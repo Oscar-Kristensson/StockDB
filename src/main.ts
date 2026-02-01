@@ -1,5 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { dbAddUser } from "./db.ts";
+import { AppLayer, LayerSwitcher } from "./appLayer.ts";
+import { firstLayer } from "./views/testLayers.ts";
 
 let greetInputEl: HTMLInputElement | null;
 let greetMsgEl: HTMLElement | null;
@@ -16,6 +18,22 @@ async function greet() {
 
 async function myTestCommand() {
     await invoke("my_test_command");
+}
+
+let layerSwitcher: LayerSwitcher | null;
+let navContainer: HTMLElement | null = document.querySelector("nav");
+
+function init() {
+    if (!navContainer) {
+        console.error("Could not find navContainer -> could not create layerSwitcher");
+        return;
+    }
+
+    const tempLayer = new AppLayer("testLayer");
+
+    layerSwitcher = new LayerSwitcher(navContainer);
+    layerSwitcher.addLayer(tempLayer);
+    layerSwitcher.addLayer(firstLayer);
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -51,5 +69,7 @@ window.addEventListener("DOMContentLoaded", () => {
     })
     
     myTestCommand();
+
+    init();
 
 });
