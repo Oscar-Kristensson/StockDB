@@ -13,3 +13,5 @@ class FirstLayer extends AppLayer {
 
 
 export const firstLayer = new FirstLayer();
+export const firstLayer2 = new FirstLayer();
+export const firstLayer3 = new FirstLayer();

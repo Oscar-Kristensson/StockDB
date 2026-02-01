@@ -12,12 +12,16 @@ class LayerButton {
 
         this.text = document.createElement("div");
         this.text.textContent = text;
+        this.text.className = "text";
 
         this.button.appendChild(this.icon);
         this.button.appendChild(this.text);
 
         layerSwitcher.navContainer.appendChild(this.button);
     }
+
+    select() { this.button.classList.add("select"); }
+    deselect() { this.button.classList.remove("select"); }
 
 
 }
@@ -38,6 +42,7 @@ export class LayerSwitcher {
 
     addLayer(layer: AppLayer) {
         const button = new LayerButton(this, layer.iconPath, layer.name);
+        button.deselect();
 
 
         this.layers.push({

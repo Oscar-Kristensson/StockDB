@@ -1,14 +1,73 @@
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+
+}
+
+:root {
+    --textColor: #999999;
+}
+
 body {
     display: grid;
+    grid-template-areas: "nav main";
+    grid-template-columns: auto 1fr;
+    background-color: #1c1c1c;
+    color: var(--textColor);
+}
+
+nav {
+    grid-area: nav;
+    background-color: #003434;
+    padding: 16px;
+
 }
 
 
+nav button {
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(0, 64, 64);
+    outline: none;
+    border: none;
+    border-radius: 8px;
+    padding-right: 12px ;
+
+    align-items: center;
+    cursor: pointer;
+    transition: all 250ms ease-in-out;
+    margin-bottom: 8px;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.088);
+}
+
+nav button.selected {
+    background-color: #005353ff;
+}
+
+nav button:hover {
+    background-color: rgb(0, 73, 73);
+}
+
+nav button .text {
+    font-size: 16px;
+    margin-left: 16px;
+    margin-right: 16px;
+    color: white;
+}
+
+nav button img {
+    margin: 2px;
+    height: 50px;
+}
 
 
-
-
-
-/* Default */
+/* Default 
 .logo.vite:hover {
     filter: drop-shadow(0 0 2em #747bff);
 }
@@ -125,3 +184,4 @@ button {
     background-color: #0f0f0f69;
   }
 }
+*/
