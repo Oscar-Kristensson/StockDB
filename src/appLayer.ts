@@ -1,10 +1,34 @@
 
+class LayerButton {
+    button: HTMLButtonElement;
+    icon: HTMLImageElement;
+    text: HTMLElement;
 
+    constructor(layerSwitcher:LayerSwitcher, iconPath: string, text: string) {
+        this.button = document.createElement("button");
+        
+        this.icon = document.createElement("img");
+        this.icon.src = iconPath;
+
+        this.text = document.createElement("div");
+        this.text.textContent = text;
+
+        this.button.appendChild(this.icon);
+        this.button.appendChild(this.text);
+
+        layerSwitcher.navContainer.appendChild(this.button);
+    }
+
+
+}
 
 
 export class LayerSwitcher {
     navContainer: HTMLElement;
-    layers: Array<AppLayer>;
+    layers: Array<{
+        layer: AppLayer, 
+        button: LayerButton, 
+    }>;
 
     constructor(navContainer: HTMLElement) {
         this.navContainer = navContainer;
@@ -13,11 +37,13 @@ export class LayerSwitcher {
     }
 
     addLayer(layer: AppLayer) {
-        const tempElement = document.createElement("div");
-        tempElement.innerText = layer.temp;
+        const button = new LayerButton(this, layer.iconPath, layer.name);
 
-        this.navContainer.appendChild(tempElement);
-                
+
+        this.layers.push({
+            layer: layer,
+            button: button
+        });               
     }
 }
 
@@ -26,8 +52,12 @@ export class LayerSwitcher {
 
 
 export class AppLayer {
-    temp: string;
-    constructor(temp: string) {
-        this.temp = temp;
+    name: string;
+    iconPath: string;
+
+    
+    constructor(name: string, iconPath: string) {
+        this.name = name;
+        this.iconPath = iconPath;
     }
 }

@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { dbAddUser } from "./db.ts";
-import { AppLayer, LayerSwitcher } from "./appLayer.ts";
+import { LayerSwitcher } from "./appLayer.ts";
 import { firstLayer } from "./views/testLayers.ts";
 
 let greetInputEl: HTMLInputElement | null;
@@ -29,10 +29,8 @@ function init() {
         return;
     }
 
-    const tempLayer = new AppLayer("testLayer");
 
     layerSwitcher = new LayerSwitcher(navContainer);
-    layerSwitcher.addLayer(tempLayer);
     layerSwitcher.addLayer(firstLayer);
 }
 
