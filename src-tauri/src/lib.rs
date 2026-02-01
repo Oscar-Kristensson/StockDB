@@ -2,8 +2,11 @@ mod db;
 
 use rusqlite::{Connection, Result, params};
 use tauri::State;
+use tauri::Manager;
 
 use std::sync::Mutex;
+use std::fs;
+use std::path::PathBuf;
 
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -117,23 +120,51 @@ fn db_add_user(db: State<db::DbConn>, name: &str) {
 
 }
 
+fn assure_folder_structure(data_dir_path: &PathBuf) {
+    println!("Data dir: {}", data_dir_path.display());
+    // Create the directory if it doesn't exist (like 'mkdir -p')
+    if !data_dir_path.exists() {
+        println!("The dir does not exist!");
+        fs::create_dir_all(&data_dir_path);
+    }
+
+    // Create a database directory
+    let database_dir = data_dir_path.join("databases");
+    println!("DB dir: {}", database_dir.display());
+    if !database_dir.exists() {
+        fs::create_dir_all(&database_dir);
+    }
+
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let conn = db::init().expect("Falied to initalize DB");
-    let db_conn = db::DbConn(std::sync::Mutex::new(conn));
-    //db_test();
-    //let user_id: i32 = 1;
-    //println!("{}", read_one_user(user_id).unwrap().name);
-    println!("Before print table");
-    db::print_table(&db_conn);
-    //print_tables();
-    //delete_table("user");
-
-
-
-
     tauri::Builder::default()
-        .manage(db_conn)
+        .setup(|app| {
+            // Get the handle to the app-specific local data directory
+            // This automatically resolves to the correct OS folder
+            println!("Setup");
+            let data_dir = app.path().app_local_data_dir()
+                .expect("failed to resolve app local data dir");
+
+            assure_folder_structure(&data_dir);
+
+            let db_dir = data_dir.join("databases").join("example.db");
+            let conn = db::init(&db_dir).expect("Falied to initalize DB");
+            let db_conn = db::DbConn(std::sync::Mutex::new(conn));
+            println!("Before print table");
+            db::print_table(&db_conn);
+
+            app.manage(db_conn);
+
+            let file_path = data_dir.join("init.log");
+            println!("Creating log!");
+            fs::write(file_path, "App started!")?;
+            println!("Created log!");
+
+            Ok(())
+        })
+        //.manage(db_conn)
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             greet,

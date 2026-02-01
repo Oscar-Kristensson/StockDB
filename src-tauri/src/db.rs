@@ -1,16 +1,17 @@
 use std::sync::Mutex;
 use rusqlite::{Connection, Result, params};
+use std::path::PathBuf;
 
 pub struct DbConn(pub Mutex<Connection>);
 
 
 
-pub fn init() -> Result<Connection> {
-    let path = "../user_data/example.db";
+pub fn init(data_dir: &PathBuf) -> Result<Connection> {
+    //let path = "../user_data/example.db";
 
 
 
-    let conn = Connection::open(path)?;
+    let conn = Connection::open(data_dir)?;
 
     conn.execute(
         "CREATE TABLE IF NOT EXISTS users (
