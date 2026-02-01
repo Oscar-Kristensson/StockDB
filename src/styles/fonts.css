@@ -1,0 +1,7 @@
+@font-face {
+  font-family: 'Open-Sans';
+  src: url('../../assets/fonts/OpenSans.woff2') format('woff2-variations');
+  font-weight: 300 800;
+  font-style: normal;
+  font-display: swap;
+}
