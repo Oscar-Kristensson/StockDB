@@ -29,14 +29,16 @@ class LayerButton {
 
 export class LayerSwitcher {
     navContainer: HTMLElement;
+    mainContainer: HTMLElement;
     layers: Array<{
         layer: AppLayer, 
         button: LayerButton, 
     }>;
 
-    constructor(navContainer: HTMLElement) {
+    constructor(navContainer: HTMLElement, mainContainer: HTMLElement) {
         this.navContainer = navContainer;
         this.layers = [];
+        this.mainContainer = mainContainer;
 
     }
 
@@ -48,7 +50,24 @@ export class LayerSwitcher {
         this.layers.push({
             layer: layer,
             button: button
-        });               
+        });      
+        
+    }
+
+    loadLayer(layer: AppLayer) {
+        const layerExists = this.layers.some(l => l.layer === layer);
+
+        if (!layerExists) {
+            console.error("Could not load layer since it could not be found in the switcher");
+            return;
+        }
+
+        // Add the links to the switcher for the ability to switch layers etc
+        layer.layerSwitcher = this;
+        layer.layerContainer = this.mainContainer;
+
+        layer.onLoad();
+            
     }
 }
 
@@ -59,10 +78,21 @@ export class LayerSwitcher {
 export class AppLayer {
     name: string;
     iconPath: string;
+    layerContainer: HTMLElement | undefined;
+    layerSwitcher: LayerSwitcher | undefined;
 
     
     constructor(name: string, iconPath: string) {
         this.name = name;
         this.iconPath = iconPath;
+    }
+
+    /**
+     * This function should be overriden and is ment
+     */
+    onLoad(): void {
+        console.log("Loaded layer", this.name)
+        if (this.layerContainer)
+            this.layerContainer.innerText = this.name;
     }
 }

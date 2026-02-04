@@ -15,4 +15,4 @@ git clone https://github.com/Oscar-Kristensson/StockDB.git
 
 
 ## License
-TBD
+See the LICENSE file

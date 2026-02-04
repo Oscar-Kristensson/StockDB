@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { dbAddUser } from "./db.ts";
 import { LayerSwitcher } from "./appLayer.ts";
 import { firstLayer, firstLayer2, firstLayer3 } from "./views/testLayers.ts";
+import { stockLayer } from "./views/stockLayer.ts";
 
 let greetInputEl: HTMLInputElement | null;
 let greetMsgEl: HTMLElement | null;
@@ -21,20 +22,46 @@ async function myTestCommand() {
 }
 
 let layerSwitcher: LayerSwitcher | null;
-let navContainer: HTMLElement | null = document.querySelector("nav");
+let navContainer: HTMLElement | null;
+let mainContainer: HTMLElement | null;
+
+
+
+
 
 function init() {
+    navContainer = document.querySelector("nav");
+    mainContainer = document.querySelector("main");
+
+    if (!navContainer || !mainContainer) {
+        console.error("Failed to load main container!");
+        prompt("Failed to load UI");
+        return;
+    }
+
+
     if (!navContainer) {
         console.error("Could not find navContainer -> could not create layerSwitcher");
         return;
     }
 
 
-    layerSwitcher = new LayerSwitcher(navContainer);
+    layerSwitcher = new LayerSwitcher(navContainer, mainContainer);
+    layerSwitcher.addLayer(stockLayer);
+    layerSwitcher.loadLayer(stockLayer);
     layerSwitcher.addLayer(firstLayer);
     layerSwitcher.addLayer(firstLayer2);
     layerSwitcher.addLayer(firstLayer3);
+    
 }
+
+
+
+
+
+
+
+
 
 window.addEventListener("DOMContentLoaded", () => {
     greetInputEl = document.querySelector("#greet-input");
