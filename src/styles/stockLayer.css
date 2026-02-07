@@ -6,44 +6,49 @@ nav {
 }
 
 
-nav button {
-    display: flex;
-    flex-direction: row;
-    background-color: rgb(0, 64, 64);
-    outline: none;
-    border: none;
-    border-radius: 8px;
-    padding-right: 12px ;
-    width: 100%;
+.stockLayer {
+    --margin: 32px;
+    --leftGridMargin: 16px;
+    width:  calc(100% - 2 * var(--margin));
+    margin: var(--margin);
+    display: grid;
 
-    align-items: center;
-    cursor: pointer;
-    transition: all 250ms ease-in-out;
-    margin-bottom: 8px;
-    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.088);
+    grid-template-areas: 
+        "heading heading"
+        "graph info"
+        "overview info";
+
+    grid-template-rows: auto auto;
 
 
 }
 
-nav button.selected {
-    background-color: rgb(0, 52, 52);
+@media (max-width: 1000px) {
+    .stockLayer {
+        grid-template-areas: 
+            "heading"
+            "graph "
+            "overview"
+            "info";
+    }
+    
 }
 
-nav button:hover {
-    background-color: #004949;
+.stockLayer .graphContainer {
+    grid-area: graph;
+}
+.stockLayer .overviewContainer {
+    grid-area: overview;
+}
+.stockLayer .informationContainer {
+    grid-area: info;
 }
 
-nav button .text {
-    font-size: 16px;
-    margin-left: 16px;
-    margin-right: 16px;
-    color: white;
-    font-family: 'Open-Sans', sans-serif;
-    font-weight: normal;
 
+.stockLayer .stockHeading {
+    margin-left: var(--leftGridMargin);
 }
 
-nav button img {
-    margin: 2px;
-    height: 50px;
-}
+
+
+
