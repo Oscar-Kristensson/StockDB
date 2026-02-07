@@ -30,6 +30,7 @@ class LayerButton {
 export class LayerSwitcher {
     navContainer: HTMLElement;
     mainContainer: HTMLElement;
+    currentLoadedLayer: AppLayer | undefined;
     layers: Array<{
         layer: AppLayer, 
         button: LayerButton, 
@@ -62,11 +63,24 @@ export class LayerSwitcher {
             return;
         }
 
+
+        if (this.currentLoadedLayer === layer) {
+            return;
+        }
+
+        if (this.currentLoadedLayer) {
+            this.currentLoadedLayer.unload();
+        }
+
         // Add the links to the switcher for the ability to switch layers etc
         layer.layerSwitcher = this;
         layer.layerContainer = this.mainContainer;
 
-        layer.onLoad();
+        const HTML = layer.onLoad();
+        if (HTML)
+            this.mainContainer.replaceChildren(HTML);
+        else 
+            this.mainContainer.replaceChildren();
             
     }
 }
@@ -90,9 +104,15 @@ export class AppLayer {
     /**
      * This function should be overriden and is ment
      */
-    onLoad(): void {
+    onLoad(): HTMLElement | undefined {
         console.log("Loaded layer", this.name)
         if (this.layerContainer)
             this.layerContainer.innerText = this.name;
+
+        return undefined;
+    }
+
+    unload() {
+        
     }
 }

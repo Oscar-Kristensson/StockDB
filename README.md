@@ -12,6 +12,10 @@ Tauri requires specific system dependencies depending on your OS. Please follow 
 git clone https://github.com/Oscar-Kristensson/StockDB.git
 ```
 
+To run the program in the development environment with npm use the following command.
+``` bash
+npm run tauri dev
+```
 
 
 ## License

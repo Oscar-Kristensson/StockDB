@@ -17,17 +17,16 @@ class StockLayer extends AppLayer {
         }
         this.container = document.createElement("div");
         this.container.className = "stockLayer";
+        const test = document.createElement("div");
+        test.innerText = "Stocks!";
+        this.container.appendChild(test);
 
     }
 
-    override onLoad(): void {
+    override onLoad(): HTMLElement | undefined {
         this.createUI();
-        if (!this.container || !this.layerContainer){
-            // Note: Add error message
-            return;
-        }
 
-        this.layerContainer.appendChild(this.container);
+        return this.container;
     }
 
 }
