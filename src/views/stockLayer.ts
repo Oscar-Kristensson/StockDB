@@ -1,5 +1,5 @@
 import { AppLayer } from "../appLayer.ts";
-
+import { loadCSS } from "../utils.ts";
 
 
 
@@ -11,6 +11,8 @@ class StockLayer extends AppLayer {
     }
 
     createUI() {
+        loadCSS("src/styles/stockLayer.css");
+
         if (!this.layerContainer) {
             console.error("Could not create UI since the layerContainer is undefined");
             return;

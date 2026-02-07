@@ -3,25 +3,35 @@ class LayerButton {
     button: HTMLButtonElement;
     icon: HTMLImageElement;
     text: HTMLElement;
+    linkedLayer: AppLayer;
+    layerSwitcher: LayerSwitcher;
 
-    constructor(layerSwitcher:LayerSwitcher, iconPath: string, text: string) {
+    constructor(layerSwitcher:LayerSwitcher, iconPath: string, linkedLayer: AppLayer) {
+        this.linkedLayer = linkedLayer;
         this.button = document.createElement("button");
         
         this.icon = document.createElement("img");
         this.icon.src = iconPath;
 
         this.text = document.createElement("div");
-        this.text.textContent = text;
+        this.text.textContent = linkedLayer.name;
         this.text.className = "text";
 
         this.button.appendChild(this.icon);
         this.button.appendChild(this.text);
 
-        layerSwitcher.navContainer.appendChild(this.button);
+        this.layerSwitcher = layerSwitcher;
+
+        this.layerSwitcher.navContainer.appendChild(this.button);
+
+        this.button.addEventListener("click", () => { this.exe(); })
     }
 
-    select() { this.button.classList.add("select"); }
-    deselect() { this.button.classList.remove("select"); }
+    exe() {
+        this.layerSwitcher.loadLayer(this.linkedLayer);
+    }
+    select() { this.button.classList.add("selected"); }
+    deselect() { this.button.classList.remove("selected"); }
 
 
 }
@@ -31,34 +41,31 @@ export class LayerSwitcher {
     navContainer: HTMLElement;
     mainContainer: HTMLElement;
     currentLoadedLayer: AppLayer | undefined;
-    layers: Array<{
-        layer: AppLayer, 
-        button: LayerButton, 
-    }>;
+    layers: Array<AppLayer>;
+    buttons: Array<LayerButton>;
 
     constructor(navContainer: HTMLElement, mainContainer: HTMLElement) {
         this.navContainer = navContainer;
         this.layers = [];
+        this.buttons = [];
         this.mainContainer = mainContainer;
 
     }
 
     addLayer(layer: AppLayer) {
-        const button = new LayerButton(this, layer.iconPath, layer.name);
+        const button = new LayerButton(this, layer.iconPath, layer);
         button.deselect();
 
 
-        this.layers.push({
-            layer: layer,
-            button: button
-        });      
+        this.layers.push(layer);
+        this.buttons.push(button);
         
     }
 
     loadLayer(layer: AppLayer) {
-        const layerExists = this.layers.some(l => l.layer === layer);
+        const newLayerIndex = this.layers.indexOf(layer);
 
-        if (!layerExists) {
+        if (newLayerIndex === -1) {
             console.error("Could not load layer since it could not be found in the switcher");
             return;
         }
@@ -68,8 +75,14 @@ export class LayerSwitcher {
             return;
         }
 
+        
+
         if (this.currentLoadedLayer) {
+            const previousLayerIndex = this.layers.indexOf(this.currentLoadedLayer);
+
             this.currentLoadedLayer.unload();
+            this.buttons[previousLayerIndex].deselect();
+
         }
 
         // Add the links to the switcher for the ability to switch layers etc
@@ -81,6 +94,9 @@ export class LayerSwitcher {
             this.mainContainer.replaceChildren(HTML);
         else 
             this.mainContainer.replaceChildren();
+
+        this.buttons[newLayerIndex].select();
+        this.currentLoadedLayer = layer;
             
     }
 }
