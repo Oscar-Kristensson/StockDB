@@ -11,6 +11,7 @@ html, body {
     -webkit-text-size-adjust: 100%;
     font-family: 'Open-Sans', sans-serif;
 
+
 }
 
 :root {
@@ -23,6 +24,8 @@ body {
     grid-template-columns: auto 1fr;
     background-color: #1c1c1c;
     color: var(--textColor);
+    overflow: none;
+
 }
 
 body main {
@@ -30,6 +33,7 @@ body main {
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow-y: auto;
 }
 
 

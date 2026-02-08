@@ -23,13 +23,15 @@ nav {
 
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1400px) {
     .stockLayer {
         grid-template-areas: 
             "heading"
             "graph "
             "overview"
             "info";
+
+        grid-template-columns: auto;
     }
     
 }

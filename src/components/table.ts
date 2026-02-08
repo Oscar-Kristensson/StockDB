@@ -1,50 +1,6 @@
 import { CustomElementInterface } from "./base";
 import { CustomContainer } from "./container";
 
-export class CustomTableElement {
-    html: HTMLTableCellElement;
-    constructor(content: HTMLElement, className: string = "") {
-        this.html = document.createElement("td");
-
-        if (className !== "")
-           this.html.className = className;
-
-        this.html.appendChild(content);
-    }
-
-    static fromStringList(data: Array<string>) {
-        const list: Array<CustomTableElement> = [];
-        data.forEach(data => {
-            list.push(CustomTableElement.fromString(data));
-        })
-
-        return list;
-    }
-
-    static fromString(string: string) {
-        const text = document.createElement("div");
-        text.innerText = string;
-        return new CustomTableElement(text)
-        
-    }
-
-    
-}
-
-
-export class CustomTableRow {
-    tableRow: HTMLTableRowElement;
-    size: Number;
-    header: boolean;
-    
-    constructor(data: Array<CustomTableElement>, header:boolean = false) {
-        this.tableRow = document.createElement("tr");
-        this.header = header;
-        this.size = data.length;
-
-    }
-
-}
 
 
 export class CustomTable implements CustomElementInterface {
@@ -53,7 +9,6 @@ export class CustomTable implements CustomElementInterface {
     tableBody: HTMLTableSectionElement;
     tableHead: HTMLTableSectionElement;
 
-    rows: Array<CustomTableRow>;
     width: Number;
 
     constructor(parent: HTMLElement | CustomContainer, className:string, width:Number = 1) {
@@ -67,7 +22,6 @@ export class CustomTable implements CustomElementInterface {
 
         parent.appendChild(this.container);
 
-        this.rows = [];
         this.width = width;
 
         this.tableHead = document.createElement("thead");

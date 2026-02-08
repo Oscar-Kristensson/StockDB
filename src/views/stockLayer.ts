@@ -118,10 +118,10 @@ class StockLayer extends AppLayer {
         for (let i = 0; i < 100; i++) {
             this.overviewTable.addRow([
                 new CustomLabelElement(undefined, `Revenue`),
-                new CustomLabelElement(undefined, `${revenue + i * 5} kr`),
-                new CustomLabelElement(undefined, `${revenue + i * 2} kr`),
-                new CustomLabelElement(undefined, `${revenue + i * 4} kr`),
-                new CustomLabelElement(undefined, `${revenue + i * 3} kr`),
+                new CustomLabelElement(undefined, `${revenue + (i * 4325 + i * 981) % 100} kr`),
+                new CustomLabelElement(undefined, `${revenue + (i * 2312 + i * 342) % 80} kr`),
+                new CustomLabelElement(undefined, `${revenue + (i * 9324 + i * 432) % 50} kr`),
+                new CustomLabelElement(undefined, `${revenue + (i * 923  + i * 21 ) % 120} kr`),
     
             ]);
         }
