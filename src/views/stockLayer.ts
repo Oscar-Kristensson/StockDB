@@ -1,8 +1,37 @@
 import { AppLayer } from "../appLayer.ts";
 import { loadCSS } from "../utils.ts";
-import { createContainer } from "../components/base.ts"
 import { CustomContainer } from "../components/container.ts";
 import { CustomHeading } from "../components/heading.ts";
+import { CustomTable, CustomTableElement, CustomTableRow } from "../components/table.ts";
+import { CustomElementInterface } from "../components/base.ts";
+
+class CustomLabelElement implements CustomElementInterface {
+    content: HTMLElement;
+    constructor(parent: HTMLElement | undefined, content:string | HTMLElement | CustomElementInterface, className:string = "") {
+        this.content = document.createElement("div");
+        this.content.className = "labelElement";
+
+        if (className !== "")
+            this.content.classList.add(className);
+
+        if (typeof content === "string") {
+            this.content.innerText = content;
+        }
+
+        parent?.appendChild(this.content);
+
+    }
+
+    appendChild(node: HTMLElement) {
+        this.content.appendChild(node);
+    }
+
+    getTopMostHTMLContainer(): HTMLElement {
+        return this.content;
+    }
+}
+
+
 
 class StockLayer extends AppLayer {
     container: HTMLElement | undefined;
@@ -10,6 +39,7 @@ class StockLayer extends AppLayer {
     overviewContainer: CustomContainer | undefined;
     informationContainer: CustomContainer | undefined;
     heading: CustomHeading | undefined;
+    overviewTable: CustomTable | undefined;
 
     stockName: string;
 
@@ -40,6 +70,11 @@ class StockLayer extends AppLayer {
 
 
 
+        this.overviewTable = new CustomTable(this.overviewContainer, "informationTable", 5);
+
+        this.generateStockOverViewTable(120, 0, 0);
+
+
         
 
         
@@ -57,6 +92,39 @@ class StockLayer extends AppLayer {
 
         this.heading?.setHeading(this.stockName);
 
+    }
+
+
+    generateStockOverViewTable(
+        revenue: number,
+        operatingExpenses: number,
+        earningsPerShare: number,
+    ) {
+        console.log("GEN", this.overviewTable);
+
+        if (!(this.overviewTable instanceof CustomTable)) {
+            console.error("The overview table is not correctly initalized!");
+            return;
+        }
+
+        this.overviewTable.addRow([
+            new CustomLabelElement(undefined, ""),
+            new CustomLabelElement(undefined, "Latest"),
+            new CustomLabelElement(undefined, "1 year"),
+            new CustomLabelElement(undefined, "5 years"),
+            new CustomLabelElement(undefined, "10 years"),
+        ], true);
+
+        for (let i = 0; i < 100; i++) {
+            this.overviewTable.addRow([
+                new CustomLabelElement(undefined, `Revenue`),
+                new CustomLabelElement(undefined, `${revenue + i * 5} kr`),
+                new CustomLabelElement(undefined, `${revenue + i * 2} kr`),
+                new CustomLabelElement(undefined, `${revenue + i * 4} kr`),
+                new CustomLabelElement(undefined, `${revenue + i * 3} kr`),
+    
+            ]);
+        }
     }
 
 }

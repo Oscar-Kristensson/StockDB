@@ -9,3 +9,9 @@ export function createContainer(parent: HTMLElement, className: string) : HTMLDi
 
     return container;
 }
+
+
+export interface CustomElementInterface {   
+    appendChild(node: CustomElementInterface | HTMLElement) : void;
+    getTopMostHTMLContainer() : HTMLElement;
+}

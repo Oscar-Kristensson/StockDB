@@ -1,12 +1,13 @@
+import { CustomElementInterface } from "./base.ts";
 
 
 
-export class CustomContainer {
+export class CustomContainer implements CustomElementInterface {
     mainContainer: HTMLDivElement;
     contentContainer: HTMLDivElement;
     heading : HTMLHeadingElement;
 
-    constructor(parent: HTMLElement, heading:string, className: string) {
+    constructor(parent: HTMLElement | undefined, heading:string, className: string) {
         this.mainContainer = document.createElement("div");
         this.mainContainer.className = "customContainer";
         this.mainContainer.classList.add(className);
@@ -21,10 +22,18 @@ export class CustomContainer {
         this.mainContainer.appendChild(this.contentContainer);
         
 
-        parent.appendChild(this.mainContainer);
+        parent?.appendChild(this.mainContainer);
     }
 
     setHeading(heading: string) {
         this.heading.innerText = heading;
+    }
+
+    appendChild(node: HTMLElement) {
+        this.contentContainer.appendChild(node);
+    }
+
+    getTopMostHTMLContainer(): HTMLElement {
+        return this.mainContainer;
     }
 }
