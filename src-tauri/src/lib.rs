@@ -9,6 +9,7 @@ use std::fs;
 use std::path::PathBuf;
 
 
+
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -120,6 +121,13 @@ fn db_add_user(db: State<db::DbConn>, name: &str) {
 
 }
 
+
+#[tauri::command]
+fn db_debug_table(db: State<db::DbConn>, table: &str) -> Vec<Vec<String>> {
+    db::debug_table(db, table)
+}
+
+
 fn assure_folder_structure(data_dir_path: &PathBuf) {
     println!("Data dir: {}", data_dir_path.display());
     // Create the directory if it doesn't exist (like 'mkdir -p')
@@ -169,7 +177,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             greet,
             my_test_command,
-            db_add_user
+            db_add_user,
+            db_debug_table
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

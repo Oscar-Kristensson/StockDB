@@ -7,3 +7,27 @@ export function dbAddUser(name:string) {
         name: name,
     })
 }
+
+
+export function dbDebugTable() {
+    invoke("db_debug_table", {
+        table: "users",
+    })
+    .then(result => {
+        let rv:string = "";
+        if (result instanceof Array) {
+            result.forEach(row => {
+                if (row instanceof Array){
+                    row.forEach(element => {
+                        if (typeof element === "string")
+                            rv += element + "\t";
+                    })
+                }
+                rv += "\n";
+            });
+        }
+
+        console.log(rv);
+
+    })
+}

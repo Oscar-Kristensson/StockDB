@@ -2,7 +2,7 @@ import { AppLayer } from "../appLayer.ts";
 import { loadCSS } from "../utils.ts";
 import { CustomContainer } from "../components/container.ts";
 import { CustomHeading } from "../components/heading.ts";
-import { CustomTable, CustomTableElement, CustomTableRow } from "../components/table.ts";
+import { CustomTable } from "../components/table.ts";
 import { CustomElementInterface } from "../components/base.ts";
 
 class CustomLabelElement implements CustomElementInterface {
@@ -72,7 +72,7 @@ class StockLayer extends AppLayer {
 
         this.overviewTable = new CustomTable(this.overviewContainer, "informationTable", 5);
 
-        this.generateStockOverViewTable(120, 0, 0);
+        this.generateStockOverViewTable(120);
 
 
         
@@ -97,8 +97,6 @@ class StockLayer extends AppLayer {
 
     generateStockOverViewTable(
         revenue: number,
-        operatingExpenses: number,
-        earningsPerShare: number,
     ) {
         console.log("GEN", this.overviewTable);
 
