@@ -1,4 +1,5 @@
 mod db;
+mod utils;
 
 use rusqlite::{Connection, Result, params};
 use tauri::State;
@@ -123,8 +124,13 @@ fn db_add_user(db: State<db::DbConn>, name: &str) {
 
 
 #[tauri::command]
-fn db_debug_table(db: State<db::DbConn>, table: &str) -> Vec<Vec<String>> {
-    db::debug_table(db, table)
+fn db_debug_table(db: State<db::DbConn>, table: &str) -> Result<Vec<Vec<String>>, String> {
+    if(!utils::is_only_letters(&table)) {
+        return Err("Invalid table name. Tables names may only contain letters.".into());
+    }
+    
+
+    Ok(db::debug_table(db, table))
 }
 
 
@@ -160,8 +166,11 @@ pub fn run() {
             let db_dir = data_dir.join("databases").join("example.db");
             let conn = db::init(&db_dir).expect("Falied to initalize DB");
             let db_conn = db::DbConn(std::sync::Mutex::new(conn));
-            println!("Before print table");
-            db::print_table(&db_conn);
+            
+            
+            // println!("Before print table");
+            
+            //db::print_table(&db_conn);
 
             app.manage(db_conn);
 

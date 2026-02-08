@@ -33,9 +33,6 @@ pub fn init(data_dir: &PathBuf) -> Result<Connection> {
 
 pub fn debug_table(db: State<DbConn>, table: &str) -> Vec<Vec<String>> {
     // NOTE (IMPORTANT): sanitze table str
-
-    println!("Debugging table {}", table);
-    
     // Lock the connection
     let conn = db.0.lock().unwrap();
 
@@ -46,14 +43,11 @@ pub fn debug_table(db: State<DbConn>, table: &str) -> Vec<Vec<String>> {
     let column_names: Vec<String> = stmt.column_names().iter().map(|s| s.to_string()).collect();
     let column_count = column_names.len();
 
-    println!("Column names: {:?} (length {})", column_names, column_count);
-
     let mut rv: Vec<Vec<String>> = Vec::new();
 
 
     // Iterate over rows
     let rows = stmt.query_map([], |row: &rusqlite::Row| {
-        println!("Row iter {}", column_count);
         let mut values: Vec<String> = Vec::new();
         for i in 0..column_count {
             let value: Value = row.get(i)?;

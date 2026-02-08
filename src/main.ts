@@ -62,7 +62,7 @@ function init() {
 
 function test() {
     console.log("BF Debug Table");
-    dbDebugTable();
+    dbDebugTable("?test");
 }
 
 

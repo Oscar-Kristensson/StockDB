@@ -9,9 +9,9 @@ export function dbAddUser(name:string) {
 }
 
 
-export function dbDebugTable() {
+export function dbDebugTable(table: string) {
     invoke("db_debug_table", {
-        table: "users",
+        table: table,
     })
     .then(result => {
         let rv:string = "";
