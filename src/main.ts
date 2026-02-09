@@ -1,9 +1,9 @@
 import { invoke } from "@tauri-apps/api/core";
 import { dbAddStock, dbAddUser, dbDebugTable, dbGetStockInfoById } from "./db.ts";
-import { LayerSwitcher } from "./appLayer.ts";
 import { firstLayer, firstLayer2, firstLayer3 } from "./views/testLayers.ts";
 import { stockLayer } from "./views/stockLayer.ts";
-import { StockInfo, StockSectors } from "./stocks.ts";
+import { StockInfo } from "./stocks.ts";
+import { StockDB } from "./app.ts";
 
 let greetInputEl: HTMLInputElement | null;
 let greetMsgEl: HTMLElement | null;
@@ -22,7 +22,7 @@ async function myTestCommand() {
     await invoke("my_test_command");
 }
 
-let layerSwitcher: LayerSwitcher | null;
+let stockDb: StockDB | null;
 let navContainer: HTMLElement | null;
 let mainContainer: HTMLElement | null;
 
@@ -47,13 +47,30 @@ function init() {
     }
 
 
-    layerSwitcher = new LayerSwitcher(navContainer, mainContainer);
-    layerSwitcher.addLayer(stockLayer);
-    layerSwitcher.loadLayer(stockLayer);
-    layerSwitcher.addLayer(firstLayer);
-    layerSwitcher.addLayer(firstLayer2);
-    layerSwitcher.addLayer(firstLayer3);
+    stockDb = new StockDB(navContainer, mainContainer);
     
+    // Load the starting layer
+    stockDb.addLayer(stockLayer);
+    stockDb.loadLayer(stockLayer);
+
+
+    stockDb.addLayer(firstLayer);
+    stockDb.addLayer(firstLayer2);
+    stockDb.addLayer(firstLayer3);
+
+
+    console.log("ID -> Stock");
+    dbGetStockInfoById(2)
+    .then(result => {
+        console.log("Recieved", result);
+        if (result === null) {
+            console.warn("There is no stock with the ID");
+        } else if (stockDb){
+            stockDb.stock = result;
+        }
+    })
+
+    stockDb.initalize();    
 }
 
 
@@ -63,7 +80,7 @@ function init() {
 
 function test() {
     console.log("BF Debug Table");
-    addStock();
+    // addStock();
     dbDebugTable("users");
     dbDebugTable("stock");
     dbGetStockInfoById(0);
@@ -84,6 +101,7 @@ function addStock() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM loaded");
     greetInputEl = document.querySelector("#greet-input");
     greetMsgEl = document.querySelector("#greet-msg");
     document.querySelector("#greet-form")?.addEventListener("submit", (e) => {

@@ -1,4 +1,3 @@
-
 class LayerButton {
     button: HTMLButtonElement;
     icon: HTMLImageElement;
@@ -36,13 +35,16 @@ class LayerButton {
 
 }
 
-
+/**
+ * Contains the logic for switching between different layers
+ */
 export class LayerSwitcher {
     navContainer: HTMLElement;
     mainContainer: HTMLElement;
     currentLoadedLayer: AppLayer | undefined;
     layers: Array<AppLayer>;
     buttons: Array<LayerButton>;
+
 
     constructor(navContainer: HTMLElement, mainContainer: HTMLElement) {
         this.navContainer = navContainer;
@@ -88,7 +90,7 @@ export class LayerSwitcher {
         // Add the links to the switcher for the ability to switch layers etc
         layer.layerSwitcher = this;
         layer.layerContainer = this.mainContainer;
-
+        
         const HTML = layer.onLoad();
         if (HTML)
             this.mainContainer.replaceChildren(HTML);
@@ -96,11 +98,10 @@ export class LayerSwitcher {
             this.mainContainer.replaceChildren();
 
         this.buttons[newLayerIndex].select();
+        
         this.currentLoadedLayer = layer;
-            
     }
 }
-
 
 
 
@@ -118,7 +119,7 @@ export class AppLayer {
     }
 
     /**
-     * This function should be overriden and is ment
+     * This function should be overriden
      */
     onLoad(): HTMLElement | undefined {
         console.log("Loaded layer", this.name)

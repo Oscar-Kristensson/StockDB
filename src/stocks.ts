@@ -19,7 +19,21 @@ export class StockInfo {
         public name: string,
         public exchange: string,
         public sector: StockSectors | null,
-        public industry: string,
+        public industry: string | null,
         public currency: string = "kr",
   ) {}
+
+  static validate(obj: any): obj is StockInfo {
+  return (
+    obj !== null &&
+    typeof obj === "object" &&
+    typeof obj.id === "number" &&
+    typeof obj.ticker === "string" &&
+    typeof obj.name === "string" &&
+    typeof obj.exchange === "string" &&
+    typeof obj.currency === "string" &&
+    ("sector" in obj) &&
+    ("industry" in obj)
+  );
+}
 }

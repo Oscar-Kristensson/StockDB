@@ -58,3 +58,6 @@ nav {
 
 
 
+.stockLayer .stockInfo {
+    margin: var(--leftGridMargin);
+}

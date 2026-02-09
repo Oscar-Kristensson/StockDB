@@ -1,9 +1,11 @@
 import { AppLayer } from "../appLayer.ts";
 import { loadCSS } from "../utils.ts";
 import { CustomContainer } from "../components/container.ts";
-import { CustomHeading } from "../components/heading.ts";
 import { CustomTable } from "../components/table.ts";
 import { CustomElementInterface } from "../components/base.ts";
+import { CustomStockInfo } from "../components/stockInfo.ts";
+import { StockInfo } from "../stocks.ts";
+import { StockDB } from "../app.ts";
 
 class CustomLabelElement implements CustomElementInterface {
     content: HTMLElement;
@@ -38,16 +40,15 @@ class StockLayer extends AppLayer {
     graphContainer: CustomContainer | undefined;
     overviewContainer: CustomContainer | undefined;
     informationContainer: CustomContainer | undefined;
-    heading: CustomHeading | undefined;
+    stockInfo: CustomStockInfo | undefined;
     overviewTable: CustomTable | undefined;
 
-    stockName: string;
+    stock: StockInfo | undefined;
+    app: StockDB | undefined;
 
-
-    constructor(stockName: string) {
+    constructor() {
         super("Stocks", "assets/icons/StockIcon.svg");
 
-        this.stockName = stockName;
 
     }
 
@@ -62,7 +63,7 @@ class StockLayer extends AppLayer {
         this.container.className = "stockLayer";
 
 
-        this.heading = new CustomHeading(this.container, this.stockName, "stockHeading");
+        this.stockInfo = new CustomStockInfo(this.container, "stockInfo");
 
         this.graphContainer = new CustomContainer(this.container, "Graph", "graphContainer")
         this.overviewContainer = new CustomContainer(this.container, "Overview", "overviewContainer");
@@ -81,17 +82,69 @@ class StockLayer extends AppLayer {
 
     }
 
+    /**
+     * Called only once
+     */
+    receivedApp() {
+        if (this.layerSwitcher instanceof StockDB) {
+           this.app = this.layerSwitcher; 
+        } else {
+            this.app = undefined;
+        }
+
+        console.log(this.app, this.layerSwitcher);
+
+
+        // Inorder for hte StockLayer to auto update the stock if it is changed
+        if (this.app) {
+            this.app.eventSystem.listen("stockChange", () => {
+                console.log("heard event");
+                if (this.app 
+                    && this.app.currentStock 
+                    && this.app.currentLoadedLayer === this) {
+                    this.setStock(this.app.currentStock);
+                }
+            });            
+
+        } else {
+            console.warn("Could not add a listner since this.layerSwicther is not StockDB");
+        }
+    }
+
+    /**
+     * Is called when the app layer is switched
+     * @returns 
+     */
     override onLoad(): HTMLElement | undefined {
+        if (!this.app)
+            this.receivedApp();
+
         this.createUI();
+
+        if (this.app?.currentStock) {
+            this.setStock(this.app.currentStock);
+        }
 
         return this.container;
     }
 
-    setStockName(stockName: string) {
-        this.stockName = stockName;
+    setStock(stock: StockInfo) {
+        this.stock = stock;
+        
+        if (!this.stockInfo) {
+            console.warn("Could not complete setting the stock because the UI was not yet created, please call onLoad or createUI before setting the stock");
+            return;
+        }
+        this.stockInfo.setStock(this.stock)
 
-        this.heading?.setHeading(this.stockName);
 
+
+    }
+
+    generateStockHeading() {
+        if (!this.container)
+            return;
+        this.stockInfo = new CustomStockInfo(this.container, "stockInfo");
     }
 
 
@@ -129,4 +182,4 @@ class StockLayer extends AppLayer {
 
 
 
-export const stockLayer = new StockLayer("Unkown Stock");
+export const stockLayer = new StockLayer();

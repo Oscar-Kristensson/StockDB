@@ -9,6 +9,7 @@ use std::fs;
 use std::path::PathBuf;
 
 
+
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -149,11 +150,8 @@ fn db_get_stock_info_by_id(db: State<db::DbConn>, id: u32) -> Option<db::stocks:
 
 #[tauri::command]
 fn db_get_table_names(db: State<db::DbConn>) -> Vec<String> {
-    println!("Called");
     let conn = db.0.lock().unwrap();
-    println!("Retriving table names");
     let table_names = db::tables::get_table_names(&conn);
-    println!("Tables names {:?}", table_names);
 
     match table_names {
         Ok(names) => names, // Return the stock info

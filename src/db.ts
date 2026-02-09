@@ -34,24 +34,39 @@ export function dbDebugTable(table: string) {
     })
 }
 
+
 // NOTE: This should be converted to promises
+// NOTE: This should have more sophisticated error handling
+export function dbGetStockInfoById(id: number) : Promise<StockInfo | null> {
+    return new Promise((resolve, reject) => {
+        invoke("db_get_stock_info_by_id", {
+            id: id,
+        })
+        .then(result => {
+            console.log("INVOKE ->", result);
+            if (result === null)
+                resolve(null);
 
-export function dbGetStockInfoById(id: number) {
-    console.log("Fetching stock info!", id);
-    if (id < 0) {
-        //reject(new Error(`The id must be a positive number, not ${id}`));
-    }
+            if (!StockInfo.validate(result)) {
+                throw new Error(`The backend did not return a valid StockInfo object, the backend returned ${result}`);
+            }
+            
+            const stockInfo = new StockInfo(
+                result.id,
+                result.ticker,
+                result.name,
+                result.exchange,
+                result.sector,
+                result.industry,
+                result.currency
+            )
 
-    invoke("db_get_stock_info_by_id", {
-        id: id,
-    })
-    .then(rv => {
-        console.log(rv);
-        //resolve(rv);
-    })    
-    /*return new Promise((resolve, reject) => {
+            resolve(stockInfo);
 
-    })*/
+        })
+        .catch(error => {reject(error)});
+    });
+
 }
 
 export function dbAddStock(stock: StockInfo) {

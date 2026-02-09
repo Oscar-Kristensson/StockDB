@@ -54,6 +54,7 @@ impl StockSectors {
 }
 
 
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StockInformation {
     pub id: u32,
@@ -69,15 +70,22 @@ pub struct StockInformation {
 
 pub fn get_stock_by_id(conn: &Connection, id: u32) -> Result<Option<StockInformation>, Error> {
     let mut stmt = conn.prepare(
-        "SELECT ticker, name, exchange, sector, industry, currency FROM stocks WHERE id = ?1"
+        "SELECT ticker, name, exchange, sector, industry, currency FROM stock WHERE id = ?1"
     )?;
 
     let mut rows = stmt.query([id])?;
 
 
     if let Some(row) = rows.next()? {
-        let sector_str: String = row.get(3)?;
-        let sector= StockSectors::from_str_opt(&sector_str);
+        let sector_str: Option<String> = row.get(3)?;
+
+        let sector = match sector_str {
+            Some(ref s) => StockSectors::from_str_opt(&s),
+            None => None,
+        };
+
+
+ 
 
         let stock = StockInformation {
             id: id,
@@ -106,7 +114,7 @@ pub fn add_stock(conn: &Connection, stock: &StockInformation) -> Result<(), Stri
             &stock.industry, 
             &stock.currency),
     )
-    .map_err(|e| e.to_string())?; // convert rusqlite::Error -> String
+    .map_err(|e| e.to_string())?; // convert rusqlite::Error -> String 
 
     Ok(())
 }

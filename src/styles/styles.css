@@ -121,3 +121,38 @@ nav button img {
     outline: none;
     padding: 8px;
 }
+
+.customStockInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.customStockInfo .stockName {
+    font-size: 28px;
+    font-weight: 800;
+    margin-right: 16px;
+    width: max-content;
+}
+
+.customStockInfo .statContainer {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    flex-wrap: wrap;
+}
+
+.customStockInfo .statContainer .stat {
+    margin: 4px;
+    width: max-content;
+    display: flex;
+    flex-direction: row;
+}
+
+.customStockInfo .statContainer .stat .statName {
+    margin-right: 4px;
+    font-size: 12px;
+}
+
+.customStockInfo .statContainer .stat .statLabel {
+    font-size: 12px;
+}
