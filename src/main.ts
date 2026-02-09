@@ -1,8 +1,9 @@
 import { invoke } from "@tauri-apps/api/core";
-import { dbAddUser, dbDebugTable } from "./db.ts";
+import { dbAddStock, dbAddUser, dbDebugTable, dbGetStockInfoById } from "./db.ts";
 import { LayerSwitcher } from "./appLayer.ts";
 import { firstLayer, firstLayer2, firstLayer3 } from "./views/testLayers.ts";
 import { stockLayer } from "./views/stockLayer.ts";
+import { StockInfo, StockSectors } from "./stocks.ts";
 
 let greetInputEl: HTMLInputElement | null;
 let greetMsgEl: HTMLElement | null;
@@ -62,9 +63,25 @@ function init() {
 
 function test() {
     console.log("BF Debug Table");
-    dbDebugTable("?test");
+    addStock();
+    dbDebugTable("users");
+    dbDebugTable("stock");
+    dbGetStockInfoById(0);
 }
 
+function addStock() {
+    const apple = new StockInfo(
+        1,
+        "INVE B",                     // Actual ticker on Nasdaq Stockholm
+        "Investor B",                 // Human-readable name
+        "Nasdaq Stockholm",           // Exchange where it trades
+        null,                         // Sector can be null or a valid sector if you categorize it
+        null,                         // Industry unknown/optional for holding company
+        "SEK"                         // Local currency
+    );
+
+    dbAddStock(apple);
+}
 
 window.addEventListener("DOMContentLoaded", () => {
     greetInputEl = document.querySelector("#greet-input");

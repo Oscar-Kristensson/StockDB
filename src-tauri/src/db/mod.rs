@@ -1,5 +1,9 @@
+pub mod stocks;
+
+pub mod tables;
+
 use std::sync::Mutex;
-use rusqlite::{Connection, Result, params};
+use rusqlite::{Connection, Result};
 use std::path::PathBuf;
 
 use tauri::State;
@@ -8,8 +12,6 @@ use rusqlite::types::Value;
 
 pub struct DbConn(pub Mutex<Connection>);
 
-
-
 pub fn init(data_dir: &PathBuf) -> Result<Connection> {
     //let path = "../user_data/example.db";
 
@@ -17,17 +19,12 @@ pub fn init(data_dir: &PathBuf) -> Result<Connection> {
 
     let conn = Connection::open(data_dir)?;
 
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL
-        )
-        ",
-        [],
-    )?;
+    tables::create_tables(&conn)?;
+
 
     Ok(conn)
 }
+
 
 
 
@@ -79,43 +76,10 @@ pub fn debug_table(db: State<DbConn>, table: &str) -> Vec<Vec<String>> {
     for _ in rows {
         // nothing else needed; the closure already prints
     }
-    /* 
-    // Print the column names
-    println!("{:?}", column_names);
 
-    // Print each row
-    for row in rows {
-        let row = row?;
-        println!("{:?}", row);
-    }
-    */
-    // rows
     rv
 
 }
 
 
 
-#[derive(Debug)]
-pub struct User {
-    pub id: i32,
-    pub name: String,
-}
-
-pub fn print_table(db: &DbConn) {
-    let conn = db.0.lock().unwrap();
-
-    let mut stmt = conn.prepare("SELECT id, name FROM users").unwrap();
-
-    let user_iter = stmt.query_map([], |row: &rusqlite::Row| {
-        Ok(User {
-            id: row.get(0)?,
-            name: row.get(1)?,
-        })
-    }).unwrap();
-
-    for user in user_iter {
-        let user: User = user.expect("Failed to parse row");
-        println!("User {}: {}", user.id, user.name);
-    }
-}

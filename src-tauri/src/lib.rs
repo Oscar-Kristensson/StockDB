@@ -1,14 +1,12 @@
 mod db;
 mod utils;
 
-use rusqlite::{Connection, Result, params};
+use rusqlite::{Result, params, Error};
 use tauri::State;
 use tauri::Manager;
 
-use std::sync::Mutex;
 use std::fs;
 use std::path::PathBuf;
-
 
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -25,7 +23,7 @@ fn my_test_command() {
 
 
 
-
+/* 
 fn db_test() -> Result<()> {
     println!("dbTest running!");
     let conn = Connection::open("../user_data/example.db")?;
@@ -53,7 +51,8 @@ fn db_test() -> Result<()> {
 struct Table {
     name: String,
 }
-
+*/
+/* 
 fn read_one_user(id: i32) -> Result<db::User> {
     let conn = Connection::open("../user_data/example.db")?;
 
@@ -110,6 +109,7 @@ fn delete_table(table_name: &str) -> Result<()> {
 
     Ok(())
 }
+*/
 
 #[tauri::command]
 fn db_add_user(db: State<db::DbConn>, name: &str) {
@@ -125,7 +125,7 @@ fn db_add_user(db: State<db::DbConn>, name: &str) {
 
 #[tauri::command]
 fn db_debug_table(db: State<db::DbConn>, table: &str) -> Result<Vec<Vec<String>>, String> {
-    if(!utils::is_only_letters(&table)) {
+    if !utils::is_only_letters(&table) {
         return Err("Invalid table name. Tables names may only contain letters.".into());
     }
     
@@ -133,20 +133,78 @@ fn db_debug_table(db: State<db::DbConn>, table: &str) -> Result<Vec<Vec<String>>
     Ok(db::debug_table(db, table))
 }
 
+#[tauri::command]
+fn db_get_stock_info_by_id(db: State<db::DbConn>, id: u32) -> Option<db::stocks::StockInformation> {
+    let conn = db.0.lock().unwrap();
+    let stock_information: Result<Option<db::stocks::StockInformation>, Error> = db::stocks::get_stock_by_id(&conn, id);
+
+
+
+    match stock_information {
+        Ok(stock) => stock, // Return the stock info
+        Err(_) => None,           // Return "null" in JS
+    }
+    
+}
+
+#[tauri::command]
+fn db_get_table_names(db: State<db::DbConn>) -> Vec<String> {
+    println!("Called");
+    let conn = db.0.lock().unwrap();
+    println!("Retriving table names");
+    let table_names = db::tables::get_table_names(&conn);
+    println!("Tables names {:?}", table_names);
+
+    match table_names {
+        Ok(names) => names, // Return the stock info
+        Err(_) => Vec::new(),           // Return "null" in JS
+    }
+}
+
+
+#[tauri::command]
+fn db_add_stock(db: State<db::DbConn>, stock: db::stocks::StockInformation) -> Result<(), String> {
+    let conn = db.0.lock().unwrap();
+
+    if !(utils::is_alphanumeric_or_space(&stock.ticker)) {
+        return Err("Invalid stock ticker. Stock ticker may only contain letters.".into());
+    }
+
+    if !(utils::is_alphanumeric_or_space(&stock.name)) {
+        return Err("Invalid stock name. Stock names may only contain letters.".into());
+    }
+
+    if !(utils::is_alphanumeric_or_space(&stock.exchange)) {
+        return Err("Invalid stock exchange. Stock exchange may only contain letters.".into());
+    }
+
+    if let Some(ind) = stock.industry.as_ref() {
+        if !utils::is_alphanumeric_or_space(ind) {
+            return Err("Invalid industry name. Industry names may only contain letters.".into());
+        }
+    }
+
+    
+    db::stocks::add_stock(&conn, &stock).map_err(|e| e.to_string())
+
+}
+
+
+
 
 fn assure_folder_structure(data_dir_path: &PathBuf) {
     println!("Data dir: {}", data_dir_path.display());
     // Create the directory if it doesn't exist (like 'mkdir -p')
     if !data_dir_path.exists() {
         println!("The dir does not exist!");
-        fs::create_dir_all(&data_dir_path);
+        fs::create_dir_all(&data_dir_path).unwrap();
     }
 
     // Create a database directory
     let database_dir = data_dir_path.join("databases");
     println!("DB dir: {}", database_dir.display());
     if !database_dir.exists() {
-        fs::create_dir_all(&database_dir);
+        fs::create_dir_all(&database_dir).unwrap();
     }
 
 }
@@ -187,7 +245,11 @@ pub fn run() {
             greet,
             my_test_command,
             db_add_user,
-            db_debug_table
+            db_debug_table,
+            db_get_stock_info_by_id,
+            db_get_table_names,
+            db_add_stock
+            
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
