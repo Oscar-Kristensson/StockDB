@@ -1,8 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
-import { dbAddStock, dbAddUser, dbDebugTable, dbGetStockInfoById } from "./db.ts";
+import { dbAddUser, dbDebugTable, dbGetStockInfoById } from "./db.ts";
 import { firstLayer, firstLayer2, firstLayer3 } from "./views/testLayers.ts";
 import { stockLayer } from "./views/stockLayer.ts";
-import { StockInfo } from "./stocks.ts";
 import { StockDB } from "./app.ts";
 
 let greetInputEl: HTMLInputElement | null;
@@ -86,19 +85,6 @@ function test() {
     dbGetStockInfoById(0);
 }
 
-function addStock() {
-    const apple = new StockInfo(
-        1,
-        "INVE B",                     // Actual ticker on Nasdaq Stockholm
-        "Investor B",                 // Human-readable name
-        "Nasdaq Stockholm",           // Exchange where it trades
-        null,                         // Sector can be null or a valid sector if you categorize it
-        null,                         // Industry unknown/optional for holding company
-        "SEK"                         // Local currency
-    );
-
-    dbAddStock(apple);
-}
 
 window.addEventListener("DOMContentLoaded", () => {
     console.log("DOM loaded");
