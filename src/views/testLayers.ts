@@ -5,7 +5,7 @@ import { AppLayer } from "../appLayer.ts";
 
 class FirstLayer extends AppLayer {
     constructor() {
-        super("firstLayer", "assets/icons/LogIcon.svg");
+        super("firstLayer", "/icons/LogIcon.svg");
 
     }
 }

@@ -47,7 +47,7 @@ class StockLayer extends AppLayer {
     app: StockDB | undefined;
 
     constructor() {
-        super("Stocks", "assets/icons/StockIcon.svg");
+        super("Stocks", "icons/StockIcon.svg");
 
 
     }
