@@ -1,10 +1,11 @@
 import { AppLayer } from "../appLayer.ts";
 import { StockDB } from "../app.ts";
-
+import { CustomTabs, CustomTab } from "../components/tabs.ts";
 
 class LogLayer extends AppLayer {
     app: StockDB | undefined;
     container: HTMLDivElement | undefined;
+    tabs: CustomTabs | undefined;
 
     constructor() {
         super("Log", "icons/StockIcon.svg");
@@ -19,6 +20,10 @@ class LogLayer extends AppLayer {
         this.container = document.createElement("div");
         this.container.className = "logLayer";
 
+
+        this.tabs = new CustomTabs(this.container);
+        this.tabs.addTab(new CustomTab("Add stock"));
+        this.tabs.addTab(new CustomTab("Add record"));
         
 
     }
@@ -32,8 +37,6 @@ class LogLayer extends AppLayer {
         } else {
             this.app = undefined;
         }
-
-        console.log(this.app, this.layerSwitcher);
     }
 
     /**
