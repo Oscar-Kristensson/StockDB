@@ -3,6 +3,7 @@ import { dbAddUser, dbDebugTable, dbGetStockInfoById } from "./db.ts";
 import { firstLayer, firstLayer2, firstLayer3 } from "./views/testLayers.ts";
 import { stockLayer } from "./views/stockLayer.ts";
 import { StockDB } from "./app.ts";
+import { logLayer } from "./views/logLayer.ts";
 
 let greetInputEl: HTMLInputElement | null;
 let greetMsgEl: HTMLElement | null;
@@ -51,6 +52,8 @@ function init() {
     // Load the starting layer
     stockDb.addLayer(stockLayer);
     stockDb.loadLayer(stockLayer);
+
+    stockDb.addLayer(logLayer);
 
 
     stockDb.addLayer(firstLayer);
