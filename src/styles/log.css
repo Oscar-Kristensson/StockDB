@@ -1,0 +1,16 @@
+
+
+
+.logLayer {
+    padding: 16px;
+}
+
+
+.tabContainer {
+    --borderRadius: 16px;
+    background-color: #272727;
+    border-bottom-left-radius: var(--borderRadius);
+    border-bottom-right-radius: var(--borderRadius);
+    border-top-right-radius: var(--borderRadius);
+
+}

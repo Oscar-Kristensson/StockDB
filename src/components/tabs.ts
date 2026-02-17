@@ -5,8 +5,9 @@ export class CustomTab {
     container: HTMLDivElement;
     textLabel: HTMLDivElement;
     tabSystem: CustomTabs | undefined;
+    linkedContainer: HTMLElement | undefined;
 
-    constructor(name: string) {
+    constructor(name: string, linkedContainer:HTMLElement | undefined = undefined) {
         this.container = document.createElement("div");
         this.container.className = "customTab";
         
@@ -20,6 +21,11 @@ export class CustomTab {
         this.tabSystem = undefined;
 
         this.container.addEventListener("click", () => { this.exe(); });
+
+        this.linkedContainer = linkedContainer;
+        if (this.linkedContainer) {
+            this.linkedContainer.classList.add("linkedToCustomTab");
+        }
     }
 
     setTabSystem(tabSystem: CustomTabs) {
@@ -35,10 +41,20 @@ export class CustomTab {
 
     open() {
         this.container.classList.add("selected");
+
+        if (this.linkedContainer) {
+            this.linkedContainer.classList.add("open");
+        }
+
     }
 
     close() {
         this.container.classList.remove("selected");
+
+        if (this.linkedContainer) {
+            this.linkedContainer.classList.remove("open");
+        }
+
     }
 }
 

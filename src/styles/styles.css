@@ -170,4 +170,25 @@ nav button img {
     display: flex;
     flex-direction: row;
     align-items: center;
+    cursor: pointer;
+    transition: all 250ms ease-in-out;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.customTabs .customTab:hover {
+    background-color: hsl(0, 0%, 12%);
+}
+
+.customTabs .customTab.selected {
+    background-color: #272727;
+}
+
+.linkedToCustomTab:not(.open) {
+    display: none;
+}
+
+.linkedToCustomTab {
+    padding: 16px;
+
 }
