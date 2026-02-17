@@ -174,10 +174,16 @@ nav button img {
     transition: all 250ms ease-in-out;
     font-size: 16px;
     font-weight: 800;
+    user-select: none;
 }
 
 .customTabs .customTab:hover {
     background-color: hsl(0, 0%, 12%);
+}
+
+.customTabs .customTab .icon {
+    height: 24px;
+    margin-right: 8px;
 }
 
 .customTabs .customTab.selected {

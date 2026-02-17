@@ -4,12 +4,26 @@ import { CustomElementInterface } from "./base.ts";
 export class CustomTab {
     container: HTMLDivElement;
     textLabel: HTMLDivElement;
+    iconLabel: HTMLImageElement | undefined;
     tabSystem: CustomTabs | undefined;
     linkedContainer: HTMLElement | undefined;
 
-    constructor(name: string, linkedContainer:HTMLElement | undefined = undefined) {
+    constructor(
+        name: string, 
+        linkedContainer:HTMLElement | undefined = undefined, 
+        iconPath: string | undefined = undefined
+    ) {
         this.container = document.createElement("div");
         this.container.className = "customTab";
+
+        if (iconPath) {
+            this.iconLabel = document.createElement("img");
+            this.iconLabel.className = "icon";
+            this.iconLabel.src = iconPath;
+            this.container.appendChild(this.iconLabel);
+        }
+        
+        
         
         
         this.textLabel = document.createElement("div");

@@ -42,8 +42,8 @@ class LogLayer extends AppLayer {
 
 
         this.tabs = new CustomTabs(this.container);
-        this.tabs.addTab(new CustomTab("Add stock", this.addStockContainer));
-        this.tabs.addTab(new CustomTab("Add record", this.addRecordContainer));
+        this.tabs.addTab(new CustomTab("Add stock", this.addStockContainer, "icons/addStockIcon.svg"));
+        this.tabs.addTab(new CustomTab("Add record", this.addRecordContainer, "icons/recordIcon.svg"));
 
         this.container.appendChild(this.addStockContainer)
         this.container.appendChild(this.addRecordContainer);
