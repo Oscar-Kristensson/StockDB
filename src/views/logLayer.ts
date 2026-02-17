@@ -2,6 +2,7 @@ import { AppLayer } from "../appLayer.ts";
 import { StockDB } from "../app.ts";
 import { CustomTabs, CustomTab } from "../components/tabs.ts";
 import { loadCSS } from "../utils.ts";
+import { CustomInputElement } from "../components/input.ts";
 
 class LogLayer extends AppLayer {
     app: StockDB | undefined;
@@ -35,6 +36,16 @@ class LogLayer extends AppLayer {
         this.addRecordContainer.className = "tabContainer";
         this.addRecordContainer.innerText = "record";
         this.addStockContainer.classList.add("stock");
+
+
+        // NOTE: This is temporary testing code for the CustomInputElement
+        new CustomInputElement(this.addStockContainer, "Input name", "kr", "number");
+        const testElement = new CustomInputElement(this.addStockContainer, "Input name", "kr", "text", true);
+
+        testElement.eventSystem?.listen("input", () => {
+            testElement.value = testElement.value.toUpperCase();
+        })
+
 
         
 

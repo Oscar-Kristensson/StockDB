@@ -11,7 +11,7 @@ export class CustomTable implements CustomElementInterface {
 
     width: Number;
 
-    constructor(parent: HTMLElement | CustomContainer, className:string, width:Number = 1) {
+    constructor(parent: HTMLElement | CustomContainer, className: string, width: Number = 1) {
         this.container = document.createElement("div");
         this.container.className = "customTable";
         this.container.classList.add(className);
