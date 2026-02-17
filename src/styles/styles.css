@@ -156,3 +156,18 @@ nav button img {
 .customStockInfo .statContainer .stat .statLabel {
     font-size: 12px;
 }
+
+.customTabs {
+    display: flex;
+    flex-direction: row;
+}
+
+.customTabs .customTab {
+    background-color: #151515;
+    padding: 16px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
