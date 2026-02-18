@@ -47,7 +47,6 @@ export class CustomTab {
     }
     
     exe() {
-        console.log("Clicked tab", this.textLabel.innerText);
         if (this.tabSystem) {
             this.tabSystem.switchTab(this);
         }
@@ -103,7 +102,6 @@ export class CustomTabs implements CustomElementInterface {
            
         this.activeTab = toTab;
         this.activeTab.open();
-        console.log("Switched tab to", this.activeTab);
 
     }
 

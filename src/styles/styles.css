@@ -227,10 +227,15 @@ nav button img {
     border-bottom-color: #005500;
 }
 
+
+
 .customInputElement:focus-within {
     border-bottom-color: #007700;
 }
 
+.customInputElement.invalid {
+    border-bottom-color: #550000;
+}
 
 
 .customInputElement .input {
@@ -248,4 +253,25 @@ nav button img {
 
     font-size: smaller;
     font-weight: 500;
+}
+
+.customFormElement .customInputElement .input {
+    width: 250px;
+}
+
+.customFormElement .inputElementContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.customFormElement .inputElementContainer .customInputElement {
+    margin-right: 16px;
+    margin-bottom: 16px;
+}
+
+
+h2 {
+    font-size: 24px;
+
 }

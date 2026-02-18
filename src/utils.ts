@@ -36,7 +36,6 @@ export class EventSystem {
     }
 
     listen(type: string, callback: Listener) {
-        console.log("Listning to", type)
         if (!(type in this.listeners)) {
             this.listeners[type] = [];
         }

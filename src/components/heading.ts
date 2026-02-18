@@ -5,10 +5,26 @@
 export class CustomHeading {
     heading : HTMLHeadingElement;
 
-    constructor(parent: HTMLElement, heading:string, className: string) {
-        this.heading = document.createElement("h1");
+    constructor(parent: HTMLElement, heading:string, className: string | undefined = undefined, level: number = 1) {
+        
+        console.log(level);
+        switch (level) {
+            case 2:
+                this.heading = document.createElement("h2");
+                break;
+
+            default:
+            case 1:
+                this.heading = document.createElement("h1");
+                break;
+
+
+        }
         this.heading.className = "customHeading";
-        this.heading.classList.add(className);
+
+        if (className) {
+            this.heading.classList.add(className);
+        }
 
         this.setHeading(heading);
 
