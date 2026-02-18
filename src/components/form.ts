@@ -21,6 +21,23 @@ export class CustomFormElement implements CustomElementInterface {
 
         }
 
+        _send() {
+            if (!this.validate()) {
+                return;
+            } 
+
+            this._send();
+
+        }
+
+        send() {
+            console.log("Send");
+        }
+
+        validate() {
+            return true;
+        }
+
         addInput(input: CustomInputElement) {
             this.inputElementContainer.appendChild(input.getTopMostHTMLContainer());
             this.inputs.push(input);

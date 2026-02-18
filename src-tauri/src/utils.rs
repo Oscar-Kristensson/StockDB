@@ -5,3 +5,7 @@ pub fn is_only_letters(s: &str) -> bool {
 pub fn is_alphanumeric_or_space(s: &str) -> bool {
     s.chars().all(|c| c.is_alphanumeric() || c == ' ')
 }
+
+pub fn is_alphanumeric_or_dash(s: &str) -> bool {
+    s.chars().all(|c| c.is_alphanumeric() || c == '-')
+}

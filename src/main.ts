@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { dbAddUser, dbDebugTable, dbGetStockInfoById } from "./db.ts";
+import { db } from "./db.ts";
 import { firstLayer, firstLayer2, firstLayer3 } from "./views/testLayers.ts";
 import { stockLayer } from "./views/stockLayer/stockLayer.ts";
 import { StockDB } from "./app.ts";
@@ -62,11 +62,11 @@ function init() {
 
 
     console.log("ID -> Stock");
-    dbGetStockInfoById(2)
+    db.getStockInfoById(1)
     .then(result => {
         console.log("Recieved", result);
         if (result === null) {
-            console.warn("There is no stock with the ID");
+            console.warn("There is no stock with the ID. The result gave", result);
         } else if (stockDb){
             stockDb.stock = result;
         }
@@ -83,9 +83,9 @@ function init() {
 function test() {
     console.log("BF Debug Table");
     // addStock();
-    dbDebugTable("users");
-    dbDebugTable("stock");
-    dbGetStockInfoById(0);
+    db.debugTable("users");
+    db.debugTable("stock");
+    db.getStockInfoById(0);
 }
 
 
@@ -114,7 +114,7 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
         }
         if (userName !== null) {
-            dbAddUser(userName);
+            db.addUser(userName);
         }
         else 
         {

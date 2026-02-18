@@ -164,7 +164,7 @@ fn db_get_table_names(db: State<db::DbConn>) -> Vec<String> {
 fn db_add_stock(db: State<db::DbConn>, stock: db::stocks::StockInformation) -> Result<(), String> {
     let conn = db.0.lock().unwrap();
 
-    if !(utils::is_alphanumeric_or_space(&stock.ticker)) {
+    if !(utils::is_alphanumeric_or_dash(&stock.ticker)) {
         return Err("Invalid stock ticker. Stock ticker may only contain letters.".into());
     }
 

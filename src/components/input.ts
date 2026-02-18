@@ -137,6 +137,10 @@ export class CustomInputElement implements CustomElementInterface {
 
     }
 
+    public get valid() : boolean {
+        return this.validInput;
+    }
+
     public get placeholder() : string {
         return this.input.placeholder;
     }

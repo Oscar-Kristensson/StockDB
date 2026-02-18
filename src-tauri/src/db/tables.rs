@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS stock (
     )),
 
     industry TEXT,
-    currency TEXT default 'kr'
+    currency TEXT default 'SEK'
 );            
 
         "#,

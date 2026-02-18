@@ -1,5 +1,7 @@
 import { CustomInputElement, InputValidationError, InputValidationStates } from "../../components/input.ts";
 import { CustomFormElement } from "../../components/form.ts";
+import { StockInfo, StockSectors } from "../../stocks.ts";
+import { db } from "../../db.ts";
 
 function validateTicker(ticker: string) {
     if (ticker === "")
@@ -54,5 +56,36 @@ export class AddStockForm extends CustomFormElement {
         this.industry = new CustomInputElement(undefined, "Industry", "", "text", true);
         this.industry.placeholder = "Investment Companies";
         this.addInput(this.industry);
+
+        this.industry.input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                this.send();
+            }
+        })
+    }
+
+    override send() {
+        console.log("Send add stock!");
+
+        const stock = new StockInfo(0, this.ticker.value, this.name.value, 
+            this.exchange.value, StockSectors.CommunicationServices, this.industry.value, "kr"
+        )
+
+        db.addStock(stock);
+
+        
+
+
+        
+
+    }
+
+
+
+    validate(): boolean {
+        if (!this.name.valid)
+            return false;
+
+        return true;
     }
 }

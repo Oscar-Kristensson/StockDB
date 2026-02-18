@@ -20,7 +20,7 @@ export class StockInfo {
         public exchange: string,
         public sector: StockSectors | null,
         public industry: string | null,
-        public currency: string = "kr",
+        public currency: string = "SEK",
   ) {}
 
   static validate(obj: any): obj is StockInfo {
