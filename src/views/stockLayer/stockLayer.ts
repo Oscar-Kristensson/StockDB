@@ -1,37 +1,12 @@
-import { AppLayer } from "../appLayer.ts";
-import { loadCSS } from "../utils.ts";
-import { CustomContainer } from "../components/container.ts";
-import { CustomTable } from "../components/table.ts";
-import { CustomElementInterface } from "../components/base.ts";
-import { CustomStockInfo } from "../components/stockInfo.ts";
-import { StockInfo } from "../stocks.ts";
-import { StockDB } from "../app.ts";
+import { AppLayer } from "../../appLayer.ts";
+import { loadCSS } from "../../utils.ts";
+import { CustomContainer } from "../../components/container.ts";
+import { CustomTable } from "../../components/table.ts";
+import { CustomStockInfo } from "../../components/stockInfo.ts";
+import { StockInfo } from "../../stocks.ts";
+import { StockDB } from "../../app.ts";
+import { CustomLabelElement } from "./customLabel.ts";
 
-class CustomLabelElement implements CustomElementInterface {
-    content: HTMLElement;
-    constructor(parent: HTMLElement | undefined, content:string | HTMLElement | CustomElementInterface, className:string = "") {
-        this.content = document.createElement("div");
-        this.content.className = "labelElement";
-
-        if (className !== "")
-            this.content.classList.add(className);
-
-        if (typeof content === "string") {
-            this.content.innerText = content;
-        }
-
-        parent?.appendChild(this.content);
-
-    }
-
-    appendChild(node: HTMLElement) {
-        this.content.appendChild(node);
-    }
-
-    getTopMostHTMLContainer(): HTMLElement {
-        return this.content;
-    }
-}
 
 
 
