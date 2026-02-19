@@ -4,6 +4,7 @@ import { StockInfo, StockSectors } from "../../stocks.ts";
 import { db } from "../../db.ts";
 
 function validateTicker(ticker: string) {
+    ticker = ticker.toUpperCase();
     if (ticker === "")
         return InputValidationStates.empty;
 
@@ -13,8 +14,32 @@ function validateTicker(ticker: string) {
             "The ticker was to long",
         );
     }
+
+    if (!/^[-A-Z]+$/.test(ticker)) {
+        return new InputValidationError(
+            InputValidationStates.error,
+            `${ticker} is invalid. The ticker may only contain letters and "-".`
+        );
+        
+    }
+
     
     return InputValidationStates.ok;
+}
+
+function validateName(name: string) {
+    if (name === "")
+        return InputValidationStates.empty;
+
+    if (!/^[a-zA-Z ]+$/.test(name)) {
+        return new InputValidationError(
+            InputValidationStates.error,
+            `${name} is invalid. The name may only contain letters and spaces.`
+        )
+    }
+
+    return InputValidationStates.ok;
+
 }
 
 
@@ -40,7 +65,7 @@ export class AddStockForm extends CustomFormElement {
         
 
 
-        this.name = new CustomInputElement(undefined, "Name", "", "text", true);
+        this.name = new CustomInputElement(undefined, "Name", "", "text", true, validateName);
         this.name.placeholder = "Investor-B";
         this.addInput(this.name);
 
@@ -68,14 +93,10 @@ export class AddStockForm extends CustomFormElement {
         console.log("Send add stock!");
 
         const stock = new StockInfo(0, this.ticker.value, this.name.value, 
-            this.exchange.value, StockSectors.CommunicationServices, this.industry.value, "kr"
+            this.exchange.value, StockSectors.CommunicationServices, this.industry.value, "SEK"
         )
 
         db.addStock(stock);
-
-        
-
-
         
 
     }
@@ -85,6 +106,10 @@ export class AddStockForm extends CustomFormElement {
     validate(): boolean {
         if (!this.name.valid)
             return false;
+
+        if (!validateName(this.name.value)) {
+            return false;
+        }
 
         return true;
     }
