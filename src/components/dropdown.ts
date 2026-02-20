@@ -24,7 +24,6 @@ export class DropDownItem {
     }
 
     onClick() {
-        console.log(this.value);
         this.dropdown?.updateCurrentOption(this);
 
     }
@@ -94,6 +93,9 @@ export class CustomDropdownElement implements CustomElementInterface {
     }
 
     updateCurrentOption(item: DropDownItem, forceUpdate: boolean = false) {
+
+        if (this.state === DropdownState.closed)
+            return;
 
         if (forceUpdate && item === this.currentOption) {
             return;

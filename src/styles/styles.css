@@ -274,10 +274,17 @@ nav button img {
     right: 0;
     transform: translateY(-20px);
     opacity: 0;
-    z-index: 0;
     height: 0;
+    display: none;
 
 
+}
+
+.customDropdownElement .dropdown .item {
+    display: none;
+}
+.customDropdownElement.open .dropdown .item {
+    display: block;
 }
 
 .customDropdownElement.open .dropdown {
@@ -354,3 +361,78 @@ h2 {
 
 
 
+.customButtonElement {
+    --button-height: 64px;
+    border: none;
+    outline: none;
+    height: var(--button-height);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+}
+
+.customButtonElement.hasText {
+    padding: 8px;
+}
+
+.customButtonElement .icon {
+    max-height: 48px;
+    margin: 4px;
+}
+
+
+.customButtonElement .label {
+    font-size: 1rem;
+    font-family: "Open-Sans", sans-serif;
+    margin: 8px;
+
+
+}
+
+
+/* Styles */
+
+.customButtonElement {
+    background-color: #003434;
+    transition: all 250ms ease-in-out;
+    justify-content: center;
+}
+
+.customButtonElement:hover {
+    background-color: hsl(180, 100%, 9%);
+}
+
+.customButtonElement.clean {
+    position: relative;
+}
+
+.customButtonElement.clean .label {
+    user-select: none;
+    position: absolute;
+    transform: translateY(calc(var(--button-height) * 0.7));
+    transition: all 250ms ease-in-out;
+    opacity: 0;
+    z-index: 100;
+    width: max-content;
+    padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+
+
+}
+
+.customButtonElement.clean:hover .label {
+    transform: translateY(calc(var(--button-height)*0.8));
+    opacity: 1;
+    user-select: auto;
+    background-color: #151515;
+    border-radius: 4px;
+}
+
+
+
+.customButtonElement .label {
+    color: #fff;
+}

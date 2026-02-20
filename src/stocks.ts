@@ -10,6 +10,12 @@ export enum StockSectors {
     Materials = "Materials",
     RealEstate = "RealEstate",
     Utilities = "Utilities",
+    
+}
+
+
+export function isStockSector(value: string): value is StockSectors {
+    return Object.values(StockSectors).includes(value as StockSectors);
 }
 
 export class StockInfo {
@@ -21,19 +27,19 @@ export class StockInfo {
         public sector: StockSectors | null,
         public industry: string | null,
         public currency: string = "SEK",
-  ) {}
+    ) {}
 
-  static validate(obj: any): obj is StockInfo {
-  return (
-    obj !== null &&
-    typeof obj === "object" &&
-    typeof obj.id === "number" &&
-    typeof obj.ticker === "string" &&
-    typeof obj.name === "string" &&
-    typeof obj.exchange === "string" &&
-    typeof obj.currency === "string" &&
-    ("sector" in obj) &&
-    ("industry" in obj)
-  );
-}
+    static validate(obj: any): obj is StockInfo {
+        return (
+            obj !== null &&
+            typeof obj === "object" &&
+            typeof obj.id === "number" &&
+            typeof obj.ticker === "string" &&
+            typeof obj.name === "string" &&
+            typeof obj.exchange === "string" &&
+            typeof obj.currency === "string" &&
+            ("sector" in obj) &&
+            ("industry" in obj)
+        );
+    }
 }

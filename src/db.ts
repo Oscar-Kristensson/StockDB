@@ -1,6 +1,10 @@
 import { invoke } from "@tauri-apps/api/core";
 import { StockInfo } from "./stocks";
 
+/**
+ * A wrapper module for the database
+ * ts db -> rust db -> rusqlite
+ */
 export namespace db {
 
     export function addUser(name:string) {

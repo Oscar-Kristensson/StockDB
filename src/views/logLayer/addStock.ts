@@ -1,9 +1,10 @@
 import { CustomInputElement, InputValidationError, InputValidationStates } from "../../components/input.ts";
 import { CustomFormElement } from "../../components/form.ts";
-import { StockInfo, StockSectors } from "../../stocks.ts";
+import { isStockSector, StockInfo, StockSectors } from "../../stocks.ts";
 import { db } from "../../db.ts";
 import { CustomDropdownElement, DropDownItem } from "../../components/dropdown.ts";
 import { utils } from "../../utils.ts";
+import { CustomButtonElement } from "../../components/button.ts";
 
 function validateTicker(ticker: string) {
     ticker = ticker.toUpperCase();
@@ -93,7 +94,11 @@ export class AddStockForm extends CustomFormElement {
             if (event.key === "Enter") {
                 this.send();
             }
-        })
+        });
+
+        const button1 = new CustomButtonElement(this.container, "Add stock", "icons/StockIcon.svg");
+
+
 
 
     }
@@ -105,8 +110,24 @@ export class AddStockForm extends CustomFormElement {
             return;
         }
 
+
+
+        if (!this.sector.currentOption) {
+            return;
+        }
+        if (!this.sector.currentOption.value) {
+            return;
+        }
+        if (typeof this.sector.currentOption.value !== "string") {
+            return;
+        }
+
+        if (!isStockSector(this.sector.currentOption.value)) {
+            return;
+        }
+
         const stock = new StockInfo(0, this.ticker.value, this.name.value, 
-            this.exchange.value, StockSectors.CommunicationServices, this.industry.value, "SEK"
+            this.exchange.value, this.sector.currentOption.value, this.industry.value, "SEK"
         )
 
         db.addStock(stock);
