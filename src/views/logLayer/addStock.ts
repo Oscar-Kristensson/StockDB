@@ -81,6 +81,7 @@ export class AddStockForm extends CustomFormElement {
             console.log(sector, key)
             options.push(new DropDownItem(utils.pascalToWords(sector), key));
         }
+        
         this.sector = new CustomDropdownElement(undefined, "Sector", options);
         this.addInput(this.sector);
 
