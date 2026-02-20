@@ -8,7 +8,7 @@ export enum StockSectors {
     Industrials = "Industrials",
     InformationTechnology = "InformationTechnology",
     Materials = "Materials",
-    Real_Estate = "RealEstate",
+    RealEstate = "RealEstate",
     Utilities = "Utilities",
 }
 

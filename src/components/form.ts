@@ -1,4 +1,5 @@
 import { CustomElementInterface } from "./base";
+import { CustomDropdownElement } from "./dropdown";
 import { CustomInputElement } from "./input";
 
 
@@ -6,7 +7,7 @@ import { CustomInputElement } from "./input";
 export class CustomFormElement implements CustomElementInterface { 
         container: HTMLDivElement;
         inputElementContainer: HTMLDivElement;
-        inputs: Array<CustomInputElement>;
+        inputs: Array<CustomInputElement | CustomDropdownElement>;
         
         constructor(parent: HTMLElement) {
             this.container = document.createElement("div");
@@ -38,7 +39,7 @@ export class CustomFormElement implements CustomElementInterface {
             return true;
         }
 
-        addInput(input: CustomInputElement) {
+        addInput(input: CustomInputElement | CustomDropdownElement) {
             this.inputElementContainer.appendChild(input.getTopMostHTMLContainer());
             this.inputs.push(input);
         }

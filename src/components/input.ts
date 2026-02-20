@@ -25,7 +25,7 @@ export class CustomInputElement implements CustomElementInterface {
     unit: HTMLDivElement | undefined;
     validateFunc: (value: string) => InputValidationStates | InputValidationError;
     eventSystem: EventSystem | undefined;
-    validInput: boolean;
+    inputState: InputValidationStates;
 
     constructor(
         parent: HTMLElement | undefined, 
@@ -38,7 +38,7 @@ export class CustomInputElement implements CustomElementInterface {
         // NOTE: Add the error message element
         this.container = document.createElement("div");
         this.container.className = "customInputElement";
-        this.validInput = false;
+        this.inputState = InputValidationStates.empty;
 
         if (eventSystem) {
             this.eventSystem = new EventSystem();
@@ -83,7 +83,7 @@ export class CustomInputElement implements CustomElementInterface {
         if (!this.validateFunc) {
             this.container.classList.remove("valid");
             this.container.classList.remove("invalid");
-            this.validInput = false;
+            this.inputState = InputValidationStates.ok;
             return;
         } 
         
@@ -96,23 +96,23 @@ export class CustomInputElement implements CustomElementInterface {
             validationState = rv;
         }
 
+        this.inputState = validationState;
+
+
         switch (validationState) {
             case InputValidationStates.empty:
                 this.container.classList.remove("invalid");
                 this.container.classList.remove("valid");
-                this.validInput = false;
                 break;
 
             case InputValidationStates.ok:
                 this.container.classList.remove("invalid");
                 this.container.classList.add("valid");
-                this.validInput = true;
                 break;
 
             case InputValidationStates.error:
                 this.container.classList.add("invalid");
                 this.container.classList.remove("valid");
-                this.validInput = false;
                 break;
 
         }
@@ -138,7 +138,7 @@ export class CustomInputElement implements CustomElementInterface {
     }
 
     public get valid() : boolean {
-        return this.validInput;
+        return this.inputState === InputValidationStates.ok;
     }
 
     public get placeholder() : string {

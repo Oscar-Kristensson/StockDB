@@ -1,6 +1,35 @@
 
 const loadedCSSFiles: Array<string> = [];
 
+// NOTE: Everything in this file should be in the utils namespace
+export namespace utils {
+    export function createElement<K extends keyof HTMLElementTagNameMap>(
+        tagName: K,
+        parent?: HTMLElement,
+        classNames: string[] = [],
+    ): HTMLElementTagNameMap[K] {
+
+        const element = document.createElement(tagName);
+
+        classNames.forEach(className => {
+            element.classList.add(className);
+        });
+
+        parent?.appendChild(element);
+
+        return element;
+    }
+
+
+    export function pascalToWords(value: string): string {
+        return value
+            .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+            .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
+    }
+}
+
+
+
 
 export function loadCSS(href: string) {
     if (href in loadedCSSFiles) {

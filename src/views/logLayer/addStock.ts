@@ -2,6 +2,8 @@ import { CustomInputElement, InputValidationError, InputValidationStates } from 
 import { CustomFormElement } from "../../components/form.ts";
 import { StockInfo, StockSectors } from "../../stocks.ts";
 import { db } from "../../db.ts";
+import { CustomDropdownElement, DropDownItem } from "../../components/dropdown.ts";
+import { utils } from "../../utils.ts";
 
 function validateTicker(ticker: string) {
     ticker = ticker.toUpperCase();
@@ -48,7 +50,7 @@ export class AddStockForm extends CustomFormElement {
     ticker: CustomInputElement;
     name: CustomInputElement;
     exchange: CustomInputElement;
-    sector: CustomInputElement;
+    sector: CustomDropdownElement;
     industry: CustomInputElement;
 
 
@@ -74,8 +76,12 @@ export class AddStockForm extends CustomFormElement {
         this.addInput(this.exchange);
 
         // NOTE: This should be a drop down element
-        this.sector = new CustomInputElement(undefined, "Sector", "", "text", true);
-        this.sector.placeholder = "Financials";
+        const options = [];
+        for (const [sector, key] of Object.entries(StockSectors)) {
+            console.log(sector, key)
+            options.push(new DropDownItem(utils.pascalToWords(sector), key));
+        }
+        this.sector = new CustomDropdownElement(undefined, "Sector", options);
         this.addInput(this.sector);
 
         this.industry = new CustomInputElement(undefined, "Industry", "", "text", true);
@@ -87,10 +93,16 @@ export class AddStockForm extends CustomFormElement {
                 this.send();
             }
         })
+
+
     }
 
     override send() {
         console.log("Send add stock!");
+
+        if (!this.validate()) {
+            return;
+        }
 
         const stock = new StockInfo(0, this.ticker.value, this.name.value, 
             this.exchange.value, StockSectors.CommunicationServices, this.industry.value, "SEK"
@@ -104,8 +116,26 @@ export class AddStockForm extends CustomFormElement {
 
 
     validate(): boolean {
-        if (!this.name.valid)
+        if (this.name.inputState !== InputValidationStates.ok) {
             return false;
+        }
+
+        if (this.ticker.inputState !== InputValidationStates.ok) {
+            return false;
+        }
+
+        if (this.exchange.inputState !== InputValidationStates.ok) {
+            return false;
+        }
+
+        if (this.industry.inputState !== InputValidationStates.ok) {
+            return false;
+        }
+
+        console.log("Validated!");
+
+
+
 
         if (!validateName(this.name.value)) {
             return false;

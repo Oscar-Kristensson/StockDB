@@ -16,6 +16,8 @@ html, body {
 
 :root {
     --textColor: #999999;
+    --inputBackgroundColor: #171717;
+    --inputBackgroundColorHover: hsl(0, 0%, 6%);
 }
 
 body {
@@ -207,10 +209,10 @@ nav button img {
 
 
 
-
-.customInputElement {
+.customDropdownElement .inputContainer,
+.customInputElement{
     --border-radius: 12px;
-    background-color: #171717;
+    background-color: var(--inputBackgroundColor);
     padding-top: 8px;
     
     padding-left: 12px;
@@ -220,7 +222,14 @@ nav button img {
     border-top-right-radius: var(--border-radius);
     border-bottom: hsl(0, 0%, 20%) solid 3px;
     transition: all 250ms ease-in-out;
+    height: 50px;
 
+
+}
+
+.customDropdownElement {
+    position: relative;
+    cursor: pointer;
 }
 
 .customInputElement.valid {
@@ -237,7 +246,7 @@ nav button img {
     border-bottom-color: #550000;
 }
 
-
+.customDropdownElement .selectedOption,
 .customInputElement .input {
     background: none;
     border: none;
@@ -246,9 +255,62 @@ nav button img {
     font-family: Open-Sans, sans-serif;
     outline: none;
     padding-bottom: 8px;
+    padding-left: 0;
 
 }
 
+.customDropdownElement .selectedOption {
+    width: 250px;
+}
+
+.customDropdownElement {
+    user-select: none;
+}
+
+/* Dropdown Animation */
+.customDropdownElement .dropdown {
+    flex-direction: column;
+    left: 0;
+    right: 0;
+    transform: translateY(-20px);
+    opacity: 0;
+    z-index: 0;
+    height: 0;
+
+
+}
+
+.customDropdownElement.open .dropdown {
+    display: flex;
+    transform: translateY(0%);
+    opacity: 1;
+    height: fit-content;
+}
+
+/* Dropdown Styling */
+.customDropdownElement .dropdown .item {
+    --border-color: hsl(0, 0%, 20%);
+    --border-width: 2px;
+    --border-radius: 12px;
+    background-color: var(--inputBackgroundColor);
+    padding: 12px;
+    border-left: var(--border-color) solid var(--border-width);
+    border-right: var(--border-color) solid var(--border-width);
+    transition: all 250ms ease-in-out;
+
+}
+
+.customDropdownElement .dropdown .item:last-child {
+    border-bottom: var(--border-color) solid var(--border-width);
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+
+.customDropdownElement .dropdown .item:hover {
+    background-color: var(--inputBackgroundColorHover);
+}
+
+.customDropdownElement .label,
 .customInputElement .label {
 
     font-size: smaller;
@@ -264,7 +326,7 @@ nav button img {
     flex-direction: row;
     flex-wrap: wrap;
 }
-
+.customDropdownElement,
 .customFormElement .inputElementContainer .customInputElement {
     margin-right: 16px;
     margin-bottom: 16px;
@@ -275,3 +337,20 @@ h2 {
     font-size: 24px;
 
 }
+
+
+.customDropdownElement.open .inputContainer {
+    border-bottom: hsl(0, 0%, 40%) solid 3px;
+}
+
+
+.customDropdownElement .dropdown {
+    display: flex;
+    position: absolute;
+    height: 0;
+    transition: all 250ms ease-in-out;
+}
+
+
+
+

@@ -13,7 +13,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "stockdb",
+        "title": "StockDB",
         "width": 800,
         "height": 600
       }
