@@ -187,6 +187,24 @@ fn db_add_stock(db: State<db::DbConn>, stock: db::stocks::StockInformation) -> R
 
 }
 
+#[tauri::command]
+fn db_add_quarterly(
+    db: State<db::DbConn>, 
+    stock_id: i64, 
+    fiscal_year: i64, 
+    fiscal_quarter: i64,
+    revenue: f64,
+    gross_profit: f64,
+    operating_income: f64,
+    net_income: f64,
+    shares_outstanding: i64,
+    currency: String,
+
+) -> Result<(), String> {
+    let conn = db.0.lock().unwrap();
+
+    db::quarterly::add_record(&conn, stock_id, fiscal_year, fiscal_quarter, revenue, gross_profit, operating_income, net_income, shares_outstanding, currency)
+}
 
 
 
@@ -246,7 +264,8 @@ pub fn run() {
             db_debug_table,
             db_get_stock_info_by_id,
             db_get_table_names,
-            db_add_stock
+            db_add_stock,
+            db_add_quarterly
             
         ])
         .run(tauri::generate_context!())

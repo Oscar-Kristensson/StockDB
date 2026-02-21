@@ -61,10 +61,8 @@ function init() {
     stockDb.addLayer(firstLayer3);
 
 
-    console.log("ID -> Stock");
     db.getStockInfoById(1)
     .then(result => {
-        console.log("Recieved", result);
         if (result === null) {
             console.warn("There is no stock with the ID. The result gave", result);
         } else if (stockDb){
@@ -81,16 +79,30 @@ function init() {
 
 
 function test() {
-    console.log("BF Debug Table");
     // addStock();
-    db.debugTable("users");
-    db.debugTable("stock");
     db.getStockInfoById(0);
+
+    db.getTableNames()
+    .then(result => {
+        console.log("Tables", result);
+        if (result instanceof Array) {
+            result.forEach(tableName => {
+                db.debugTable(tableName);
+            })
+        }
+    })
+
+    db.addQuarterly(1, 2026, 2, 100, 200, 300, 400, 500, "SEK")
+    .then(response => {
+        console.log(response);
+    })
+    .catch(error => {
+        console.log(error);
+    })
 }
 
 
 window.addEventListener("DOMContentLoaded", () => {
-    console.log("DOM loaded");
     greetInputEl = document.querySelector("#greet-input");
     greetMsgEl = document.querySelector("#greet-msg");
     document.querySelector("#greet-form")?.addEventListener("submit", (e) => {
@@ -102,7 +114,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const addUserButton = document.querySelector("#addUser-button");
     const addUserInput = document.querySelector("#addUser-input");    
     
-    console.log(addUserButton, addUserInput)
 
     addUserButton?.addEventListener("click", () => {
         console.log("On Event!");

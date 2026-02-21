@@ -1,6 +1,12 @@
 import { invoke } from "@tauri-apps/api/core";
 import { StockInfo } from "./stocks";
 
+function printError(error: unknown, fn: Function) {
+    console.error(`The function db.${fn.name} returned the following error: ${error}`);
+ 
+}
+
+
 /**
  * A wrapper module for the database
  * ts db -> rust db -> rusqlite
@@ -48,7 +54,6 @@ export namespace db {
                 id: id,
             })
             .then(result => {
-                console.log("INVOKE ->", result);
                 if (result === null)
                     resolve(null);
 
@@ -96,6 +101,56 @@ export namespace db {
 
         console.log("Adding stock!");
 
+    }
+
+    export function getTableNames() {
+        return new Promise((resolve, reject) => {
+            invoke("db_get_table_names", {})
+            .then(result => {
+                resolve(result);
+            })
+            .catch(error => {
+                printError(error, getTableNames);
+                reject(error);
+            })
+            
+        })
+    }
+
+    export function addQuarterly(
+        stock_id: number,
+        fiscal_year: number,
+        fiscal_quarter: number,
+        revenue: number,
+        gross_profit: number,
+        operating_income: number,
+        net_income: number,
+        shares_outstanding: number,
+        currency: String,
+
+    ) {
+        return new Promise((resolve, reject) => {
+            invoke("db_add_quarterly", {
+                stockId: stock_id,
+                fiscalYear: fiscal_year,
+                fiscalQuarter: fiscal_quarter,
+                revenue: revenue,
+                grossProfit: gross_profit,
+                operatingIncome: operating_income,
+                netIncome: net_income,
+                sharesOutstanding: shares_outstanding,
+                currency: currency,
+            })
+            .then(rv => {
+                resolve(rv);
+                //resolve(rv);
+            }) 
+            // The rust errors should be structured to improve error handeling
+            .catch(error => {
+                printError(error, addQuarterly);
+                reject(error);
+            })       
+        })
     }
 
 

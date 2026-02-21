@@ -38,8 +38,6 @@ export class CustomTable implements CustomElementInterface {
             return;
         }
 
-        console.log("Adding row");
-
         const tableRow = document.createElement("tr");
 
         if (header) {

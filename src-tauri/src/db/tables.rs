@@ -41,6 +41,35 @@ CREATE TABLE IF NOT EXISTS stock (
         []
     )?;
 
+
+    conn.execute(r#"
+CREATE TABLE IF NOT EXISTS quarterly (
+    id INTEGER PRIMARY KEY,
+
+    stock_id INTEGER NOT NULL,
+
+    fiscal_year INTEGER NOT NULL,
+    fiscal_quarter INTEGER NOT NULL CHECK (fiscal_quarter BETWEEN 1 AND 4),
+
+    revenue REAL,                         -- total revenue
+    gross_profit REAL,
+    operating_income REAL,
+    net_income REAL,
+
+    shares_outstanding REAL,
+
+    currency TEXT DEFAULT 'SEK',
+
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (stock_id) REFERENCES stock(id) ON DELETE CASCADE,
+
+    UNIQUE (stock_id, fiscal_year, fiscal_quarter)
+);           
+
+        "#, []
+    )?;
+
     Ok(())
 
 }

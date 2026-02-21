@@ -56,7 +56,6 @@ export class EventSystem {
         if (!(type in this.listeners)) {
             return;
         }
-        console.log("Event posted", type, this.listeners[type].length);
 
         for (let i = 0; i < this.listeners[type].length; i++) {
             this.listeners[type][i]()

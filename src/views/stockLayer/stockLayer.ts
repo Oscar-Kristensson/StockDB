@@ -67,13 +67,10 @@ class StockLayer extends AppLayer {
             this.app = undefined;
         }
 
-        console.log(this.app, this.layerSwitcher);
-
 
         // Inorder for hte StockLayer to auto update the stock if it is changed
         if (this.app) {
             this.app.eventSystem.listen("stockChange", () => {
-                console.log("heard event");
                 if (this.app 
                     && this.app.currentStock 
                     && this.app.currentLoadedLayer === this) {
@@ -126,7 +123,6 @@ class StockLayer extends AppLayer {
     generateStockOverViewTable(
         revenue: number,
     ) {
-        console.log("GEN", this.overviewTable);
 
         if (!(this.overviewTable instanceof CustomTable)) {
             console.error("The overview table is not correctly initalized!");

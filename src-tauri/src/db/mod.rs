@@ -1,4 +1,5 @@
 pub mod stocks;
+pub mod quarterly;
 
 pub mod tables;
 
