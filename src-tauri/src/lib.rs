@@ -8,7 +8,7 @@ use tauri::AppHandle;
 
 use std::fs;
 use std::path::PathBuf;
-
+use std::env;
 
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -236,6 +236,14 @@ fn os_get_data_dir(app: AppHandle) -> String {
 }
 
 
+#[tauri::command]
+fn os_get_cwd() -> String {
+    match env::current_dir() {
+        Ok(path) => path.to_string_lossy().to_string(),
+        Err(e) => e.to_string()
+    }
+}
+
 
 
 
@@ -280,7 +288,8 @@ pub fn run() {
             db_get_table_names,
             db_add_stock,
             db_add_quarterly,
-            os_get_data_dir
+            os_get_data_dir,
+            os_get_cwd
             
         ])
         .run(tauri::generate_context!())

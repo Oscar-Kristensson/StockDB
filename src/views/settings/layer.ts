@@ -27,11 +27,25 @@ class SettingsLayer extends AppLayer {
 
         new CustomHeading(this.container, "Settings", "info", 2);
 
+
+        const text = new utils.SmartVar<string>("", (value: string) => {
+            if (!this.container)
+                return;
+            this.container.innerText = value;
+
+        })
+
         
         os.getDataDir()
         .then(result => {
-            if (this.container)
-                this.container.innerText = `Data dir: ${result}`;
+            if (this.container && typeof result === "string")
+                text.value += "\nData dir: " + result;
+        })
+
+        os.getcwd()
+        .then(result => {
+            if (this.container && typeof result === "string")
+                text.value += "\nWorking dir: " + result;
         })
     }
 

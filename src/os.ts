@@ -14,4 +14,17 @@ export namespace os {
 
         });
     }
+
+    export function getcwd() {
+        return new Promise((resolve, reject) => {
+            invoke("os_get_cwd")
+            .then(result => {
+                resolve(result);
+            })
+            .catch(error => {
+                reject(error);
+            })
+
+        });
+    }
 }

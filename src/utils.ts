@@ -26,6 +26,30 @@ export namespace utils {
             .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
             .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
     }
+
+
+    export class SmartVar<T> {
+        _value: T;
+        onUpdate: ((value: T) => void) | undefined;
+        constructor(value: T, onUpdate: ((value: T) => void) | undefined = undefined) {
+            this._value = value;
+            this.onUpdate = onUpdate;
+        }
+
+        public set value(value: T) {
+            this._value = value;
+            if (!this.onUpdate)
+                return;
+
+            this.onUpdate(this._value);
+        }
+
+        public get value() : T {
+            return this._value;
+        }
+
+
+    }
 }
 
 
