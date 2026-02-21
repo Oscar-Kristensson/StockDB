@@ -14,3 +14,9 @@
     border-top-right-radius: var(--borderRadius);
 
 }
+
+.customFormElement.invalid .customButtonElement {
+    filter: saturate(0);
+    background-color: hsl(180, 0%, 9%);
+
+}

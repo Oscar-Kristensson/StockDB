@@ -96,7 +96,19 @@ export class AddStockForm extends CustomFormElement {
             }
         });
 
-        const button1 = new CustomButtonElement(this.container, "Add stock", "icons/StockIcon.svg");
+        this.send = this.send.bind(this);
+
+        const button1 = new CustomButtonElement(this.container, "Add stock", "icons/addStockIcon.svg", [], this.send);
+
+        this.container.addEventListener("keydown", () => {
+            const valid = this.validate();
+            if (valid) {
+                this.container.classList.remove("invalid");
+            } else {
+                this.container.classList.add("invalid");
+            }
+
+        })
 
 
 
@@ -129,7 +141,7 @@ export class AddStockForm extends CustomFormElement {
         const stock = new StockInfo(0, this.ticker.value, this.name.value, 
             this.exchange.value, this.sector.currentOption.value, this.industry.value, "SEK"
         )
-
+        
         db.addStock(stock);
         
 
@@ -154,7 +166,6 @@ export class AddStockForm extends CustomFormElement {
             return false;
         }
 
-        console.log("Validated!");
 
 
 

@@ -276,6 +276,7 @@ nav button img {
     opacity: 0;
     height: 0;
     display: none;
+    z-index: 100;
 
 
 }
@@ -378,7 +379,7 @@ h2 {
 }
 
 .customButtonElement .icon {
-    max-height: 48px;
+    max-height: 40px;
     margin: 4px;
 }
 
@@ -407,6 +408,7 @@ h2 {
 .customButtonElement.clean {
     position: relative;
 }
+
 
 .customButtonElement.clean .label {
     user-select: none;

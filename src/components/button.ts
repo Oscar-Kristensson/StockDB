@@ -7,7 +7,8 @@ export class CustomButtonElement implements CustomElementInterface {
     container: HTMLButtonElement;
     icon: HTMLImageElement | undefined;
     label: HTMLDivElement | undefined;
-    constructor(parent: HTMLElement, name: string | undefined = undefined, icon: string | undefined = undefined, classNames: Array<string> = []) {
+    callback: (() => any) | undefined;
+    constructor(parent: HTMLElement, name: string | undefined = undefined, icon: string | undefined = undefined, classNames: Array<string> = [], callback: (() => any) | undefined = undefined) {
         this.container = utils.createElement("button", parent, ["customButtonElement", ... classNames] );
         if  (icon) {
             this.icon = utils.createElement("img", this.container, ["icon"]);
@@ -21,6 +22,10 @@ export class CustomButtonElement implements CustomElementInterface {
             this.container.classList.add("hasText");
 
         }
+
+        this.callback = callback;
+
+        this.container.addEventListener("click", () => { if (this.callback) this.callback(); });
 
     }
 

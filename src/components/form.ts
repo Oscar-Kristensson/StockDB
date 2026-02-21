@@ -22,17 +22,10 @@ export class CustomFormElement implements CustomElementInterface {
 
         }
 
-        _send() {
-            if (!this.validate()) {
-                return;
-            } 
 
-            this._send();
-
-        }
 
         send() {
-            console.log("Send");
+            console.log("Send. This function should be overriden if it is called");
         }
 
         validate() {
