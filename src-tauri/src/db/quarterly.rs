@@ -31,23 +31,19 @@ pub fn add_record (
         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)
         "#,
         params![
-            stock_id,              // stock_id
-            fiscal_year,           // fiscal_year
-            fiscal_quarter,              // fiscal_quarter
-            revenue,    // revenue (REAL -> f64)
-            gross_profit,      // gross_profit
-            operating_income,      // operating_income
-            net_income,      // net_income
-            shares_outstanding,  // shares_outstanding
-            currency          // currency
+            stock_id,               // stock_id
+            fiscal_year,            // fiscal_year
+            fiscal_quarter,         // fiscal_quarter
+            revenue,                // revenue (REAL -> f64)
+            gross_profit,           // gross_profit
+            operating_income,       // operating_income
+            net_income,             // net_income
+            shares_outstanding,     // shares_outstanding
+            currency                // currency
         ],
     )
-
     .map_err(|e| e.to_string())?; // convert rusqlite::Error -> String 
 
-
-
-    
     Ok(())
 
 }

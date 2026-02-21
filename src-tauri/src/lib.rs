@@ -4,6 +4,7 @@ mod utils;
 use rusqlite::{Result, params, Error};
 use tauri::State;
 use tauri::Manager;
+use tauri::AppHandle;
 
 use std::fs;
 use std::path::PathBuf;
@@ -225,6 +226,19 @@ fn assure_folder_structure(data_dir_path: &PathBuf) {
 
 }
 
+
+#[tauri::command]
+fn os_get_data_dir(app: AppHandle) -> String {
+    app.path().app_local_data_dir()
+        .expect("failed to resolve app local data dir")
+        .to_string_lossy() // Converts PathBuf -> Cow<str>
+        .to_string()
+}
+
+
+
+
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -265,7 +279,8 @@ pub fn run() {
             db_get_stock_info_by_id,
             db_get_table_names,
             db_add_stock,
-            db_add_quarterly
+            db_add_quarterly,
+            os_get_data_dir
             
         ])
         .run(tauri::generate_context!())

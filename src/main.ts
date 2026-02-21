@@ -4,6 +4,7 @@ import { firstLayer, firstLayer2, firstLayer3 } from "./views/testLayers.ts";
 import { stockLayer } from "./views/stockLayer/stockLayer.ts";
 import { StockDB } from "./app.ts";
 import { logLayer } from "./views/logLayer/layer.ts";
+import { settingsLayer } from "./views/settings/layer.ts";
 
 let greetInputEl: HTMLInputElement | null;
 let greetMsgEl: HTMLElement | null;
@@ -54,6 +55,7 @@ function init() {
     stockDb.loadLayer(stockLayer);
 
     stockDb.addLayer(logLayer);
+    stockDb.addLayer(settingsLayer);
 
 
     stockDb.addLayer(firstLayer);

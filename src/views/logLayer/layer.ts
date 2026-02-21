@@ -33,6 +33,7 @@ class LogLayer extends AppLayer {
             console.error("Could not create UI since the layerContainer is undefined");
             return;
         }
+        
         this.container = document.createElement("div");
         this.container.className = "logLayer";
 
