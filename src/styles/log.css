@@ -20,3 +20,15 @@
     background-color: hsl(180, 0%, 9%);
 
 }
+
+
+.customFormElement .infoPanel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.customFormElement .infoPanel .customButtonElement,
+.customFormElement .infoPanel .customErrorMessage {
+    margin: 16px;
+}

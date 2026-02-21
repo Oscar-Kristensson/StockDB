@@ -17,6 +17,7 @@ html, body {
 :root {
     --textColor: #999999;
     --inputBackgroundColor: #171717;
+    --defaultPadding: 8px;
     --inputBackgroundColorHover: hsl(0, 0%, 6%);
 }
 
@@ -375,7 +376,7 @@ h2 {
 }
 
 .customButtonElement.hasText {
-    padding: 8px;
+    padding: var(--defaultPadding);
 }
 
 .customButtonElement .icon {

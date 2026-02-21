@@ -1,0 +1,47 @@
+
+
+
+.customErrorMessage {
+    display: grid;
+    grid-template-areas: 
+        "icon heading"
+        "icon message"
+    ;
+
+    /*background-color: hsl(0, 0%, 21%);*/
+    background: hsl(0, 0%, 10%);
+    border: solid hsl(0, 100%, 20%) 3px;
+    flex-direction: row;
+    align-items: center;
+    padding: var(--defaultPadding);
+    border-radius: var(--defaultPadding);
+    width: max-content;
+    height: max-content;
+}
+
+.customErrorMessage.hidden {
+    display: none;
+}
+
+.customErrorMessage .icon {
+    max-height: 40px;
+    margin: 4px;
+    grid-area: icon;
+    margin-right: 16px;
+    
+}
+
+.customErrorMessage .message {
+    margin: 4px;
+    color: var(--textColor);
+    min-width: 10ch;
+    grid-area: message;
+    margin-right: 16px;
+}
+
+.customErrorMessage .heading {
+    margin: 4px;
+    font-weight: 800;
+    color: hsl(0, 75%, 50%);
+    font-size: large;
+}

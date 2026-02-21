@@ -5,6 +5,7 @@ import { db } from "../../db.ts";
 import { CustomDropdownElement, DropDownItem } from "../../components/dropdown.ts";
 import { utils } from "../../utils.ts";
 import { CustomButtonElement } from "../../components/button.ts";
+import { CustomErrorMessage } from "../../components/errorMsg.ts";
 
 function validateTicker(ticker: string) {
     ticker = ticker.toUpperCase();
@@ -53,10 +54,14 @@ export class AddStockForm extends CustomFormElement {
     exchange: CustomInputElement;
     sector: CustomDropdownElement;
     industry: CustomInputElement;
+    infoPanel: HTMLDivElement;
+    inputError: CustomErrorMessage;
 
 
     constructor(parent: HTMLElement) {
         super(parent);
+
+        this.infoPanel = utils.createElement("div", this.container, ["infoPanel"]);
 
         this.ticker = new CustomInputElement(undefined, "Ticker", "", "text", true, validateTicker);
         this.ticker.placeholder = "ex INVE-B";
@@ -98,7 +103,7 @@ export class AddStockForm extends CustomFormElement {
 
         this.send = this.send.bind(this);
 
-        const button1 = new CustomButtonElement(this.container, "Add stock", "icons/addStockIcon.svg", [], this.send);
+        new CustomButtonElement(this.infoPanel, "Add stock", "icons/addStockIcon.svg", [], this.send);
 
         this.container.addEventListener("keydown", () => {
             const valid = this.validate();
@@ -109,6 +114,11 @@ export class AddStockForm extends CustomFormElement {
             }
 
         })
+
+        this.container.classList.add("invalid");
+
+
+        this.inputError = new CustomErrorMessage(this.infoPanel);
 
 
 
@@ -125,12 +135,24 @@ export class AddStockForm extends CustomFormElement {
 
 
         if (!this.sector.currentOption) {
+            this.inputError.throw(
+                "Sector not selected", 
+                "A stock must have a sector selected"
+            )
             return;
         }
         if (!this.sector.currentOption.value) {
+            this.inputError.throw(
+                "Sector value not accessible", 
+                "Could not access the sector value since it was undefined"
+            )
             return;
         }
         if (typeof this.sector.currentOption.value !== "string") {
+            this.inputError.throw(
+                "Sector value unvalid", 
+                "The sector value was not a string"
+            )
             return;
         }
 
@@ -138,10 +160,12 @@ export class AddStockForm extends CustomFormElement {
             return;
         }
 
+
+
         const stock = new StockInfo(0, this.ticker.value, this.name.value, 
             this.exchange.value, this.sector.currentOption.value, this.industry.value, "SEK"
         )
-        
+
         db.addStock(stock);
         
 
@@ -149,20 +173,29 @@ export class AddStockForm extends CustomFormElement {
 
 
 
-    validate(): boolean {
+    validate(throwError: boolean = false): boolean {
         if (this.name.inputState !== InputValidationStates.ok) {
+            if (throwError)
+                this.inputError.throw("Invalid name", "The name was not valid!");
             return false;
         }
 
         if (this.ticker.inputState !== InputValidationStates.ok) {
+            if (throwError)
+                this.inputError.throw("Invalid ticker", "The ticker was not valid!");
             return false;
         }
 
         if (this.exchange.inputState !== InputValidationStates.ok) {
+            if (throwError)
+                this.inputError.throw("Invalid exchange", "The exchange was not valid!");
             return false;
         }
 
         if (this.industry.inputState !== InputValidationStates.ok) {
+            if (throwError)
+                this.inputError.throw("Invalid industry", "The industry was not valid!");
+
             return false;
         }
 
@@ -171,8 +204,13 @@ export class AddStockForm extends CustomFormElement {
 
 
         if (!validateName(this.name.value)) {
+            if (throwError)
+                this.inputError.throw("Invalid name", "The name was not valid!");
+            
             return false;
         }
+
+        this.inputError.hide();
 
         return true;
     }
