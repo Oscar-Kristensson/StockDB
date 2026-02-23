@@ -101,3 +101,10 @@ export function assert(condition: boolean, errorMsg: string) {
     if (!condition)
         throw new Error(errorMsg);
 }
+
+
+
+export function printError(error: unknown, fn: Function) {
+    console.error(`The function db.${fn.name} returned the following error: ${error}`);
+ 
+}

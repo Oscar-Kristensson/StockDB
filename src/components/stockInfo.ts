@@ -1,4 +1,4 @@
-import { StockInfo } from "../stocks.ts";
+import { StockInfo } from "../db/stocks.ts";
 import { CustomElementInterface } from "./base.ts";
 
 class StatElement {

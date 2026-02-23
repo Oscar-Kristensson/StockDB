@@ -1,7 +1,7 @@
 import { CustomInputElement, InputValidationError, InputValidationStates } from "../../components/input.ts";
 import { CustomFormElement } from "../../components/form.ts";
-import { isStockSector, StockInfo, StockSectors } from "../../stocks.ts";
-import { db } from "../../db.ts";
+import { isStockSector, StockInfo, StockSectors } from "../../db/stocks.ts";
+import * as db from "../../db"
 import { CustomDropdownElement, DropDownItem } from "../../components/dropdown.ts";
 import { utils } from "../../utils.ts";
 import { CustomButtonElement } from "../../components/button.ts";

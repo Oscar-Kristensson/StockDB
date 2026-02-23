@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { db } from "./db.ts";
+import * as db from "./db";
 import { firstLayer, firstLayer2, firstLayer3 } from "./views/testLayers.ts";
 import { stockLayer } from "./views/stockLayer/stockLayer.ts";
 import { StockDB } from "./app.ts";
@@ -100,6 +100,11 @@ function test() {
     })
     .catch(error => {
         console.log(error);
+    })
+
+    db.getQuarterlyFromStockID(1)
+    .then(result => {
+        console.log(result);
     })
 }
 

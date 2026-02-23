@@ -199,16 +199,11 @@ fn db_add_quarterly(
     operating_income: f64,
     net_income: f64,
     shares_outstanding: i64,
-    currency: String,
 
 ) -> Result<(), String> {
     let conn = db.0.lock().unwrap();
 
-    if !utils::is_only_letters(&currency) {
-        return Err("Invalid currency. A currency may only contain letters".into());
-    }
-
-    db::quarterly::add_record(&conn, stock_id, fiscal_year, fiscal_quarter, revenue, gross_profit, operating_income, net_income, shares_outstanding, currency)
+    db::quarterly::add_record(&conn, stock_id, fiscal_year, fiscal_quarter, revenue, gross_profit, operating_income, net_income, shares_outstanding)
 }
 
 
@@ -229,6 +224,21 @@ fn assure_folder_structure(data_dir_path: &PathBuf) {
     }
 
 }
+
+#[tauri::command]
+fn db_get_quarterly_from_stock_id(db: State<db::DbConn>, stock_id: i64) -> Result<Vec<db::quarterly::QuarterlyRecord>, String> {
+    let conn = db.0.lock().unwrap();
+
+    println!("Stock ID: {}", stock_id);
+
+    db::quarterly::get_quarterly_for_stock(&conn, stock_id)
+        .map_err(|e| e.to_string())
+}
+
+
+
+
+
 
 
 #[tauri::command]
@@ -292,6 +302,7 @@ pub fn run() {
             db_get_table_names,
             db_add_stock,
             db_add_quarterly,
+            db_get_quarterly_from_stock_id,
             os_get_data_dir,
             os_get_cwd
             

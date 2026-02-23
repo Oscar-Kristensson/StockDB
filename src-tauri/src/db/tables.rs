@@ -58,8 +58,6 @@ CREATE TABLE IF NOT EXISTS quarterly (
 
     shares_outstanding REAL,
 
-    currency TEXT DEFAULT 'SEK',
-
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (stock_id) REFERENCES stock(id) ON DELETE CASCADE,

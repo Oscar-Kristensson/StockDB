@@ -2,7 +2,7 @@ import { AppLayer } from "../../appLayer.ts";
 import { CustomContainer } from "../../components/container.ts";
 import { CustomTable } from "../../components/table.ts";
 import { CustomStockInfo } from "../../components/stockInfo.ts";
-import { StockInfo } from "../../stocks.ts";
+import { StockInfo } from "../../db/stocks.ts";
 import { StockDB } from "../../app.ts";
 import { CustomLabelElement } from "./customLabel.ts";
 
