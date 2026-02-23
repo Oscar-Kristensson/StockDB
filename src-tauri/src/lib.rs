@@ -204,6 +204,10 @@ fn db_add_quarterly(
 ) -> Result<(), String> {
     let conn = db.0.lock().unwrap();
 
+    if !utils::is_only_letters(&currency) {
+        return Err("Invalid currency. A currency may only contain letters".into());
+    }
+
     db::quarterly::add_record(&conn, stock_id, fiscal_year, fiscal_quarter, revenue, gross_profit, operating_income, net_income, shares_outstanding, currency)
 }
 

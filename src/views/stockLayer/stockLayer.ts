@@ -1,5 +1,4 @@
 import { AppLayer } from "../../appLayer.ts";
-import { loadCSS } from "../../utils.ts";
 import { CustomContainer } from "../../components/container.ts";
 import { CustomTable } from "../../components/table.ts";
 import { CustomStockInfo } from "../../components/stockInfo.ts";
@@ -28,7 +27,6 @@ class StockLayer extends AppLayer {
     }
 
     createUI() {
-        loadCSS("src/styles/stockLayer.css");
 
         if (!this.layerContainer) {
             console.error("Could not create UI since the layerContainer is undefined");

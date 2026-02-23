@@ -1,7 +1,6 @@
 import { AppLayer } from "../../appLayer.ts";
 import { StockDB } from "../../app.ts";
 import { CustomTabs, CustomTab } from "../../components/tabs.ts";
-import { loadCSS } from "../../utils.ts";
 
 import { CustomHeading } from "../../components/heading.ts";
 
@@ -28,12 +27,11 @@ class LogLayer extends AppLayer {
 
 
     createUI() {
-        loadCSS("src/styles/log.css");
         if (!this.layerContainer) {
             console.error("Could not create UI since the layerContainer is undefined");
             return;
         }
-        
+
         this.container = document.createElement("div");
         this.container.className = "logLayer";
 

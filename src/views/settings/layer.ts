@@ -2,7 +2,6 @@ import { AppLayer } from "../../appLayer.ts";
 import { StockDB } from "../../app.ts";
 import { CustomHeading } from "../../components/heading.ts";
 import { utils } from "../../utils.ts";
-import { loadCSS } from "../../utils.ts";
 import { os } from "../../os.ts";
 
 class SettingsLayer extends AppLayer {
@@ -16,7 +15,6 @@ class SettingsLayer extends AppLayer {
     }
     
     createUI() {
-        loadCSS("src/styles/settings.css");
         if (!this.layerContainer) {
             console.error("Could not create UI since the layerContainer is undefined");
             return;
