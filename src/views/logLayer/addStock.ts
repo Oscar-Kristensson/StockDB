@@ -3,7 +3,7 @@ import { CustomFormElement } from "../../components/form.ts";
 import { isStockSector, StockInfo, StockSectors } from "../../db/stocks.ts";
 import * as db from "../../db"
 import { CustomDropdownElement, DropDownItem } from "../../components/dropdown.ts";
-import { utils } from "../../utils.ts";
+import * as utils from "../../utils.ts";
 import { CustomButtonElement } from "../../components/button.ts";
 import { CustomErrorMessage } from "../../components/errorMsg.ts";
 
@@ -84,7 +84,6 @@ export class AddStockForm extends CustomFormElement {
         // NOTE: This should be a drop down element
         const options = [];
         for (const [sector, key] of Object.entries(StockSectors)) {
-            console.log(sector, key)
             options.push(new DropDownItem(utils.pascalToWords(sector), key));
         }
         

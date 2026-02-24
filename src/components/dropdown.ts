@@ -1,5 +1,6 @@
 import { CustomElementInterface } from "./base.ts";
-import { utils } from "../utils.ts"
+import * as utils from "../utils.ts";
+
 
 enum DropdownState {
     open = 0,

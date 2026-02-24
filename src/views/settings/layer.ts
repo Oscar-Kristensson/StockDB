@@ -1,7 +1,7 @@
 import { AppLayer } from "../../appLayer.ts";
 import { StockDB } from "../../app.ts";
 import { CustomHeading } from "../../components/heading.ts";
-import { utils } from "../../utils.ts";
+import * as utils from "../../utils.ts"
 import { os } from "../../os.ts";
 
 class SettingsLayer extends AppLayer {

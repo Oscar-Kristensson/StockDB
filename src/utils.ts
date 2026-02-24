@@ -2,57 +2,56 @@
 const loadedCSSFiles: Array<string> = [];
 
 // NOTE: Everything in this file should be in the utils namespace
-export namespace utils {
-    export function createElement<K extends keyof HTMLElementTagNameMap>(
-        tagName: K,
-        parent?: HTMLElement,
-        classNames: string[] = [],
-    ): HTMLElementTagNameMap[K] {
+export function createElement<K extends keyof HTMLElementTagNameMap>(
+    tagName: K,
+    parent?: HTMLElement,
+    classNames: string[] = [],
+): HTMLElementTagNameMap[K] {
 
-        const element = document.createElement(tagName);
+    const element = document.createElement(tagName);
 
-        classNames.forEach(className => {
-            element.classList.add(className);
-        });
+    classNames.forEach(className => {
+        element.classList.add(className);
+    });
 
-        parent?.appendChild(element);
+    parent?.appendChild(element);
 
-        return element;
-    }
-
-
-    export function pascalToWords(value: string): string {
-        return value
-            .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
-            .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
-    }
-
-
-    export class SmartVar<T> {
-        _value: T;
-        onUpdate: ((value: T) => void) | undefined;
-        constructor(value: T, onUpdate: ((value: T) => void) | undefined = undefined) {
-            this._value = value;
-            this.onUpdate = onUpdate;
-        }
-
-        public set value(value: T) {
-            this._value = value;
-            if (!this.onUpdate)
-                return;
-
-            this.onUpdate(this._value);
-        }
-
-        public get value() : T {
-            return this._value;
-        }
-
-
-    }
+    return element;
 }
 
 
+export function pascalToWords(value: string): string {
+    return value
+        .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+        .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
+}
+
+
+
+
+
+export class SmartVar<T> {
+    _value: T;
+    onUpdate: ((value: T) => void) | undefined;
+    constructor(value: T, onUpdate: ((value: T) => void) | undefined = undefined) {
+        this._value = value;
+        this.onUpdate = onUpdate;
+    }
+
+    public set value(value: T) {
+        this._value = value;
+        if (!this.onUpdate)
+            return;
+
+        this.onUpdate(this._value);
+    }
+
+    public get value() : T {
+        return this._value;
+    }
+
+
+}
 
 
 export function loadCSS(href: string) {
@@ -107,4 +106,25 @@ export function assert(condition: boolean, errorMsg: string) {
 export function printError(error: unknown, fn: Function) {
     console.error(`The function db.${fn.name} returned the following error: ${error}`);
  
+}
+
+
+export function averageO<T>(objects: Array<T>, func: ((object: T) => number)) {
+    let total = 0;
+
+    objects.forEach(object => {
+        total += func(object);
+    })
+
+    return total/objects.length;
+}
+
+
+export function average(numbers: Array<number>) {
+    let total = 0;
+    numbers.forEach(number => {
+        total += number;
+    });
+
+    return total / numbers.length;
 }

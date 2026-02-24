@@ -1,4 +1,4 @@
-import { utils } from "../utils";
+import * as utils from "../utils.ts";
 import { CustomElementInterface } from "./base";
 
 

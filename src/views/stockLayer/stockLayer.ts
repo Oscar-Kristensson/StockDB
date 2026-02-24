@@ -5,8 +5,9 @@ import { CustomStockInfo } from "../../components/stockInfo.ts";
 import { StockInfo } from "../../db/stocks.ts";
 import { StockDB } from "../../app.ts";
 import { CustomLabelElement } from "./customLabel.ts";
-
-
+import * as utils from "../../utils.ts"
+import { QuarterlyReport } from "../../db/quarterly.ts";
+import * as db from "../../db"
 
 
 class StockLayer extends AppLayer {
@@ -20,8 +21,21 @@ class StockLayer extends AppLayer {
     stock: StockInfo | undefined;
     app: StockDB | undefined;
 
+    quarterlyRecords?: Array<QuarterlyReport>
+
+    averageRevenue: utils.SmartVar<string>;
+    averageRevenueElement: CustomLabelElement;
+
+
     constructor() {
         super("Stocks", "icons/StockIcon.svg");
+
+        this.averageRevenueElement = new CustomLabelElement(undefined, "Unkown");
+        
+        this.averageRevenue = new utils.SmartVar<string>("Unkown", () => {
+            if (this.averageRevenueElement)
+                this.averageRevenueElement.content.innerText = this.averageRevenue.value;
+        })
 
 
     }
@@ -107,6 +121,28 @@ class StockLayer extends AppLayer {
         }
         this.stockInfo.setStock(this.stock)
 
+        db.getQuarterlyFromStockID(this.stock.id)
+            .then(result => {
+                if (result instanceof Array) {
+                    this.quarterlyRecords = result;
+
+                    this.averageRevenue.value = String(utils.averageO(this.quarterlyRecords, (record: QuarterlyReport) => {
+                        if (record.revenue === null) {
+                            return 0;
+                        }
+                            
+                        return record.revenue;
+                    }))
+
+                    
+                }
+            })
+            .catch(error => {
+                console.error("An error occured whilst reading quarterly records", error);
+            })
+
+        
+
 
 
     }
@@ -118,10 +154,12 @@ class StockLayer extends AppLayer {
     }
 
 
+    
+
+
     generateStockOverViewTable(
         revenue: number,
     ) {
-
         if (!(this.overviewTable instanceof CustomTable)) {
             console.error("The overview table is not correctly initalized!");
             return;
@@ -134,6 +172,18 @@ class StockLayer extends AppLayer {
             new CustomLabelElement(undefined, "5 years"),
             new CustomLabelElement(undefined, "10 years"),
         ], true);
+
+
+        this.overviewTable.addRow([
+            new CustomLabelElement(undefined, "Revenue"),
+            this.averageRevenueElement,
+            new CustomLabelElement(undefined, ""),
+            new CustomLabelElement(undefined, ""),
+            new CustomLabelElement(undefined, ""),
+        ], false);
+
+
+        
 
         for (let i = 0; i < 100; i++) {
             this.overviewTable.addRow([

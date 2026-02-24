@@ -8,6 +8,7 @@ export class QuarterlyReport {
         public readonly stock_id: number,
         public fiscalYear: number,
         public fiscalQuarter: number,
+        public revenue: number | null,
         public gross_profit: number | null,
         public operating_income: number | null,
         public net_income: number | null,
@@ -22,6 +23,7 @@ export class QuarterlyReport {
             typeof obj.stock_id === "number" &&
             typeof obj.fiscalYear === "number" &&
             typeof obj.fiscalQuarter === "number" &&
+            typeof obj.revenue === "number" &&
             typeof obj.gross_profit === "number" &&
             typeof obj.operating_income === "number" &&
             typeof obj.net_income === "number" &&
