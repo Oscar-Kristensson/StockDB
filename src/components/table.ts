@@ -1,5 +1,6 @@
 import { CustomElementInterface } from "./base";
 import { CustomContainer } from "./container";
+import { CustomTableRow } from "./row";
 
 
 
@@ -10,6 +11,8 @@ export class CustomTable implements CustomElementInterface {
     tableHead: HTMLTableSectionElement;
 
     width: Number;
+
+    rows: Array<CustomTableRow>;
 
     constructor(parent: HTMLElement | CustomContainer, className: string, width: Number = 1) {
         this.container = document.createElement("div");
@@ -29,10 +32,26 @@ export class CustomTable implements CustomElementInterface {
         this.tableBody = document.createElement("tbody");
         this.table.appendChild(this.tableBody);
 
+        this.rows = [];
+
     }
 
+    addRow(row: CustomTableRow, header: boolean = false) {
+        this.rows.push(row);
 
-    addRow(row: Array<CustomElementInterface>, header: boolean = false) {
+
+        (header ? this.tableHead : this.tableBody).appendChild(row.container);
+        console.log("Adding to", this.tableHead, this.tableBody, row.container);
+        
+    }
+
+    /**
+     * Legacy function
+     * @param row 
+     * @param header 
+     * @returns 
+     */
+    addRow_L(row: Array<CustomElementInterface>, header: boolean = false) {
         if (row.length !== this.width) {
             console.error("The array length does not match the tables width");
             return;

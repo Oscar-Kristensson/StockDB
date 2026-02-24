@@ -8,6 +8,7 @@ import { CustomLabelElement } from "./customLabel.ts";
 import * as utils from "../../utils.ts"
 import { QuarterlyReport } from "../../db/quarterly.ts";
 import * as db from "../../db"
+import { calcDataAverages, OverviewTableRow, TableRowStruct } from "./tables.ts";
 
 
 class StockLayer extends AppLayer {
@@ -25,6 +26,17 @@ class StockLayer extends AppLayer {
 
     averageRevenue: utils.SmartVar<string>;
     averageRevenueElement: CustomLabelElement;
+
+
+    revenueRow: OverviewTableRow | undefined;
+    grossProfitRow: OverviewTableRow | undefined;
+    operatingIncome: OverviewTableRow | undefined;
+    operatingIncomeRow: OverviewTableRow | undefined;
+    netIncomeRow: OverviewTableRow | undefined;
+    sharesOutstandingRow: OverviewTableRow | undefined;
+
+
+
 
 
     constructor() {
@@ -58,9 +70,9 @@ class StockLayer extends AppLayer {
 
 
 
-        this.overviewTable = new CustomTable(this.overviewContainer, "informationTable", 5);
+        this.overviewTable = new CustomTable(this.overviewContainer, "informationTable", 6);
 
-        this.generateStockOverViewTable(120);
+        this.generateStockOverViewTable();
 
 
         
@@ -124,7 +136,10 @@ class StockLayer extends AppLayer {
         db.getQuarterlyFromStockID(this.stock.id)
             .then(result => {
                 if (result instanceof Array) {
-                    this.quarterlyRecords = result;
+                    console.log("Sorting", result);
+                    this.quarterlyRecords = result.sort((a, b) => b.totalPeriod - a.totalPeriod);
+
+
 
                     this.averageRevenue.value = String(utils.averageO(this.quarterlyRecords, (record: QuarterlyReport) => {
                         if (record.revenue === null) {
@@ -133,6 +148,10 @@ class StockLayer extends AppLayer {
                             
                         return record.revenue;
                     }))
+
+                    this.onQuarterlyRecieved();
+
+
 
                     
                 }
@@ -147,6 +166,7 @@ class StockLayer extends AppLayer {
 
     }
 
+
     generateStockHeading() {
         if (!this.container)
             return;
@@ -154,47 +174,99 @@ class StockLayer extends AppLayer {
     }
 
 
+    onQuarterlyRecieved() {
+        if (!this.quarterlyRecords) {
+            return;
+        }
+
+        const revenue = calcDataAverages(this.quarterlyRecords, "revenue");
+        this.revenueRow?.data.setDataS(revenue);
+
+        const gross_profit = calcDataAverages(this.quarterlyRecords, "gross_profit");
+        this.grossProfitRow?.data.setDataS(gross_profit);
+
+        const operating_income = calcDataAverages(this.quarterlyRecords, "operating_income");
+        this.operatingIncomeRow?.data.setDataS(operating_income);
+
+        const net_income = calcDataAverages(this.quarterlyRecords, "net_income");
+        this.netIncomeRow?.data.setDataS(net_income);
+
+        const shares_outstanding = calcDataAverages(this.quarterlyRecords, "shares_outstanding");
+        this.sharesOutstandingRow?.data.setDataS(shares_outstanding);
+
+        
+
+
+    }
+
+
     
 
 
-    generateStockOverViewTable(
-        revenue: number,
-    ) {
+    generateStockOverViewTable() {
         if (!(this.overviewTable instanceof CustomTable)) {
             console.error("The overview table is not correctly initalized!");
             return;
         }
 
-        this.overviewTable.addRow([
+        this.overviewTable.addRow_L([
             new CustomLabelElement(undefined, ""),
             new CustomLabelElement(undefined, "Latest"),
             new CustomLabelElement(undefined, "1 year"),
             new CustomLabelElement(undefined, "5 years"),
             new CustomLabelElement(undefined, "10 years"),
-        ], true);
-
-
-        this.overviewTable.addRow([
-            new CustomLabelElement(undefined, "Revenue"),
-            this.averageRevenueElement,
-            new CustomLabelElement(undefined, ""),
-            new CustomLabelElement(undefined, ""),
-            new CustomLabelElement(undefined, ""),
-        ], false);
+            new CustomLabelElement(undefined, "All"),
+        ], true);      
+        
 
 
         
+        this.revenueRow = new OverviewTableRow(
+            new TableRowStruct("Revenue"),
+        )
 
-        for (let i = 0; i < 100; i++) {
-            this.overviewTable.addRow([
-                new CustomLabelElement(undefined, `Revenue`),
-                new CustomLabelElement(undefined, `${revenue + (i * 4325 + i * 981) % 100} SEK`),
-                new CustomLabelElement(undefined, `${revenue + (i * 2312 + i * 342) % 80} SEK`),
-                new CustomLabelElement(undefined, `${revenue + (i * 9324 + i * 432) % 50} SEK`),
-                new CustomLabelElement(undefined, `${revenue + (i * 923  + i * 21 ) % 120} SEK`),
-    
-            ]);
-        }
+        this.grossProfitRow = new OverviewTableRow(
+            new TableRowStruct("Gross Profit"),
+        )
+
+        this.operatingIncomeRow = new OverviewTableRow(
+            new TableRowStruct("Operating income"),
+        )
+
+        this.netIncomeRow = new OverviewTableRow(
+            new TableRowStruct("Net income"),
+        )
+
+        this.sharesOutstandingRow = new OverviewTableRow(
+            new TableRowStruct("Shares outstandning"),
+        )
+
+        setTimeout(() => {
+            console.log("Updating data!");
+            if (!this.revenueRow?.data.setData) return;
+            this.revenueRow.data.setData(1, 2, 3, 4, 5);
+        }, 2000)
+
+        const testRow = new OverviewTableRow(
+            new TableRowStruct("TestRow"),
+        )
+
+        setTimeout(() => {
+            console.log("Updating data!");
+            testRow.data.setData(2, 2, 3, 4, 5);
+        }, 4000)
+
+        this.overviewTable.addRow(this.revenueRow);
+        this.overviewTable.addRow(this.grossProfitRow);
+        this.overviewTable.addRow(this.operatingIncomeRow);
+        this.overviewTable.addRow(this.netIncomeRow);
+        this.overviewTable.addRow(this.sharesOutstandingRow);
+
+        
+
+
+
+
     }
 
 }

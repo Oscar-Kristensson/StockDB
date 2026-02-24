@@ -1,13 +1,14 @@
 import { invoke } from "@tauri-apps/api/core";
-import { printError } from "../utils"
+import { printError } from "../utils";
+import * as utils from "../utils";
 
 
 export class QuarterlyReport {
     constructor(
         public readonly id: number,
         public readonly stock_id: number,
-        public fiscalYear: number,
-        public fiscalQuarter: number,
+        public fiscal_year: number,
+        public fiscal_quarter: number,
         public revenue: number | null,
         public gross_profit: number | null,
         public operating_income: number | null,
@@ -24,12 +25,29 @@ export class QuarterlyReport {
             typeof obj.fiscalYear === "number" &&
             typeof obj.fiscalQuarter === "number" &&
             typeof obj.revenue === "number" &&
-            typeof obj.gross_profit === "number" &&
-            typeof obj.operating_income === "number" &&
-            typeof obj.net_income === "number" &&
-            typeof obj.operating_income === "number" &&
-            typeof obj.shares_outstanding === "number"
+            typeof obj.grossProfit === "number" &&
+            typeof obj.operatingIncome === "number" &&
+            typeof obj.netIncome === "number" &&
+            typeof obj.sharesOutstanding === "number"
         );
+    }
+
+    static fromDto(dto: any): QuarterlyReport {
+        return new QuarterlyReport(
+            dto.id,
+            dto.stock_id,
+            dto.fiscal_year,
+            dto.fiscal_quarter,
+            dto.revenue ?? null,
+            dto.gross_profit ?? null,
+            dto.operating_income ?? null,
+            dto.net_income ?? null,
+            dto.shares_outstanding ?? null
+        );
+    }
+
+    public get totalPeriod() : number {
+        return utils.calcTotalPeriod(this.fiscal_year, this.fiscal_quarter);
     }
 }
 
@@ -38,7 +56,16 @@ export function getQuarterlyFromStockID(stockId: Number) {
     return new Promise((resolve, reject) => {
         invoke("db_get_quarterly_from_stock_id", { stockId: stockId })
         .then(rv => {
-            resolve(rv);
+            const array: Array<QuarterlyReport> = [];
+            if (!(rv instanceof Array)) {
+                throw new Error("The return value was not an array");
+            }
+            rv.forEach(obj => {
+                array.push(QuarterlyReport.fromDto(obj));
+            })
+
+
+            resolve(array);
         })
         .catch(error => {
             printError(error, getQuarterlyFromStockID);

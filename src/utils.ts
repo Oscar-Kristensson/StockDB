@@ -128,3 +128,49 @@ export function average(numbers: Array<number>) {
 
     return total / numbers.length;
 }
+
+export function calcTotalPeriod(year: number, quarter: number) {
+    return year * 4 + quarter;
+}
+
+/**
+ * A value at a point in time
+ */
+export class DtPoint<T> {
+    constructor(
+        public time: number,
+        public data: T,
+    ) {}
+
+}
+
+/**
+ * @param fromTime 
+ * @param toTime 
+ * @param data 
+ * @returns 
+ */
+export function getAverageS(fromTime: number | undefined, toTime: number | undefined, data: Array<DtPoint<number | null>>) : undefined | number {
+    let previousTime = fromTime;
+
+    let total = 0;
+    let count = 0;
+
+
+
+    for (const dataPoint of data) {
+        previousTime = dataPoint.time;
+
+        if (fromTime && dataPoint.time < fromTime) continue;
+        if (toTime && dataPoint.time > toTime) continue;
+
+        if (dataPoint.data !== null) {
+            total += dataPoint.data;
+            count++;
+        }
+    }
+
+    return total/count;
+
+
+}

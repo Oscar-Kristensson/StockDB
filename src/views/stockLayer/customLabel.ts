@@ -18,6 +18,17 @@ export class CustomLabelElement implements CustomElementInterface {
 
     }
 
+    update(content: string){
+        this.content.innerText = content;
+    }
+
+    setloaded(state: boolean) {
+        if (state)
+            this.content.classList.remove("unloaded");
+        else
+            this.content.classList.add("unloaded");
+    }
+
     appendChild(node: HTMLElement) {
         this.content.appendChild(node);
     }
