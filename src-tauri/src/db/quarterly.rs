@@ -28,7 +28,7 @@ pub fn get_quarterly_for_stock(
         "SELECT 
             id, stock_id, fiscal_year, fiscal_quarter, 
             revenue, gross_profit, operating_income, net_income,
-            shares_outstanding, currency, created_at
+            shares_outstanding, created_at
          FROM quarterly
          WHERE stock_id = ?
          ORDER BY fiscal_year DESC, fiscal_quarter DESC"

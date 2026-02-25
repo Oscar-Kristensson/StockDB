@@ -81,7 +81,6 @@ export class AddStockForm extends CustomFormElement {
         this.exchange.placeholder = "Nasdaq Stockholm";
         this.addInput(this.exchange);
 
-        // NOTE: This should be a drop down element
         const options = [];
         for (const [sector, key] of Object.entries(StockSectors)) {
             options.push(new DropDownItem(utils.pascalToWords(sector), key));

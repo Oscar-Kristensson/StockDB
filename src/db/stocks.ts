@@ -1,3 +1,13 @@
+import { invoke } from "@tauri-apps/api/core";
+
+
+
+
+
+
+
+
+
 export enum StockSectors {
     CommunicationServices = 'CommunicationServices',
     ConsumerDiscretionary = 'ConsumerDiscretionary',
@@ -43,3 +53,74 @@ export class StockInfo {
         );
     }
 }
+
+
+
+export class StockListItem {
+    constructor(
+        public id: number,
+        public ticker: string,
+        public name: string,
+    ) {}
+
+    static validate(obj: any): obj is StockListItem {
+        return (
+            obj !== null &&
+            typeof obj === "object" &&
+            typeof obj.id === "number" &&
+            typeof obj.ticker === "string" &&
+            typeof obj.name === "string"
+        );
+    }
+}
+
+
+
+export function getAllStocks() : Promise<Array<StockListItem> | null> {
+    return new Promise((resolve, reject) => {
+        invoke("db_get_all_stocks", {})
+        .then(result => {
+            if (result === null)
+                resolve(null);
+
+            if (!(result instanceof Array)) {
+                throw new Error(`The backend did not return an array, the backend returned ${result}`);
+            }
+
+            const array: Array<StockListItem> = []
+
+            for (let i = 0; i < result.length; i++) {
+                let singleStock = result[i];
+                if (!StockListItem.validate(singleStock)) {
+                    throw new Error(`The backend did not return a valid StockInfo object, the backend returned ${result[i]}`);
+                }
+
+                const stockListItem = new StockListItem(
+                    result[i].id,
+                    result[i].ticker,
+                    result[i].name,
+
+                )
+
+                array.push(stockListItem);
+
+            }
+
+
+ 
+            
+
+            resolve(array);
+
+        })
+        .catch(error => {reject(error)});
+    });
+
+}
+
+
+
+
+
+
+

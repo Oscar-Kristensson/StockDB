@@ -236,7 +236,12 @@ fn db_get_quarterly_from_stock_id(db: State<db::DbConn>, stock_id: i64) -> Resul
 }
 
 
-
+#[tauri::command]
+fn db_get_all_stocks(db: State<db::DbConn>) -> Result<Vec<db::stocks::StockListItem>, String> {
+    let conn = db.0.lock().unwrap();
+    db::stocks::get_all_stocks(&conn)
+        .map_err(|e| e.to_string())
+}
 
 
 
@@ -303,6 +308,7 @@ pub fn run() {
             db_add_stock,
             db_add_quarterly,
             db_get_quarterly_from_stock_id,
+            db_get_all_stocks,
             os_get_data_dir,
             os_get_cwd
             

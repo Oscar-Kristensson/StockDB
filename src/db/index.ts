@@ -5,3 +5,4 @@
 
 export * from "./db.ts";
 export * from "./quarterly.ts";
+export * from "./stocks.ts";

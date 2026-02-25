@@ -94,7 +94,7 @@ function test() {
         }
     })
 
-    db.addQuarterly(1, 2026, 2, 100, 200, 300, 400, 500, "SEK")
+    /*db.addQuarterly(1, 2026, 2, 100, 200, 300, 400, 500, "SEK")
     .then(response => {
         console.log(response);
     })
@@ -105,7 +105,7 @@ function test() {
     db.getQuarterlyFromStockID(1)
     .then(result => {
         console.log(result);
-    })
+    })*/
 }
 
 

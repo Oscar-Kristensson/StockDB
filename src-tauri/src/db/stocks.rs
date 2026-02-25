@@ -67,6 +67,13 @@ pub struct StockInformation {
 }
 
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct StockListItem {
+    pub id: i64,
+    pub ticker: String,
+    pub name: String,
+}
+
 
 pub fn get_stock_by_id(conn: &Connection, id: u32) -> Result<Option<StockInformation>, Error> {
     let mut stmt = conn.prepare(
@@ -121,7 +128,27 @@ pub fn add_stock(conn: &Connection, stock: &StockInformation) -> Result<(), Stri
 
 
 
+pub fn get_all_stocks(conn: &Connection) -> Result<Vec<StockListItem>, String> {
+    let mut stmt = conn.prepare(
+        "SELECT id, ticker, name FROM stock ORDER BY name ASC"
+    ).map_err(|e| e.to_string())?;
 
+    let stocks_iter = stmt.query_map([], |row| {
+        Ok(StockListItem {
+            id: row.get(0)?,
+            ticker: row.get(1)?,
+            name: row.get(2)?,
+        })
+    }).map_err(|e| e.to_string())?;
 
+    let mut stocks = Vec::new();
+    for stock in stocks_iter {
+        match stock {
+            Ok(val) => stocks.push(val),
+            Err(_) => (),
+        }
+        //stocks.push(stock?);
+    }
 
-
+    Ok(stocks)
+}

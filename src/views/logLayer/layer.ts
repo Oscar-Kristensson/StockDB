@@ -8,6 +8,7 @@ import { CustomHeading } from "../../components/heading.ts";
 
 
 import { AddStockForm } from "./addStock.ts";
+import { AddRecordForm } from "./addQuarterly.ts";
 
 
 
@@ -19,7 +20,8 @@ class LogLayer extends AppLayer {
     tabs: CustomTabs | undefined;
     addStockContainer: HTMLDivElement | undefined;
     addRecordContainer: HTMLDivElement | undefined;
-    recordForm: AddStockForm | undefined;
+    stockForm: AddStockForm | undefined;
+    recordForm: AddRecordForm | undefined;
 
     constructor() {
         super("Log", "icons/StockIcon.svg");
@@ -39,18 +41,20 @@ class LogLayer extends AppLayer {
         this.addStockContainer = document.createElement("div");
         this.addStockContainer.className = "tabContainer";
         this.addStockContainer.classList.add("stock");
-        
         new CustomHeading(this.addStockContainer, "Information", "info", 2);
         
         this.addRecordContainer = document.createElement("div");
         this.addRecordContainer.className = "tabContainer";
         this.addRecordContainer.innerText = "record";
         this.addStockContainer.classList.add("stock");
+        new CustomHeading(this.addRecordContainer, "Information", "info", 2);
+
 
 
         // NOTE: This is temporary testing code for the CustomInputElement
 
-        this.recordForm = new AddStockForm(this.addStockContainer);
+        this.stockForm = new AddStockForm(this.addStockContainer);
+        this.recordForm = new AddRecordForm(this.addRecordContainer);
 
 
         

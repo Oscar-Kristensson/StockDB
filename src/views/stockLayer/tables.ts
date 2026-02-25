@@ -121,10 +121,10 @@ export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: 
 
     return {
         latest: 0,
-        lastYear: yearAllAvgRevenue,
-        last5Years: year10AvgRevenue,
-        last10Years: year5AvgRevenue,
-        lastAll: year1AvgRevenue,
+        lastYear: year1AvgRevenue,
+        last5Years: year5AvgRevenue,
+        last10Years: year10AvgRevenue,
+        lastAll: yearAllAvgRevenue,
     }
     
 }
