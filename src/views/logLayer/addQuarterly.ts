@@ -4,9 +4,55 @@ import * as utils from "../../utils.ts";
 import { CustomButtonElement } from "../../components/button.ts";
 import { CustomErrorMessage } from "../../components/errorMsg.ts";
 import * as db from "../../db"
+import { CustomInputElement, InputValidationError, InputValidationStates } from "../../components/input.ts";
+
+
+function validateYear(yearString: string) {
+    if (yearString === "") {
+        return InputValidationStates.empty;
+    }
+
+    const year = Number(yearString);
+
+    if (isNaN(Number(year))) {
+        return new InputValidationError(
+            InputValidationStates.error,
+            "Year must be a number"
+        )
+    }
+
+    const now: Date = new Date();
+    const currentYear: number = now.getFullYear();
+
+    if (year > currentYear) {
+        return new InputValidationError(
+            InputValidationStates.error,
+            `Year can not be larger than current year ${currentYear}`
+        )
+    }
+
+    if (year < 1900) {
+        return new InputValidationError(
+            InputValidationStates.error,
+            `This year ${year} is to small`
+        )
+    }
+
+
+
+
+    return InputValidationStates.ok;
+}
+
+
+
+
+
 
 
 export class AddRecordForm extends CustomFormElement {
+    yearInput: CustomInputElement;
+    quarterInput: CustomInputElement;
     stockSelector: CustomDropdownElement;
     infoPanel: HTMLDivElement;
     inputError: CustomErrorMessage;
@@ -17,6 +63,13 @@ export class AddRecordForm extends CustomFormElement {
 
         this.infoPanel = utils.createElement("div", this.container, ["infoPanel"]);
 
+
+        this.yearInput = new CustomInputElement(undefined, "Year", undefined, "number", false, validateYear);
+        this.yearInput.value = String(new Date().getFullYear());
+        this.addInput(this.yearInput);
+        
+        this.quarterInput = new CustomInputElement(undefined, "Quarter", undefined, "number", false);
+        this.addInput(this.quarterInput);
 
         this.stockSelector = new CustomDropdownElement(undefined, "Stock", []);
         this.addInput(this.stockSelector);
@@ -35,6 +88,7 @@ export class AddRecordForm extends CustomFormElement {
             }
 
             stockListItems.forEach((item) => {
+                // Should the dropdown item instead recieve the id instead of ticker
                 this.stockSelector.addItem(new DropDownItem(item.name, item.ticker))
             })
         })
