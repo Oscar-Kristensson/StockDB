@@ -165,6 +165,11 @@ export class AddStockForm extends CustomFormElement {
         )
 
         db.addStock(stock);
+
+
+        [this.exchange, this.ticker, this.name, this.industry].forEach(input => {
+            input.value = "";
+        })
         
 
     }

@@ -181,6 +181,13 @@ export class AddRecordForm extends CustomFormElement {
         if (isValid) {
             this.inputError.hide();
         }
+
+        [this.revenueInput, this.grossProfitInput, this.netIncomeInput, this.operatingIncomeInput, this.sharesOutstandingInput].forEach(input => {
+            input.value = "";
+        })
+
+
+
         return;
 
 
