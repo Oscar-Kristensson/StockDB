@@ -1,6 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
 import * as db from "./db";
-import { firstLayer, firstLayer2, firstLayer3 } from "./views/testLayers.ts";
 import { stockLayer } from "./views/stockLayer/stockLayer.ts";
 import { StockDB } from "./app.ts";
 import { logLayer } from "./views/logLayer/layer.ts";
@@ -56,12 +55,6 @@ function init() {
 
     stockDb.addLayer(logLayer);
     stockDb.addLayer(settingsLayer);
-
-
-    stockDb.addLayer(firstLayer);
-    stockDb.addLayer(firstLayer2);
-    stockDb.addLayer(firstLayer3);
-
 
     db.getStockInfoById(1)
     .then(result => {

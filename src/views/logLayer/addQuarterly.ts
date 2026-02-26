@@ -44,7 +44,31 @@ function validateYear(yearString: string) {
     return InputValidationStates.ok;
 }
 
+function validateQuarter(quarterString: string) {
+    if (quarterString === "") {
+        return InputValidationStates.empty;
+    }
 
+    const quarter = Number(quarterString);
+
+    if (isNaN(Number(quarter))) {
+        return new InputValidationError(
+            InputValidationStates.error,
+            "Quarter must be a number"
+        )
+    }
+
+    if (quarter > 4 || quarter < 1) {
+        return new InputValidationError(
+            InputValidationStates.error,
+            "Quarter must between 1 and 4"
+        )
+    }
+
+
+    return InputValidationStates.ok;
+
+}
 
 
 
@@ -54,6 +78,11 @@ export class AddRecordForm extends CustomFormElement {
     yearInput: CustomInputElement;
     quarterInput: CustomInputElement;
     stockSelector: CustomDropdownElement;
+    revenueInput: CustomInputElement;
+    grossProfitInput: CustomInputElement;
+    operatingIncomeInput: CustomInputElement;
+    netIncomeInput: CustomInputElement;
+    sharesOutstandingInput: CustomInputElement;
     infoPanel: HTMLDivElement;
     inputError: CustomErrorMessage;
 
@@ -63,17 +92,43 @@ export class AddRecordForm extends CustomFormElement {
 
         this.infoPanel = utils.createElement("div", this.container, ["infoPanel"]);
 
+        this.onInput = this.onInput.bind(this);
+
 
         this.yearInput = new CustomInputElement(undefined, "Year", undefined, "number", false, validateYear);
         this.yearInput.value = String(new Date().getFullYear());
         this.addInput(this.yearInput);
         
-        this.quarterInput = new CustomInputElement(undefined, "Quarter", undefined, "number", false);
+        this.quarterInput = new CustomInputElement(undefined, "Quarter (1-4)", undefined, "number", false, validateQuarter);
+        this.quarterInput.placeholder = "1";
         this.addInput(this.quarterInput);
-
-        this.stockSelector = new CustomDropdownElement(undefined, "Stock", []);
+        
+        this.stockSelector = new CustomDropdownElement(undefined, "Stock", [], true);
         this.addInput(this.stockSelector);
+        this.stockSelector.eventSystem?.listen("close", this.onInput);
+        
 
+        
+        
+        this.revenueInput = new CustomInputElement(undefined, "Quarter (1-4)", "SEK", "number", false);
+        this.revenueInput.placeholder = "1 000 000";
+        this.addInput(this.revenueInput);
+        
+        this.grossProfitInput = new CustomInputElement(undefined, "Gross profit", "SEK", "number", false);
+        this.grossProfitInput.placeholder = "1 000 000";
+        this.addInput(this.grossProfitInput);
+        
+        this.operatingIncomeInput = new CustomInputElement(undefined, "Operating income", "SEK", "number", false);
+        this.operatingIncomeInput.placeholder = "1 000 000";
+        this.addInput(this.operatingIncomeInput);
+        
+        this.netIncomeInput = new CustomInputElement(undefined, "Net income", "SEK", "number", false);
+        this.netIncomeInput.placeholder = "1 000 000";
+        this.addInput(this.netIncomeInput);
+        
+        this.sharesOutstandingInput = new CustomInputElement(undefined, "Shares outstanding", "SEK", "number", false);
+        this.sharesOutstandingInput.placeholder = "1 000 000";
+        this.addInput(this.sharesOutstandingInput);
         
 
         this.send = this.send.bind(this);
@@ -111,11 +166,21 @@ export class AddRecordForm extends CustomFormElement {
 
 
 
+        this.container.addEventListener("keydown", this.onInput);
+
+
+
+
 
     }
 
     override send() {
         console.log("Send add record!");
+        const isValid = this.validate(true);
+
+        if (isValid) {
+            this.inputError.hide();
+        }
         return;
 
 
@@ -123,11 +188,42 @@ export class AddRecordForm extends CustomFormElement {
 
     }
 
+    onInput() {
+        const valid = this.validate();
+        if (valid) {
+            this.container.classList.remove("invalid");
+        } else {
+            this.container.classList.add("invalid");
+        }
+    }
+
 
 
     validate(throwError: boolean = false): boolean {
         throwError;
-        return false;
+
+        console.log(this.stockSelector.value);
+
+        if (this.stockSelector.value === undefined) {
+            if (throwError)
+                this.inputError.throw("Invalid stock", "A stock must be selected");
+            return false;
+        }
+
+        if (this.yearInput.value === undefined || validateYear(this.yearInput.value) !== InputValidationStates.ok) {
+            if (throwError)
+                this.inputError.throw("Invalid year", "A valid year must be inputted");
+            return false;
+        }
+
+        if (this.quarterInput.value === undefined || validateQuarter(this.quarterInput.value) !== InputValidationStates.ok) {
+            if (throwError)
+                this.inputError.throw("Invalid quarterInput", "A quarter must be inputted");
+            return false;
+        }
+
+        
+
 
         return true;
     }

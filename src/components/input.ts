@@ -134,6 +134,7 @@ export class CustomInputElement implements CustomElementInterface {
 
     public set value(value: string) {
         this.input.value = value;
+        this.onInput();
 
     }
 

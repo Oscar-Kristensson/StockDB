@@ -24,7 +24,7 @@ class LogLayer extends AppLayer {
     recordForm: AddRecordForm | undefined;
 
     constructor() {
-        super("Log", "icons/StockIcon.svg");
+        super("Log", "icons/LogIcon.svg");
     }
 
 
