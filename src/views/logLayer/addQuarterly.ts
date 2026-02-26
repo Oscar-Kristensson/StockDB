@@ -188,6 +188,11 @@ export class AddRecordForm extends CustomFormElement {
 
 
 
+        this.container.classList.add("invalid");
+
+
+
+
         return;
 
 

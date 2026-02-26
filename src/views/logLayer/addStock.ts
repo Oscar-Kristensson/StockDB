@@ -67,9 +67,9 @@ export class AddStockForm extends CustomFormElement {
         this.ticker.placeholder = "ex INVE-B";
         this.addInput(this.ticker);
         
-        this.ticker.eventSystem?.listen("input", () => {
+        /*this.ticker.eventSystem?.listen("input", () => {
             this.ticker.value = this.ticker.value.toUpperCase();
-        })
+        }) -> Leads to an infinit loop */ 
         
 
 
@@ -158,9 +158,9 @@ export class AddStockForm extends CustomFormElement {
             return;
         }
 
+        const ticker = this.ticker.value.toLocaleUpperCase();
 
-
-        const stock = new StockInfo(0, this.ticker.value, this.name.value, 
+        const stock = new StockInfo(0, ticker, this.name.value, 
             this.exchange.value, this.sector.currentOption.value, this.industry.value, "SEK"
         )
 
@@ -170,6 +170,10 @@ export class AddStockForm extends CustomFormElement {
         [this.exchange, this.ticker, this.name, this.industry].forEach(input => {
             input.value = "";
         })
+
+
+        this.container.classList.add("invalid");
+
         
 
     }
