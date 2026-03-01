@@ -15,6 +15,7 @@ nav {
 
     grid-template-areas: 
         "heading heading"
+        "stockidinfo stockidinfo"
         "graph info"
         "overview info";
 
@@ -27,6 +28,7 @@ nav {
     .stockLayer {
         grid-template-areas: 
             "heading"
+            "stockidinfo"
             "graph "
             "overview"
             "info";
@@ -44,6 +46,9 @@ nav {
 }
 .stockLayer .informationContainer {
     grid-area: info;
+}
+.stockLayer .stockInfo {
+    grid-area: stockidinfo;
 }
 
 .stockLayer .overviewContainer .content {

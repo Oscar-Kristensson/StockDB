@@ -38,7 +38,7 @@ const statTypes = ["id", "ticker", "exchange", "sector", "industry", "currency"]
 
 export class CustomStockInfo implements CustomElementInterface {
     container: HTMLDivElement;
-    stockName: HTMLDivElement;
+    // stockName: HTMLDivElement;
     statContainer: HTMLDivElement;
     statElements: Array<StatElement>;
 
@@ -50,9 +50,14 @@ export class CustomStockInfo implements CustomElementInterface {
             this.container.classList.add(className);
         }
 
+        /* This element should not contain the stock name, 
+        that should instead be handled by another element
+
         this.stockName = document.createElement("div");
         this.stockName.className = "stockName";
         this.container.appendChild(this.stockName);
+
+        */
 
         this.statContainer = document.createElement("div");
         this.statContainer.className = "statContainer";
@@ -72,7 +77,7 @@ export class CustomStockInfo implements CustomElementInterface {
     }
 
     setStock(stock: StockInfo) {
-        this.stockName.innerText = stock.name;
+        // this.stockName.innerText = stock.name;
         this.statElements[0].setValue(stock.id.toString());
         this.statElements[1].setValue(stock.ticker.toString());
         this.statElements[2].setValue(stock.exchange.toString());

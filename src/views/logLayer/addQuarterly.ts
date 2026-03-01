@@ -136,6 +136,7 @@ export class AddRecordForm extends CustomFormElement {
         new CustomButtonElement(this.infoPanel, "Add record", "icons/addStockIcon.svg", [], this.send);
 
         // NOTE: This should reload each time the user visits the page
+        // NOTE: Or more likely everytime the stocks change (a stock is added etc)
         db.getAllStocks()
         .then(stockListItems => {
             if (stockListItems === null) {

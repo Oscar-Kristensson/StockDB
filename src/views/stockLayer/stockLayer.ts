@@ -9,6 +9,7 @@ import * as utils from "../../utils.ts"
 import { QuarterlyReport } from "../../db/quarterly.ts";
 import * as db from "../../db"
 import { calcDataAverages, OverviewTableRow, TableRowStruct } from "./tables.ts";
+import { CustomDropdownElement, DropDownItem } from "../../components/dropdown.ts";
 
 
 class StockLayer extends AppLayer {
@@ -34,6 +35,7 @@ class StockLayer extends AppLayer {
     operatingIncomeRow: OverviewTableRow | undefined;
     netIncomeRow: OverviewTableRow | undefined;
     sharesOutstandingRow: OverviewTableRow | undefined;
+    stockDropDown: CustomDropdownElement | undefined;
 
 
 
@@ -50,6 +52,9 @@ class StockLayer extends AppLayer {
         })
 
 
+        this.onStockListChange = this.onStockListChange.bind(this);
+
+
     }
 
     createUI() {
@@ -62,6 +67,9 @@ class StockLayer extends AppLayer {
         this.container.className = "stockLayer";
 
 
+        this.stockDropDown = new CustomDropdownElement(this.container, "Current stock", [], true);
+
+        
         this.stockInfo = new CustomStockInfo(this.container, "stockInfo");
 
         this.graphContainer = new CustomContainer(this.container, "Graph", "graphContainer")
@@ -74,11 +82,56 @@ class StockLayer extends AppLayer {
 
         this.generateStockOverViewTable();
 
+        if (this.app) {
+            this.app.events.listen("stockListUpdate", this.onStockListChange);
+        }
 
+        this.onStockListChange();
         
 
         
 
+    }
+
+    /**
+     * Is called when the stockList in the app is updated
+     * 
+     * Updates the stock selector dropdown
+     * 
+     * @returns 
+     */
+    onStockListChange() {
+
+        if (!this.app) {
+            console.warn("This layer is not bound to a layer");
+            return;
+        }
+
+        if (!this.app.stockItemList) {
+            return;
+        }
+
+
+        if (this.stockDropDown) {
+            this.stockDropDown.clearItems();
+
+            this.app.stockItemList.forEach(stockItem => {
+                this.stockDropDown?.addItem(new DropDownItem(stockItem.name, stockItem.ticker));
+            })
+
+            console.log("Updated dropdown list");
+
+            if (this.app.currentStock) {
+                console.log("Setting the current stock")
+                const values = this.stockDropDown.getValues()
+
+                if (values.length !== 0)
+                    this.stockDropDown.value = values[0];
+            }
+            
+        }
+
+        
     }
 
     /**
@@ -92,9 +145,9 @@ class StockLayer extends AppLayer {
         }
 
 
-        // Inorder for hte StockLayer to auto update the stock if it is changed
+        // Inorder for the StockLayer to auto update the stock if it is changed
         if (this.app) {
-            this.app.eventSystem.listen("stockChange", () => {
+            this.app.events.listen("stockChange", () => {
                 if (this.app 
                     && this.app.currentStock 
                     && this.app.currentLoadedLayer === this) {
@@ -131,7 +184,13 @@ class StockLayer extends AppLayer {
             console.warn("Could not complete setting the stock because the UI was not yet created, please call onLoad or createUI before setting the stock");
             return;
         }
-        this.stockInfo.setStock(this.stock)
+
+        this.stockInfo.setStock(this.stock);
+
+        if (this.stockDropDown) {
+            console.log("Updating dropdown value!");
+            this.stockDropDown.value = this.stock.ticker;
+        }
 
         db.getQuarterlyFromStockID(this.stock.id)
             .then(result => {

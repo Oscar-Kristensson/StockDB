@@ -28,6 +28,10 @@ export class DropDownItem {
         this.dropdown?.updateCurrentOption(this);
 
     }
+
+    delete() {
+        this.container.remove();
+    }
 }
 
 
@@ -74,9 +78,9 @@ export class CustomDropdownElement implements CustomElementInterface {
 
 
 
-        this.items = items;
-    
-        this.items.forEach(item => {
+        this.items = [];
+
+        items.forEach(item => {
             this.addItem(item);
         });
 
@@ -94,14 +98,28 @@ export class CustomDropdownElement implements CustomElementInterface {
 
     addItem(item: DropDownItem) {
         this.dropdownContainer.appendChild(item.container);
+        this.items.push(item);
         item.dropdown = this;
         
 
     }
 
-    updateCurrentOption(item: DropDownItem, forceUpdate: boolean = false) {
+    clearItems() {
+        this.items.forEach(item => {
+            item.delete();
+        })
+    }
 
-        if (this.state === DropdownState.closed)
+    /**
+     * Sets the current option to a DropDownItem
+     * 
+     * @param item 
+     * @param forceUpdate 
+     * @param evenIfClosed 
+     * @returns 
+     */
+    updateCurrentOption(item: DropDownItem, forceUpdate: boolean = false, checkIfOpen:boolean = true) {
+        if (checkIfOpen && this.state === DropdownState.closed)
             return;
 
         if (forceUpdate && item === this.currentOption) {
@@ -116,6 +134,9 @@ export class CustomDropdownElement implements CustomElementInterface {
 
 
     }
+
+
+
 
     
 
@@ -134,8 +155,31 @@ export class CustomDropdownElement implements CustomElementInterface {
     }
 
 
-    get value() {
+    getValues() {
+        const values: Array<string | number> = [];
+        this.items.forEach(item => {
+            values.push(item.value);
+        })
+
+        return values;
+    }
+
+
+    get value() : number | string | undefined {
         return this.currentOption?.value;
+    }
+
+    set value(value: string | number) {
+        const values = this.getValues();
+        const index = values.indexOf(value)
+        if (index === -1) {
+            return;
+        }
+
+        const newValueItem = this.items[index];
+        console.log("newValueItem", newValueItem);
+        this.updateCurrentOption(newValueItem, false, false);
+
     }
 
 
