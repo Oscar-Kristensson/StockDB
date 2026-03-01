@@ -74,3 +74,40 @@ export function getQuarterlyFromStockID(stockId: Number) {
     })
 }
 
+export function addQuarterly(
+    stock_id: number,
+    fiscal_year: number,
+    fiscal_quarter: number,
+    revenue: number,
+    gross_profit: number,
+    operating_income: number,
+    net_income: number,
+    shares_outstanding: number,
+    currency: String,
+
+) {
+    return new Promise((resolve, reject) => {
+        invoke("db_add_quarterly", {
+            stockId: stock_id,
+            fiscalYear: fiscal_year,
+            fiscalQuarter: fiscal_quarter,
+            revenue: revenue,
+            grossProfit: gross_profit,
+            operatingIncome: operating_income,
+            netIncome: net_income,
+            sharesOutstanding: shares_outstanding,
+            currency: currency,
+        })
+        .then(rv => {
+            resolve(rv);
+            //resolve(rv);
+        }) 
+        // The rust errors should be structured to improve error handeling
+        .catch(error => {
+            printError(error, addQuarterly);
+            reject(error);
+        })       
+    })
+}
+
+
