@@ -56,10 +56,13 @@ export class AddStockForm extends CustomFormElement {
     industry: CustomInputElement;
     infoPanel: HTMLDivElement;
     inputError: CustomErrorMessage;
+    events: utils.EventSystem;
 
 
     constructor(parent: HTMLElement) {
         super(parent);
+
+        this.events = new utils.EventSystem();
 
         this.infoPanel = utils.createElement("div", this.container, ["infoPanel"]);
 
@@ -165,6 +168,8 @@ export class AddStockForm extends CustomFormElement {
         )
 
         db.addStock(stock);
+
+        this.events.post("added");
 
 
         [this.exchange, this.ticker, this.name, this.industry].forEach(input => {

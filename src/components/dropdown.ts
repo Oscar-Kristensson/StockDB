@@ -44,14 +44,14 @@ export class CustomDropdownElement implements CustomElementInterface {
     state: DropdownState;
     items: Array<DropDownItem>;
     currentOption: DropDownItem | undefined;
-    eventSystem: utils.EventSystem | undefined;
+    events: utils.EventSystem | undefined;
     
 
     constructor(
         parent: HTMLElement | undefined, 
         name: string,
         items: Array<DropDownItem>,
-        eventSystem: boolean = false,
+        events: boolean = false,
 
     ) {
         this.state = DropdownState.closed;
@@ -84,8 +84,8 @@ export class CustomDropdownElement implements CustomElementInterface {
             this.addItem(item);
         });
 
-        if (eventSystem) {
-            this.eventSystem = new utils.EventSystem();
+        if (events) {
+            this.events = new utils.EventSystem();
         }
 
         
@@ -129,6 +129,9 @@ export class CustomDropdownElement implements CustomElementInterface {
         this.currentOption = item;
 
         this.selectedOption.innerText = this.currentOption.name;
+        
+
+        this.events?.post("change");
 
         this.close();
 
@@ -149,8 +152,8 @@ export class CustomDropdownElement implements CustomElementInterface {
         this.state = DropdownState.closed;
         this.container.classList.remove("open");
 
-        if (this.eventSystem) {
-            this.eventSystem.post("close");
+        if (this.events) {
+            this.events.post("close");
         }
     }
 

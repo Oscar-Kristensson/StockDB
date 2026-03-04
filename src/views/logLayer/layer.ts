@@ -54,6 +54,9 @@ class LogLayer extends AppLayer {
         // NOTE: This is temporary testing code for the CustomInputElement
 
         this.stockForm = new AddStockForm(this.addStockContainer);
+        this.stockForm.events.listen("added", () => {
+            this.app?.updateStockList();
+        })
         this.recordForm = new AddRecordForm(this.addRecordContainer);
 
 

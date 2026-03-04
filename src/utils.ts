@@ -80,8 +80,6 @@ export class EventSystem {
             return;
         }
 
-        console.log("Posted: ", type);
-
         for (let i = 0; i < this.listeners[type].length; i++) {
             this.listeners[type][i]()
 

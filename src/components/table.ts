@@ -41,7 +41,6 @@ export class CustomTable implements CustomElementInterface {
 
 
         (header ? this.tableHead : this.tableBody).appendChild(row.container);
-        console.log("Adding to", this.tableHead, this.tableBody, row.container);
         
     }
 

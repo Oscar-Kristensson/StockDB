@@ -55,6 +55,7 @@ class StockLayer extends AppLayer {
         this.onStockListChange = this.onStockListChange.bind(this);
 
 
+
     }
 
     createUI() {
@@ -68,6 +69,15 @@ class StockLayer extends AppLayer {
 
 
         this.stockDropDown = new CustomDropdownElement(this.container, "Current stock", [], true);
+        this.stockDropDown.events?.listen("change", () => {
+            if (!this.stockDropDown?.value) {
+                return;                
+            }
+
+            const index = Number(this.stockDropDown.value);
+            this.app?.setStock(index);
+
+        });
 
         
         this.stockInfo = new CustomStockInfo(this.container, "stockInfo");
@@ -116,10 +126,9 @@ class StockLayer extends AppLayer {
             this.stockDropDown.clearItems();
 
             this.app.stockItemList.forEach(stockItem => {
-                this.stockDropDown?.addItem(new DropDownItem(stockItem.name, stockItem.ticker));
+                this.stockDropDown?.addItem(new DropDownItem(stockItem.name, stockItem.id));
             })
 
-            console.log("Updated dropdown list");
 
             if (this.app.currentStock) {
                 console.log("Setting the current stock")
@@ -213,6 +222,8 @@ class StockLayer extends AppLayer {
 
 
                     
+                } else {
+                    console.warn("Not an array", result);
                 }
             })
             .catch(error => {
@@ -234,6 +245,15 @@ class StockLayer extends AppLayer {
 
 
     onQuarterlyRecieved() {
+        console.log("Recieved quarterly for", this.app?.currentStock?.ticker);
+        this.updateStockOverviewTable();
+
+
+    }
+
+    updateStockOverviewTable() {
+        this.clearStockOverviewTable();
+
         if (!this.quarterlyRecords) {
             return;
         }
@@ -252,10 +272,15 @@ class StockLayer extends AppLayer {
 
         const shares_outstanding = calcDataAverages(this.quarterlyRecords, "shares_outstanding");
         this.sharesOutstandingRow?.data.setDataS(shares_outstanding);
+    }
 
-        
-
-
+    clearStockOverviewTable() {
+        console.log("Clearing stock overview table");
+        this.revenueRow?.data.setData(undefined, 0, 0, 0, 0);
+        this.grossProfitRow?.data.setData(undefined, 0, 0, 0, 0);
+        this.operatingIncomeRow?.data.setData(undefined, 0, 0, 0, 0);
+        this.netIncomeRow?.data.setData(undefined, 0, 0, 0, 0);
+        this.sharesOutstandingRow?.data.setData(undefined, 0, 0, 0, 0);
     }
 
 

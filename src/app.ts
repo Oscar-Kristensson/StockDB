@@ -23,9 +23,29 @@ export class StockDB extends LayerSwitcher {
         return this;
     }
 
-    public set stock(stock: StockInfo){
+    public set stock(stock: StockInfo | undefined){
         this.currentStock = stock;
         this.events.post("stockChange");
+    }
+
+
+    setStock(id: number | undefined) {
+        if (!id) {
+            this.stock = undefined;
+            return;
+        }
+
+        db.getStockInfoById(id)
+        .then(result => {
+            if (!(result instanceof StockInfo)) {
+                throw new Error("The result was not a stock");
+            }
+
+            this.stock = result;
+        })
+        .catch(error => {
+            console.error("Error occured when fetching stock from database", error);
+        })
     }
 
 
