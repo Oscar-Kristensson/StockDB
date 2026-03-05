@@ -105,7 +105,7 @@ export class AddRecordForm extends CustomFormElement {
         
         this.stockSelector = new CustomDropdownElement(undefined, "Stock", [], true);
         this.addInput(this.stockSelector);
-        this.stockSelector.eventSystem?.listen("close", this.onInput);
+        this.stockSelector.events?.listen("close", this.onInput);
         
 
         
@@ -145,7 +145,7 @@ export class AddRecordForm extends CustomFormElement {
 
             stockListItems.forEach((item) => {
                 // Should the dropdown item instead recieve the id instead of ticker
-                this.stockSelector.addItem(new DropDownItem(item.name, item.ticker))
+                this.stockSelector.addItem(new DropDownItem(item.name, item.id))
             })
         })
         
@@ -182,6 +182,28 @@ export class AddRecordForm extends CustomFormElement {
         if (isValid) {
             this.inputError.hide();
         }
+
+        if (!(typeof this.stockSelector.value === "number")) {
+            return;
+
+        }
+
+
+
+
+        db.addQuarterly(
+            this.stockSelector.value, 
+            Number(this.yearInput.value), 
+            Number(this.quarterInput.value), 
+            Number(this.revenueInput.value), 
+            Number(this.grossProfitInput.value), 
+            Number(this.operatingIncomeInput.value), 
+            Number(this.netIncomeInput.value), 
+            Number(this.sharesOutstandingInput.value), 
+            "SEK"
+        );
+
+
 
         [this.revenueInput, this.grossProfitInput, this.netIncomeInput, this.operatingIncomeInput, this.sharesOutstandingInput].forEach(input => {
             input.value = "";

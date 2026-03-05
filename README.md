@@ -1,8 +1,9 @@
 # StockDB
-StockDB is a local database for tracking key statistics about stocks. Note that this is my first rust project, so the rust code quality may not be up to standard. StockDB is built using tauri, with the front end being built in TypeScript with vanilla HTML/CSS and the backend built in Rust for handling communications with a SQLite database using rusqlite. 
+StockDB is a local database for tracking key statistics about stocks. Note that this is my first rust project, so the rust code quality may not be up to standard. StockDB is built using tauri, with a front end in TypeScript using vanilla HTML/CSS and a Rust backend built for handling communications with a SQLite database using rusqlite. 
 
 ## Installation
-TBD
+### Windows
+Download the msi installer (TBD) and run it 
 
 
 ## Development Setup
