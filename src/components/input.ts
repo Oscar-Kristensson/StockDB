@@ -1,4 +1,4 @@
-import { EventSystem } from "../utils.ts";
+import { EventSystem } from "../utils";
 import { CustomElementInterface } from "./base.ts";
 
 export enum InputValidationStates {

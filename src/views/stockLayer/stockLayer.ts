@@ -5,7 +5,7 @@ import { CustomStockInfo } from "../../components/stockInfo.ts";
 import { StockInfo } from "../../db/stocks.ts";
 import { StockDB } from "../../app.ts";
 import { CustomLabelElement } from "./customLabel.ts";
-import * as utils from "../../utils.ts"
+import * as utils from "../../utils"
 import { QuarterlyReport } from "../../db/quarterly.ts";
 import * as db from "../../db"
 import { calcDataAverages, OverviewTableRow, TableRowStruct } from "./tables.ts";

@@ -1,17 +1,16 @@
 import { StockInfo, StockListItem } from "./db/stocks.ts";
 import { LayerSwitcher } from "./appLayer.ts";
-import { EventSystem } from "./utils.ts";
 import * as db from "./db"
-import * as utils from "./utils.ts"
+import * as utils from "./utils"
 
 export class StockDB extends LayerSwitcher {
     public currentStock:  utils.SmartVar<StockInfo | undefined>;
-    public events: EventSystem;
+    public events: utils.EventSystem;
     public stockItemList: utils.SmartVar<Array<StockListItem> | undefined>;
 
     constructor(navContainer: HTMLElement, mainContainer: HTMLElement) {
         super(navContainer, mainContainer);
-        this.events = new EventSystem();
+        this.events = new utils.EventSystem();
         this.currentStock = new utils.SmartVar<StockInfo | undefined>(undefined, (value) => {
             return value instanceof StockInfo || typeof value === "undefined";
         });

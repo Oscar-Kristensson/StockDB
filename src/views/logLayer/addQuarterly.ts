@@ -1,6 +1,6 @@
 import { CustomFormElement } from "../../components/form.ts";
 import { CustomDropdownElement, DropDownItem } from "../../components/dropdown.ts";
-import * as utils from "../../utils.ts";
+import * as utils from "../../utils";
 import { CustomButtonElement } from "../../components/button.ts";
 import { CustomErrorMessage } from "../../components/errorMsg.ts";
 import * as db from "../../db"

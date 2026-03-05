@@ -1,7 +1,7 @@
 import { AppLayer } from "../../appLayer.ts";
 import { StockDB } from "../../app.ts";
 import { CustomHeading } from "../../components/heading.ts";
-import * as utils from "../../utils.ts"
+import * as utils from "../../utils"
 import { os } from "../../os.ts";
 
 class SettingsLayer extends AppLayer {
@@ -26,10 +26,11 @@ class SettingsLayer extends AppLayer {
         new CustomHeading(this.container, "Settings", "info", 2);
 
 
-        const text = new utils.SmartVar<string>("", (value: string) => {
+        const text = new utils.SmartVar<string>("");
+        text.events.listen("update", () => {
             if (!this.container)
                 return;
-            this.container.innerText = value;
+            this.container.innerText = text.value;
 
         })
 
