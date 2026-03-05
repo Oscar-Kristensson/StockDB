@@ -46,10 +46,11 @@ class StockLayer extends AppLayer {
 
         this.averageRevenueElement = new CustomLabelElement(undefined, "Unkown");
         
-        this.averageRevenue = new utils.SmartVar<string>("Unkown", () => {
+        this.averageRevenue = new utils.SmartVar<string>("Unkown")
+        this.averageRevenue.events.listen("update", () => {
             if (this.averageRevenueElement)
                 this.averageRevenueElement.content.innerText = this.averageRevenue.value;
-        })
+        });
 
 
         this.onStockListChange = this.onStockListChange.bind(this);
@@ -130,7 +131,7 @@ class StockLayer extends AppLayer {
             })
 
 
-            if (this.app.currentStock) {
+            if (this.app.stock) {
                 console.log("Setting the current stock")
                 const values = this.stockDropDown.getValues()
 
@@ -158,9 +159,9 @@ class StockLayer extends AppLayer {
         if (this.app) {
             this.app.events.listen("stockChange", () => {
                 if (this.app 
-                    && this.app.currentStock 
+                    && this.app.stock 
                     && this.app.currentLoadedLayer === this) {
-                    this.setStock(this.app.currentStock);
+                    this.setStock(this.app.stock);
                 }
             });            
 
@@ -179,8 +180,8 @@ class StockLayer extends AppLayer {
 
         this.createUI();
 
-        if (this.app?.currentStock) {
-            this.setStock(this.app.currentStock);
+        if (this.app?.stock) {
+            this.setStock(this.app.stock);
         }
 
         return this.container;
@@ -245,7 +246,7 @@ class StockLayer extends AppLayer {
 
 
     onQuarterlyRecieved() {
-        console.log("Recieved quarterly for", this.app?.currentStock?.ticker);
+        console.log("Recieved quarterly for", this.app?.stock?.ticker);
         this.updateStockOverviewTable();
 
 

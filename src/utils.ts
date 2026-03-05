@@ -32,18 +32,16 @@ export function pascalToWords(value: string): string {
 
 export class SmartVar<T> {
     _value: T;
-    onUpdate: ((value: T) => void) | undefined;
-    constructor(value: T, onUpdate: ((value: T) => void) | undefined = undefined) {
+    events: EventSystem;
+    constructor(value: T) {
         this._value = value;
-        this.onUpdate = onUpdate;
+        this.events = new EventSystem();
+
     }
 
     public set value(value: T) {
         this._value = value;
-        if (!this.onUpdate)
-            return;
-
-        this.onUpdate(this._value);
+        this.events.post("updated");
     }
 
     public get value() : T {

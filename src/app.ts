@@ -2,15 +2,17 @@ import { StockInfo, StockListItem } from "./db/stocks.ts";
 import { LayerSwitcher } from "./appLayer.ts";
 import { EventSystem } from "./utils.ts";
 import * as db from "./db"
+import * as utils from "./utils.ts"
 
 export class StockDB extends LayerSwitcher {
-    public currentStock: StockInfo | undefined = undefined;
+    public currentStock:  utils.SmartVar<StockInfo | undefined>;
     public events: EventSystem;
     public stockItemList: Array<StockListItem> | undefined;
 
     constructor(navContainer: HTMLElement, mainContainer: HTMLElement) {
         super(navContainer, mainContainer);
         this.events = new EventSystem();
+        this.currentStock = new utils.SmartVar(undefined);
         this.updateStockList();
 
     }
@@ -24,8 +26,12 @@ export class StockDB extends LayerSwitcher {
     }
 
     public set stock(stock: StockInfo | undefined){
-        this.currentStock = stock;
+        this.currentStock.value = stock;
         this.events.post("stockChange");
+    }
+
+    public get stock() {
+        return this.currentStock.value;
     }
 
 
