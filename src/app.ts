@@ -7,12 +7,16 @@ import * as utils from "./utils.ts"
 export class StockDB extends LayerSwitcher {
     public currentStock:  utils.SmartVar<StockInfo | undefined>;
     public events: EventSystem;
-    public stockItemList: Array<StockListItem> | undefined;
+    public stockItemList: utils.SmartVar<Array<StockListItem> | undefined>;
 
     constructor(navContainer: HTMLElement, mainContainer: HTMLElement) {
         super(navContainer, mainContainer);
         this.events = new EventSystem();
-        this.currentStock = new utils.SmartVar(undefined);
+        this.currentStock = new utils.SmartVar<StockInfo | undefined>(undefined, (value) => {
+            return value instanceof StockInfo || typeof value === "undefined";
+        });
+
+        this.stockItemList = new utils.SmartVar<Array<StockListItem> | undefined>(undefined);
         this.updateStockList();
 
     }
@@ -63,11 +67,13 @@ export class StockDB extends LayerSwitcher {
             }
 
             // Clear list
-            this.stockItemList = [];
+            this.stockItemList.setValue([]);
+
+            
 
             stockListItems.forEach((item) => {
                 // Should the dropdown item instead recieve the id instead of ticker
-                this.stockItemList?.push(item);
+                this.stockItemList.value?.push(item);
             })
 
             this.events.post("stockListUpdate");

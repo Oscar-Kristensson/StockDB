@@ -126,7 +126,7 @@ class StockLayer extends AppLayer {
         if (this.stockDropDown) {
             this.stockDropDown.clearItems();
 
-            this.app.stockItemList.forEach(stockItem => {
+            this.app.stockItemList.value?.forEach(stockItem => {
                 this.stockDropDown?.addItem(new DropDownItem(stockItem.name, stockItem.id));
             })
 
