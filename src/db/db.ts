@@ -35,6 +35,12 @@ export function debugTable(table: string) {
 
 // NOTE: This should be converted to promises
 // NOTE: This should have more sophisticated error handling
+/**
+ * Retrieves a StockInfo struct (or null) in the form of a promise
+ * 
+ * @param id The ID if the stock in the DB
+ * @returns A promise that gets the value null or a StockInfo
+ */
 export function getStockInfoById(id: number) : Promise<StockInfo | null> {
     return new Promise((resolve, reject) => {
         invoke("db_get_stock_info_by_id", {

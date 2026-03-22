@@ -51,7 +51,12 @@ export class QuarterlyReport {
     }
 }
 
-export function getQuarterlyFromStockID(stockId: Number) {
+/**
+ * 
+ * @param stockId 
+ * @returns 
+ */
+export function getQuarterlyFromStockID(stockId: Number) : Promise<Array<QuarterlyReport>> {
     console.log(stockId);
     return new Promise((resolve, reject) => {
         invoke("db_get_quarterly_from_stock_id", { stockId: stockId })
