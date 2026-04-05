@@ -3,10 +3,13 @@ import { StockDB } from "../../app.ts";
 import { CustomHeading } from "../../components/heading.ts";
 import * as utils from "../../utils"
 import { os } from "../../os.ts";
+import { CustomContainer } from "../../components/container.ts";
+import { ExportOptions } from "./exportOptions.ts";
 
 class SettingsLayer extends AppLayer {
     app: StockDB | undefined;
     container: HTMLDivElement | undefined;
+    exportOptions: ExportOptions | undefined;
 
 
     constructor() {
@@ -26,24 +29,31 @@ class SettingsLayer extends AppLayer {
         new CustomHeading(this.container, "Settings", "info", 2);
 
 
+        const linksContainer = new CustomContainer(this.container, "Links");
+
+        this.exportOptions = new ExportOptions(this.container);
+        
+
         const text = new utils.SmartVar<string>("");
-        text.events.listen("update", () => {
-            if (!this.container)
-                return;
-            this.container.innerText = text.value;
+        text.events.listen("updated", () => {
+            console.log(">>", text);
+            linksContainer.getTopMostHTMLContainer().innerText = text.value;
 
         })
 
         
         os.getDataDir()
         .then(result => {
-            if (this.container && typeof result === "string")
+            console.log(result, typeof result);
+            if (typeof result === "string"){
                 text.value += "\nData dir: " + result;
+
+            }
         })
 
         os.getcwd()
         .then(result => {
-            if (this.container && typeof result === "string")
+            if (typeof result === "string")
                 text.value += "\nWorking dir: " + result;
         })
     }

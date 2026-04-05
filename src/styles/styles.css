@@ -439,3 +439,16 @@ h2 {
 .customButtonElement .label {
     color: #fff;
 }
+
+
+
+.customCodeElement {
+    padding: 16px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 16px;
+    display: inherit;
+}
+
+.customCodeElement.hide {
+    display: none;
+}

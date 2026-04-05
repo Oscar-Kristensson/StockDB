@@ -7,10 +7,11 @@ export class CustomContainer implements CustomElementInterface {
     contentContainer: HTMLDivElement;
     heading : HTMLHeadingElement;
 
-    constructor(parent: HTMLElement | undefined, heading:string, className: string) {
+    constructor(parent: HTMLElement | undefined, heading:string, className: string | undefined = undefined) {
         this.mainContainer = document.createElement("div");
         this.mainContainer.className = "customContainer";
-        this.mainContainer.classList.add(className);
+        if (className !== undefined && className !== "")
+            this.mainContainer.classList.add(className);
 
         this.heading = document.createElement("div");
         this.heading.className = "containerHeading";

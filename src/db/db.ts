@@ -8,11 +8,15 @@ import { printError } from "../utils";
 
 
 
-export function debugTable(table: string) {
+export function debugTable(table: string, asString = true) {
     return invoke("db_debug_table", {
         table: table,
     })
     .then(result => {
+        if (!asString) {
+            return result;
+        }
+
         let rv:string = "";
         if (result instanceof Array) {
             result.forEach(row => {

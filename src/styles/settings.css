@@ -1,3 +1,21 @@
 .settingsLayer {
     padding: 16px;
 }
+
+
+.settingsLayer h3 {
+    font-size: 1.25rem;
+}
+
+.settingsLayer .buttonPanel {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    
+}
+
+
+.settingsLayer .buttonPanel .customButtonElement {
+    margin-right: 12px;
+    margin-bottom: 12px;
+}

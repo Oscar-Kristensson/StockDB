@@ -12,6 +12,10 @@ export class CustomHeading {
             case 2:
                 this.heading = document.createElement("h2");
                 break;
+                
+            case 3:
+                this.heading = document.createElement("h3");
+                break;
 
             default:
             case 1:
