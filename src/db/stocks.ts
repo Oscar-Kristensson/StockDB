@@ -52,6 +52,10 @@ export class StockInfo {
             ("industry" in obj)
         );
     }
+
+    getStockListItem() : StockListItem {
+        return new StockListItem(this.id, this.ticker, this.name);
+    }
 }
 
 

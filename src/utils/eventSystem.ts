@@ -12,6 +12,9 @@ export class EventSystem {
         }
 
         for (let i = 0; i < this.listeners[type].length; i++) {
+            console.log(this.listeners);
+            console.log(this.listeners[type]);
+            console.log(this.listeners[type][i]);
             this.listeners[type][i]()
 
         }

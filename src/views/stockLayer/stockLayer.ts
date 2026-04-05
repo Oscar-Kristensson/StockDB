@@ -2,7 +2,6 @@ import { AppLayer } from "../../appLayer.ts";
 import { CustomContainer } from "../../components/container.ts";
 import { CustomTable } from "../../components/table.ts";
 import { CustomStockInfo } from "../../components/stockInfo.ts";
-import { StockInfo } from "../../db/stocks.ts";
 import { StockDB } from "../../app.ts";
 import { CustomLabelElement } from "./customLabel.ts";
 import * as utils from "../../utils"
@@ -10,7 +9,7 @@ import { QuarterlyReport } from "../../db/quarterly.ts";
 import * as db from "../../db"
 import { calcDataAverages, OverviewTableRow, TableRowStruct } from "./tables.ts";
 import { CustomDropdownElement, DropDownItem } from "../../components/dropdown.ts";
-
+import * as economy from "../../economy"
 
 class StockLayer extends AppLayer {
     container: HTMLElement | undefined;
@@ -20,7 +19,7 @@ class StockLayer extends AppLayer {
     stockInfo: CustomStockInfo | undefined;
     overviewTable: CustomTable | undefined;
 
-    stock: StockInfo | undefined;
+    stock: economy.Stock | undefined;
     app: StockDB | undefined;
 
     quarterlyRecords?: Array<QuarterlyReport>
@@ -135,6 +134,7 @@ class StockLayer extends AppLayer {
                 console.log("Setting the current stock")
                 const values = this.stockDropDown.getValues()
 
+                // NOTE: Consider removing this since it causes weird behavior
                 if (values.length !== 0)
                     this.stockDropDown.value = values[0];
             }
@@ -187,7 +187,7 @@ class StockLayer extends AppLayer {
         return this.container;
     }
 
-    setStock(stock: StockInfo) {
+    setStock(stock: economy.Stock) {
         this.stock = stock;
         
         if (!this.stockInfo) {
@@ -195,14 +195,18 @@ class StockLayer extends AppLayer {
             return;
         }
 
-        this.stockInfo.setStock(this.stock);
-
+        if (!this.stock.info){
+            console.warn("The stock must have info loaded");
+            return;
+        }
+        this.stockInfo.setStock(this.stock.info);
+        
         if (this.stockDropDown) {
             console.log("Updating dropdown value!");
-            this.stockDropDown.value = this.stock.ticker;
+            this.stockDropDown.value = this.stock.info.ticker;
         }
 
-        db.getQuarterlyFromStockID(this.stock.id)
+        db.getQuarterlyFromStockID(this.stock.info.id)
             .then(result => {
                 if (result instanceof Array) {
                     console.log("Sorting", result);
@@ -246,7 +250,7 @@ class StockLayer extends AppLayer {
 
 
     onQuarterlyRecieved() {
-        console.log("Recieved quarterly for", this.app?.stock?.ticker);
+        console.log("Recieved quarterly for", this.app?.stock?.info?.ticker);
         this.updateStockOverviewTable();
 
 
@@ -259,7 +263,7 @@ class StockLayer extends AppLayer {
             return;
         }
 
-        const revenue = calcDataAverages(this.quarterlyRecords, "revenue");
+        /*const revenue = calcDataAverages(this.quarterlyRecords, "revenue");
         this.revenueRow?.data.setDataS(revenue);
 
         const gross_profit = calcDataAverages(this.quarterlyRecords, "gross_profit");
@@ -272,7 +276,7 @@ class StockLayer extends AppLayer {
         this.netIncomeRow?.data.setDataS(net_income);
 
         const shares_outstanding = calcDataAverages(this.quarterlyRecords, "shares_outstanding");
-        this.sharesOutstandingRow?.data.setDataS(shares_outstanding);
+        this.sharesOutstandingRow?.data.setDataS(shares_outstanding);*/
     }
 
     clearStockOverviewTable() {

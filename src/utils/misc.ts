@@ -95,13 +95,18 @@ export class DtPoint<T> {
 
 }
 
+type AverageInfo = {
+    average: number,
+    count: number
+}
+
 /**
  * @param fromTime 
  * @param toTime 
  * @param data 
  * @returns 
  */
-export function getAverageS(fromTime: number | undefined, toTime: number | undefined, data: Array<DtPoint<number | null>>) : undefined | number {
+export function getAverageS(fromTime: number | undefined, toTime: number | undefined, data: Array<DtPoint<number | null>>) : undefined | AverageInfo {
     let previousTime = fromTime;
 
     let total = 0;
@@ -115,13 +120,28 @@ export function getAverageS(fromTime: number | undefined, toTime: number | undef
         if (fromTime && dataPoint.time < fromTime) continue;
         if (toTime && dataPoint.time > toTime) continue;
 
-        if (dataPoint.data !== null) {
-            total += dataPoint.data;
-            count++;
+        if (dataPoint.data === null) {
+            return undefined;
         }
+
+       
+        total += dataPoint.data;
+        count++;
+    
     }
 
-    return total/count;
+    return {
+        average: total/count,
+        count: count,
+    };
 
 
 }
+
+
+export function getCurrentQuarter(date: Date = new Date()): number {
+  const month = date.getMonth(); // 0 = Jan, 11 = Dec
+  return Math.floor(month / 3) + 1;
+}
+
+

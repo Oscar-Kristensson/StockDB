@@ -1,7 +1,7 @@
 import * as db from "../db"
 import * as utils from "../utils"
 
-class Stock {
+export class Stock {
     list: db.StockListItem
     _info: db.StockInfo | undefined
     _data: Array<db.QuarterlyReport> | undefined
@@ -36,9 +36,11 @@ class Stock {
 
 
     loadData(reload: boolean = false) {
+        console.log("Loading data", !this._data);
         // If not reloading, do not reload the data
-        if (!reload && (!this._data || this._data.length)) {
-            return
+        if (reload && (!this._data || this._data.length === 0)) {
+            console.warn("Failed to load data");
+            return;
         }
 
         return db.getQuarterlyFromStockID(this.list.id)
@@ -58,6 +60,9 @@ class Stock {
     public get data() : Array<db.QuarterlyReport> | undefined {
         return this._data;
     }
+
+
+    
 
 
 }

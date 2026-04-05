@@ -2,17 +2,18 @@ import { StockInfo, StockListItem } from "./db/stocks.ts";
 import { LayerSwitcher } from "./appLayer.ts";
 import * as db from "./db"
 import * as utils from "./utils"
+import * as economy from "./economy"
 
 export class StockDB extends LayerSwitcher {
-    public currentStock:  utils.SmartVar<StockInfo | undefined>;
+    public currentStock:  utils.SmartVar<economy.Stock | undefined>;
     public events: utils.EventSystem;
     public stockItemList: utils.SmartVar<Array<StockListItem> | undefined>;
 
     constructor(navContainer: HTMLElement, mainContainer: HTMLElement) {
         super(navContainer, mainContainer);
         this.events = new utils.EventSystem();
-        this.currentStock = new utils.SmartVar<StockInfo | undefined>(undefined, (value) => {
-            return value instanceof StockInfo || typeof value === "undefined";
+        this.currentStock = new utils.SmartVar<economy.Stock | undefined>(undefined, (value) => {
+            return value instanceof economy.Stock || typeof value === "undefined";
         });
 
         this.stockItemList = new utils.SmartVar<Array<StockListItem> | undefined>(undefined);
@@ -28,7 +29,7 @@ export class StockDB extends LayerSwitcher {
         return this;
     }
 
-    public set stock(stock: StockInfo | undefined){
+    public set stock(stock: economy.Stock | undefined){
         this.currentStock.value = stock;
         this.events.post("stockChange");
     }
@@ -50,7 +51,33 @@ export class StockDB extends LayerSwitcher {
                 throw new Error("The result was not a stock");
             }
 
-            this.stock = result;
+            const stock = new economy.Stock(result);
+            this.stock = stock;
+
+            // Testing code
+            const act = () => {
+                console.log("Act:", stock);
+
+
+                
+
+            }
+            stock.event.listen("update.info", act);
+            stock.event.listen("update.data", act);
+            stock.event.listen("update.data", () => {
+                if (!stock.data) return;
+
+                console.log("Loaded Q reports")
+
+                const currentQuarter = utils.getCurrentQuarter();
+                const year = new Date().getFullYear()
+                const totalPeriod = utils.calcTotalPeriod(year, currentQuarter);
+
+                economy.StockStatistics.fromQuarterlyReports(stock.data, totalPeriod - 1);
+            });
+            stock.loadInfo();
+            stock.loadData();
+            
         })
         .catch(error => {
             console.error("Error occured when fetching stock from database", error);

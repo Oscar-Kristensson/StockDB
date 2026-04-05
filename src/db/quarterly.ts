@@ -49,6 +49,16 @@ export class QuarterlyReport {
     public get totalPeriod() : number {
         return utils.calcTotalPeriod(this.fiscal_year, this.fiscal_quarter);
     }
+
+    static getCSVHeaderRow() : string {
+        return "ID, StockID, Year, Quarter, Revenue, Profit, OprIncome, NetIncome"
+    }
+
+    getCSVRow() : string {
+
+        return `${this.id}, ${this.stock_id}, ${this.fiscal_year}, ${this.fiscal_quarter}, ${this.revenue}, ${this.gross_profit}, ${this.operating_income}, ${this.net_income}`
+
+    }
 }
 
 /**

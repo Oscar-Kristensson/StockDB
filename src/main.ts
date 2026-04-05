@@ -56,14 +56,14 @@ function init() {
     stockDb.addLayer(logLayer);
     stockDb.addLayer(settingsLayer);
 
-    db.getStockInfoById(1)
+    /*db.getStockInfoById(1)
     .then(result => {
         if (result === null) {
             console.warn("There is no stock with the ID. The result gave", result);
         } else if (stockDb){
             stockDb.stock = result;
         }
-    })
+    })*/
 
     stockDb.initalize();    
 }
@@ -125,7 +125,7 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
         }
         if (userName !== null) {
-            db.addUser(userName);
+            // db.addUser(userName);
         }
         else 
         {
