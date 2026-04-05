@@ -89,7 +89,7 @@ export class Stock {
 
 
     getInfo() : Promise<db.StockInfo> {
-        return new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve) => {
             if (this._info) {
                 resolve(this._info);
                 return;

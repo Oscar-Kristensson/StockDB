@@ -6,10 +6,9 @@ import { StockDB } from "../../app.ts";
 import { CustomLabelElement } from "./customLabel.ts";
 import * as utils from "../../utils"
 import { QuarterlyReport } from "../../db/quarterly.ts";
-import { calcDataAverages, OverviewTableRow, TableRowStruct } from "./tables.ts";
+import { OverviewTableRow, TableRowStruct } from "./tables.ts";
 import { CustomDropdownElement, DropDownItem } from "../../components/dropdown.ts";
 import * as economy from "../../economy"
-import { resolve } from "@tauri-apps/api/path";
 
 class StockLayer extends AppLayer {
     container: HTMLElement | undefined;
@@ -273,7 +272,7 @@ class StockLayer extends AppLayer {
 
     async updateStockOverviewTable() {
         this.clearStockOverviewTable();
-        
+
         const stats = await this.stock?.getStatistics()
         if (stats === undefined) return;
 
