@@ -52,32 +52,7 @@ export class StockDB extends LayerSwitcher {
             }
 
             const stock = new economy.Stock(result);
-            this.stock = stock;
-
-            // Testing code
-            const act = () => {
-                console.log("Act:", stock);
-
-
-                
-
-            }
-            stock.event.listen("update.info", act);
-            stock.event.listen("update.data", act);
-            stock.event.listen("update.data", () => {
-                if (!stock.data) return;
-
-                console.log("Loaded Q reports")
-
-                const currentQuarter = utils.getCurrentQuarter();
-                const year = new Date().getFullYear()
-                const totalPeriod = utils.calcTotalPeriod(year, currentQuarter);
-
-                economy.StockStatistics.fromQuarterlyReports(stock.data, totalPeriod - 1);
-            });
-            stock.loadInfo();
-            stock.loadData();
-            
+            this.stock = stock;            
         })
         .catch(error => {
             console.error("Error occured when fetching stock from database", error);

@@ -2,6 +2,7 @@ import { CustomTableRow } from "../../components/row";
 import { CustomLabelElement } from "./customLabel";
 import * as utils from "../../utils";
 import { QuarterlyReport } from "../../db";
+import * as economy from "../../economy"
 
 export class TableRowStruct<valueT> {
     element: CustomLabelElement;
@@ -84,6 +85,16 @@ export class TableRowData {
             data.last5Years,
             data.last10Years,
             data.lastAll
+        )
+    }
+
+    setDataStockStat(stat: economy.StockStat<number | undefined>){
+        this.setData(
+            stat.previous,
+            stat.oneYear,
+            stat.fiveYear,
+            stat.tenYear,
+            stat.allYears,
         )
     }
 

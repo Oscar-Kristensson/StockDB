@@ -6,10 +6,10 @@ import { StockDB } from "../../app.ts";
 import { CustomLabelElement } from "./customLabel.ts";
 import * as utils from "../../utils"
 import { QuarterlyReport } from "../../db/quarterly.ts";
-import * as db from "../../db"
 import { calcDataAverages, OverviewTableRow, TableRowStruct } from "./tables.ts";
 import { CustomDropdownElement, DropDownItem } from "../../components/dropdown.ts";
 import * as economy from "../../economy"
+import { resolve } from "@tauri-apps/api/path";
 
 class StockLayer extends AppLayer {
     container: HTMLElement | undefined;
@@ -53,6 +53,7 @@ class StockLayer extends AppLayer {
 
 
         this.onStockListChange = this.onStockListChange.bind(this);
+
 
 
 
@@ -195,16 +196,30 @@ class StockLayer extends AppLayer {
             return;
         }
 
-        if (!this.stock.info){
-            console.warn("The stock must have info loaded");
-            return;
-        }
-        this.stockInfo.setStock(this.stock.info);
+
+        this.stock.getInfo()
+        .then(stockInfo => {
+            this.stockInfo?.setStock(stockInfo);
+
+            if (this.stockDropDown) {
+                console.log("Updating dropdown value!");
+                this.stockDropDown.value = stockInfo.ticker;
+            }
+        })
+        .catch(error => {
+            console.error("Handle this error", error);
+        })
         
-        if (this.stockDropDown) {
-            console.log("Updating dropdown value!");
-            this.stockDropDown.value = this.stock.info.ticker;
-        }
+
+
+
+        console.log("UPDATEING TABLE!");
+
+
+
+        this.updateStockOverviewTable();
+
+        /*
 
         db.getQuarterlyFromStockID(this.stock.info.id)
             .then(result => {
@@ -233,7 +248,7 @@ class StockLayer extends AppLayer {
             })
             .catch(error => {
                 console.error("An error occured whilst reading quarterly records", error);
-            })
+            })*/
 
         
 
@@ -256,12 +271,14 @@ class StockLayer extends AppLayer {
 
     }
 
-    updateStockOverviewTable() {
+    async updateStockOverviewTable() {
         this.clearStockOverviewTable();
+        
+        const stats = await this.stock?.getStatistics()
+        if (stats === undefined) return;
 
-        if (!this.quarterlyRecords) {
-            return;
-        }
+        console.log("Set revenue!");
+        this.revenueRow?.data.setDataStockStat(stats.revenue);
 
         /*const revenue = calcDataAverages(this.quarterlyRecords, "revenue");
         this.revenueRow?.data.setDataS(revenue);
