@@ -2,14 +2,14 @@ use rusqlite::{Connection, Result};
 
 pub fn create_tables(conn: &Connection) -> Result<()>{
     // This is a testing table
-    conn.execute(
+    /*conn.execute(
         "CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY,
             name TEXT NOT NULL
         )
         ",
         [],
-    )?;
+    )?;*/
 
 
     conn.execute(

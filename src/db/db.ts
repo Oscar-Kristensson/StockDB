@@ -30,7 +30,6 @@ export function debugTable(table: string, asString = true) {
             });
         }
 
-        console.log("Table", table, rv);
 
         return rv;
     })

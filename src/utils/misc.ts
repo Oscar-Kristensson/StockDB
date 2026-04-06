@@ -107,7 +107,7 @@ type AverageInfo = {
  * @returns 
  */
 export function getAverageS(fromTime: number | undefined, toTime: number | undefined, data: Array<DtPoint<number | null>>) : undefined | AverageInfo {
-    //let previousTime = fromTime;
+    let previousTime = fromTime;
 
     let total = 0;
     let count = 0;

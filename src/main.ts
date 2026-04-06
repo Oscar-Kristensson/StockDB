@@ -79,7 +79,6 @@ function test() {
 
     db.getTableNames()
     .then(result => {
-        console.log("Tables", result);
         if (result instanceof Array) {
             result.forEach(tableName => {
                 db.debugTable(tableName);

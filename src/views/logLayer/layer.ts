@@ -45,7 +45,7 @@ class LogLayer extends AppLayer {
         
         this.addRecordContainer = document.createElement("div");
         this.addRecordContainer.className = "tabContainer";
-        this.addRecordContainer.innerText = "record";
+        //this.addRecordContainer.innerText = "record";
         this.addStockContainer.classList.add("stock");
         new CustomHeading(this.addRecordContainer, "Information", "info", 2);
 
