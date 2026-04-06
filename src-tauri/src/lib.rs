@@ -194,16 +194,27 @@ fn db_add_quarterly(
     stock_id: i64, 
     fiscal_year: i64, 
     fiscal_quarter: i64,
-    revenue: f64,
-    gross_profit: f64,
-    operating_income: f64,
-    net_income: f64,
-    shares_outstanding: i64,
-
+    return_on_equity: Option<f64>,
+    price_per_equity: Option<f64>,
+    equity_per_share: Option<f64>,
+    earnings_per_share: Option<f64>,
+    share_price: Option<f64>,
+    dividend: Option<f64>,
 ) -> Result<(), String> {
     let conn = db.0.lock().unwrap();
 
-    db::quarterly::add_record(&conn, stock_id, fiscal_year, fiscal_quarter, revenue, gross_profit, operating_income, net_income, shares_outstanding)
+    db::quarterly::add_record(
+        &conn, 
+        stock_id, 
+        fiscal_year, 
+        fiscal_quarter, 
+        return_on_equity,
+        price_per_equity,
+        equity_per_share,
+        earnings_per_share,
+        share_price,
+        dividend
+    )
 }
 
 

@@ -20,18 +20,18 @@ export class StockStat<T> {
 
 export class StockStatistics {
     constructor(
-        readonly revenue: StockStat<number | undefined>,
+        readonly returnOnEquity: StockStat<number | undefined>,
     ) {
 
     }
 
     static fromQuarterlyReports(reports: Array<QuarterlyReport>) {
 
-        const revenue = calcDataAverages(reports, "revenue");
-        console.log("Revenue", revenue);
+        const returnOnEquity = calcDataAverages(reports, "return_on_equity");
+        console.log("Revenue", returnOnEquity);
 
 
-        return new StockStatistics(revenue);
+        return new StockStatistics(returnOnEquity);
 
     }
 }

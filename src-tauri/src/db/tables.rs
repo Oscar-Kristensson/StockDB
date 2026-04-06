@@ -51,12 +51,13 @@ CREATE TABLE IF NOT EXISTS quarterly (
     fiscal_year INTEGER NOT NULL,
     fiscal_quarter INTEGER NOT NULL CHECK (fiscal_quarter BETWEEN 1 AND 4),
 
-    revenue REAL,                         -- total revenue
-    gross_profit REAL,
-    operating_income REAL,
-    net_income REAL,
+    returnOnEquity DECIMAL(7,6),                         -- total revenue
+    pricePerEquity DECIMAL(18,6),
+    equityPerShare DECIMAL(18,6),
+    earningsPerShare DECIMAL(18,6),
+    sharePrice DECIMAL(10,4),
 
-    shares_outstanding REAL,
+    dividend DECIMAL(5,4), -- percentage as decimal
 
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
 

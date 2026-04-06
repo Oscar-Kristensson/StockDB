@@ -10,11 +10,12 @@ pub struct QuarterlyRecord {
     pub stock_id: i64,
     pub fiscal_year: i64,
     pub fiscal_quarter: i64,
-    pub revenue: Option<f64>,
-    pub gross_profit: Option<f64>,
-    pub operating_income: Option<f64>,
-    pub net_income: Option<f64>,
-    pub shares_outstanding: Option<f64>,
+    pub return_on_equity: Option<f64>,
+    pub price_per_equity: Option<f64>,
+    pub equity_per_share: Option<f64>,
+    pub earnings_per_share: Option<f64>,
+    pub share_price: Option<f64>,
+    pub dividend: Option<f64>,
     pub created_at: String,
 }
 
@@ -27,8 +28,8 @@ pub fn get_quarterly_for_stock(
     let mut stmt = conn.prepare(
         "SELECT 
             id, stock_id, fiscal_year, fiscal_quarter, 
-            revenue, gross_profit, operating_income, net_income,
-            shares_outstanding, created_at
+            returnOnEquity, pricePerEquity, equityPerShare, earningsPerShare,
+            sharePrice, dividend, created_at
          FROM quarterly
          WHERE stock_id = ?
          ORDER BY fiscal_year DESC, fiscal_quarter DESC"
@@ -40,12 +41,13 @@ pub fn get_quarterly_for_stock(
             stock_id: row.get(1)?,
             fiscal_year: row.get(2)?,
             fiscal_quarter: row.get(3)?,
-            revenue: row.get(4)?,
-            gross_profit: row.get(5)?,
-            operating_income: row.get(6)?,
-            net_income: row.get(7)?,
-            shares_outstanding: row.get(8)?,
-            created_at: row.get(9)?,
+            return_on_equity: row.get(4)?,
+            price_per_equity: row.get(5)?,
+            equity_per_share: row.get(6)?,
+            earnings_per_share: row.get(7)?,
+            share_price: row.get(8)?,
+            dividend: row.get(9)?,
+            created_at: row.get(10)?,
         })
     }).map_err(|e| e.to_string())?;
 
@@ -60,11 +62,12 @@ pub fn add_record (
     stock_id: i64, 
     fiscal_year: i64, 
     fiscal_quarter: i64,
-    revenue: f64,
-    gross_profit: f64,
-    operating_income: f64,
-    net_income: f64,
-    shares_outstanding: i64,
+    return_on_equity: Option<f64>,
+    price_per_equity: Option<f64>,
+    equity_per_share: Option<f64>,
+    earnings_per_share: Option<f64>,
+    share_price: Option<f64>,
+    dividend: Option<f64>,
 
 ) -> Result<(), String> {
     conn.execute(
@@ -73,23 +76,25 @@ pub fn add_record (
             stock_id,
             fiscal_year,
             fiscal_quarter,
-            revenue,
-            gross_profit,
-            operating_income,
-            net_income,
-            shares_outstanding
+            returnOnEquity,
+            pricePerEquity,
+            equityPerShare,
+            earningsPerShare,
+            sharePrice,
+            dividend,
         )
-        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)
+        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)
         "#,
         params![
             stock_id,               // stock_id
             fiscal_year,            // fiscal_year
             fiscal_quarter,         // fiscal_quarter
-            revenue,                // revenue (REAL -> f64)
-            gross_profit,           // gross_profit
-            operating_income,       // operating_income
-            net_income,             // net_income
-            shares_outstanding,     // shares_outstanding
+            return_on_equity,
+            price_per_equity,
+            equity_per_share,
+            earnings_per_share,
+            share_price,
+            dividend,    
         ],
     )
     .map_err(|e| e.to_string())?; // convert rusqlite::Error -> String 

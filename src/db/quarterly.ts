@@ -9,11 +9,14 @@ export class QuarterlyReport {
         public readonly stock_id: number,
         public fiscal_year: number,
         public fiscal_quarter: number,
-        public revenue: number | null,
-        public gross_profit: number | null,
-        public operating_income: number | null,
-        public net_income: number | null,
-        public shares_outstanding: number | null,
+
+        public return_on_equity: number | null,
+        public price_per_equity: number | null,
+        public equity_per_share: number | null,
+        public earnings_per_share: number | null,
+        public share_price: number | null,
+        public dividend: number | null,
+    
     ) {}
 
     static validate(obj: any): obj is QuarterlyReport {
@@ -24,11 +27,12 @@ export class QuarterlyReport {
             typeof obj.stock_id === "number" &&
             typeof obj.fiscalYear === "number" &&
             typeof obj.fiscalQuarter === "number" &&
-            typeof obj.revenue === "number" &&
-            typeof obj.grossProfit === "number" &&
-            typeof obj.operatingIncome === "number" &&
-            typeof obj.netIncome === "number" &&
-            typeof obj.sharesOutstanding === "number"
+            typeof obj.return_on_equity === "number" &&     // NOTE: Should this not be able to be null?
+            typeof obj.price_per_equity === "number" &&
+            typeof obj.equity_per_share === "number" &&
+            typeof obj.earnings_per_share === "number" &&
+            typeof obj.share_price === "number" &&
+            typeof obj.dividend === "number"  
         );
     }
 
@@ -38,11 +42,12 @@ export class QuarterlyReport {
             dto.stock_id,
             dto.fiscal_year,
             dto.fiscal_quarter,
-            dto.revenue ?? null,
-            dto.gross_profit ?? null,
-            dto.operating_income ?? null,
-            dto.net_income ?? null,
-            dto.shares_outstanding ?? null
+            dto.return_on_equity ?? null,
+            dto.price_per_equity ?? null,
+            dto.equity_per_share ?? null,
+            dto.earnings_per_share ?? null,
+            dto.share_price ?? null,
+            dto.dividend ?? null,
         );
     }
 
@@ -51,12 +56,12 @@ export class QuarterlyReport {
     }
 
     static getCSVHeaderRow() : string {
-        return "ID, StockID, Year, Quarter, Revenue, Profit, OprIncome, NetIncome"
+        return "ID, StockID, Year, Quarter, Revenue, Profit, OprIncome, NetIncome (THIS IS WRONG)"
     }
 
     getCSVRow() : string {
 
-        return `${this.id}, ${this.stock_id}, ${this.fiscal_year}, ${this.fiscal_quarter}, ${this.revenue}, ${this.gross_profit}, ${this.operating_income}, ${this.net_income}`
+        return `(THIS IS WRONG) ${this.id}, ${this.stock_id}, ${this.fiscal_year}, ${this.fiscal_quarter}, ${this.return_on_equity}, ${this.price_per_equity}, ${this.equity_per_share}, ${this.id}`
 
     }
 }
@@ -93,25 +98,24 @@ export function addQuarterly(
     stock_id: number,
     fiscal_year: number,
     fiscal_quarter: number,
-    revenue: number,
-    gross_profit: number,
-    operating_income: number,
-    net_income: number,
-    shares_outstanding: number,
-    currency: String,
-
+    return_on_equity: number,
+    price_per_equity: number,
+    equity_per_share: number,
+    earnings_per_share: number,
+    share_price: number,
+    dividend: number,
 ) {
     return new Promise((resolve, reject) => {
         invoke("db_add_quarterly", {
             stockId: stock_id,
             fiscalYear: fiscal_year,
             fiscalQuarter: fiscal_quarter,
-            revenue: revenue,
-            grossProfit: gross_profit,
-            operatingIncome: operating_income,
-            netIncome: net_income,
-            sharesOutstanding: shares_outstanding,
-            currency: currency,
+            returnOnEquity: return_on_equity,
+            pricePerEquity: price_per_equity,
+            equityPerShare: equity_per_share,
+            earningsPerShare: earnings_per_share,
+            sharePrice: share_price,
+            dividend: dividend,
         })
         .then(rv => {
             resolve(rv);
