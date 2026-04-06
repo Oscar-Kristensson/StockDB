@@ -9,6 +9,8 @@ import { CustomCodeElement } from "../../components/code";
 
 
 
+
+
 export class ExportOptions {
     container: CustomContainer;
     rawButtonPanel: HTMLDivElement;
@@ -79,13 +81,16 @@ export class ExportOptions {
                 csv += "\n"
             })
 
-            console.log(csv);
 
             this.csvCodeElement.setContent(csv);
             this.csvCodeElement.show();
+
+            utils.saveFile(csv);
         })
     
 
 
     }
 }
+
+

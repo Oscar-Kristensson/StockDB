@@ -107,7 +107,7 @@ type AverageInfo = {
  * @returns 
  */
 export function getAverageS(fromTime: number | undefined, toTime: number | undefined, data: Array<DtPoint<number | null>>) : undefined | AverageInfo {
-    let previousTime = fromTime;
+    //let previousTime = fromTime;
 
     let total = 0;
     let count = 0;
@@ -145,3 +145,29 @@ export function getCurrentQuarter(date: Date = new Date()): number {
 }
 
 
+
+
+/**
+ * NOTE: This function should not be used since it does not open a file dialog or give the user any feedback 
+ * @param data 
+ * @param fileName 
+ */
+export function saveFile(data: string, fileName = "test.csv"){
+
+
+    const blob = new Blob([data], {type: "text/csv;charset=utf-8;"});
+
+    const downloadLink = document.createElement("a");
+
+    downloadLink.download = fileName;
+
+    downloadLink.href = window.URL.createObjectURL(blob);
+
+    document.body.appendChild(downloadLink)
+
+    downloadLink.click()
+
+    document.body.removeChild(downloadLink)
+
+
+}
