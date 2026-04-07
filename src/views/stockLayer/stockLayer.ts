@@ -27,12 +27,12 @@ class StockLayer extends AppLayer {
     averageRevenueElement: CustomLabelElement;
 
 
-    revenueRow: OverviewTableRow | undefined;
-    grossProfitRow: OverviewTableRow | undefined;
-    operatingIncome: OverviewTableRow | undefined;
-    operatingIncomeRow: OverviewTableRow | undefined;
-    netIncomeRow: OverviewTableRow | undefined;
-    sharesOutstandingRow: OverviewTableRow | undefined;
+    returnOnEquity: OverviewTableRow | undefined;
+    pricePerEquity: OverviewTableRow | undefined;
+    equityPerShare: OverviewTableRow | undefined;
+    earningsPerShare: OverviewTableRow | undefined;
+    sharePrice: OverviewTableRow | undefined;
+    dividend: OverviewTableRow | undefined;
     stockDropDown: CustomDropdownElement | undefined;
 
 
@@ -131,7 +131,6 @@ class StockLayer extends AppLayer {
 
 
             if (this.app.stock) {
-                console.log("Setting the current stock")
                 const values = this.stockDropDown.getValues()
 
                 // NOTE: Consider removing this since it causes weird behavior
@@ -201,7 +200,6 @@ class StockLayer extends AppLayer {
             this.stockInfo?.setStock(stockInfo);
 
             if (this.stockDropDown) {
-                console.log("Updating dropdown value!");
                 this.stockDropDown.value = stockInfo.ticker;
             }
         })
@@ -209,12 +207,6 @@ class StockLayer extends AppLayer {
             console.error("Handle this error", error);
         })
         
-
-
-
-        console.log("UPDATEING TABLE!");
-
-
 
         this.updateStockOverviewTable();
 
@@ -276,7 +268,12 @@ class StockLayer extends AppLayer {
         const stats = await this.stock?.getStatistics("Yearly")
         if (stats === undefined) return;
 
-        this.revenueRow?.data.setDataStockStat(stats.returnOnEquity);
+        this.returnOnEquity?.data.setDataStockStat(stats.returnOnEquity);
+        this.pricePerEquity?.data.setDataStockStat(stats.pricePerEquity);
+        this.equityPerShare?.data.setDataStockStat(stats.equityPerShare);
+        this.earningsPerShare?.data.setDataStockStat(stats.earningsPerShare);
+        this.sharePrice?.data.setDataStockStat(stats.sharePrice);
+        this.dividend?.data.setDataStockStat(stats.dividend);
 
         /*const revenue = calcDataAverages(this.quarterlyRecords, "revenue");
         this.revenueRow?.data.setDataS(revenue);
@@ -295,12 +292,12 @@ class StockLayer extends AppLayer {
     }
 
     clearStockOverviewTable() {
-        console.log("Clearing stock overview table");
-        this.revenueRow?.data.setData(undefined, 0, 0, 0, 0);
-        this.grossProfitRow?.data.setData(undefined, 0, 0, 0, 0);
-        this.operatingIncomeRow?.data.setData(undefined, 0, 0, 0, 0);
-        this.netIncomeRow?.data.setData(undefined, 0, 0, 0, 0);
-        this.sharesOutstandingRow?.data.setData(undefined, 0, 0, 0, 0);
+        this.returnOnEquity?.data.setData(undefined, undefined, undefined, undefined, undefined);
+        this.pricePerEquity?.data.setData(undefined, undefined, undefined, undefined, undefined);
+        this.equityPerShare?.data.setData(undefined, undefined, undefined, undefined, undefined);
+        this.earningsPerShare?.data.setData(undefined, undefined, undefined, undefined, undefined);
+        this.sharePrice?.data.setData(undefined, undefined, undefined, undefined, undefined);
+        this.dividend?.data.setData(undefined, undefined, undefined, undefined, undefined);
     }
 
 
@@ -325,46 +322,39 @@ class StockLayer extends AppLayer {
 
 
         
-        this.revenueRow = new OverviewTableRow(
-            new TableRowStruct("Revenue"),
+        this.returnOnEquity = new OverviewTableRow(
+            new TableRowStruct("Return on equity"),
         )
 
-        this.grossProfitRow = new OverviewTableRow(
-            new TableRowStruct("Gross Profit"),
+        this.pricePerEquity = new OverviewTableRow(
+            new TableRowStruct("Price per equity"),
         )
 
-        this.operatingIncomeRow = new OverviewTableRow(
-            new TableRowStruct("Operating income"),
+        this.equityPerShare = new OverviewTableRow(
+            new TableRowStruct("Equity per share"),
         )
 
-        this.netIncomeRow = new OverviewTableRow(
-            new TableRowStruct("Net income"),
+        this.earningsPerShare = new OverviewTableRow(
+            new TableRowStruct("Earnings per share"),
         )
 
-        this.sharesOutstandingRow = new OverviewTableRow(
-            new TableRowStruct("Shares outstandning"),
+        this.sharePrice = new OverviewTableRow(
+            new TableRowStruct("Shares price"),
         )
 
-        setTimeout(() => {
-            console.log("Updating data!");
-            if (!this.revenueRow?.data.setData) return;
-            this.revenueRow.data.setData(1, 2, 3, 4, 5);
-        }, 2000)
-
-        const testRow = new OverviewTableRow(
-            new TableRowStruct("TestRow"),
+        this.dividend = new OverviewTableRow(
+            new TableRowStruct("Dividend"),
         )
 
-        setTimeout(() => {
-            console.log("Updating data!");
-            testRow.data.setData(2, 2, 3, 4, 5);
-        }, 4000)
 
-        this.overviewTable.addRow(this.revenueRow);
-        this.overviewTable.addRow(this.grossProfitRow);
-        this.overviewTable.addRow(this.operatingIncomeRow);
-        this.overviewTable.addRow(this.netIncomeRow);
-        this.overviewTable.addRow(this.sharesOutstandingRow);
+
+
+        this.overviewTable.addRow(this.returnOnEquity);
+        this.overviewTable.addRow(this.pricePerEquity);
+        this.overviewTable.addRow(this.equityPerShare);
+        this.overviewTable.addRow(this.earningsPerShare);
+        this.overviewTable.addRow(this.sharePrice);
+        this.overviewTable.addRow(this.dividend);
 
         
 

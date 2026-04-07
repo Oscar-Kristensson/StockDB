@@ -180,7 +180,6 @@ export class CustomDropdownElement implements CustomElementInterface {
         }
 
         const newValueItem = this.items[index];
-        console.log("newValueItem", newValueItem);
         this.updateCurrentOption(newValueItem, false, false);
 
     }

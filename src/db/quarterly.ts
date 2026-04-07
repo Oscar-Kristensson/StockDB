@@ -74,7 +74,6 @@ export type ReportType = "Yearly" | "Quarterly" | "All";
  * @returns 
  */
 export function getQuarterlyFromStockID(stockId: Number, reportType: ReportType) : Promise<Array<QuarterlyReport>> {
-    console.log(stockId);
     return new Promise((resolve, reject) => {
         invoke("db_get_quarterly_from_stock_id", { stockId: stockId, reportType: reportType })
         .then(rv => {

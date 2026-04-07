@@ -40,7 +40,6 @@ export class Stock {
 
 
     loadData(reload: boolean = false) {
-        console.log("Loading data", !this._data);
         // If not reloading, do not reload the data
         if (reload && (!this._data || this._data.length === 0)) {
             console.warn("Failed to load data");

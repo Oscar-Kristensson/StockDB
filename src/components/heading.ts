@@ -6,8 +6,6 @@ export class CustomHeading {
     heading : HTMLHeadingElement;
 
     constructor(parent: HTMLElement, heading:string, className: string | undefined = undefined, level: number = 1) {
-        
-        console.log(level);
         switch (level) {
             case 2:
                 this.heading = document.createElement("h2");

@@ -36,7 +36,6 @@ class SettingsLayer extends AppLayer {
 
         const text = new utils.SmartVar<string>("");
         text.events.listen("updated", () => {
-            console.log(">>", text);
             linksContainer.getTopMostHTMLContainer().innerText = text.value;
 
         })
@@ -44,7 +43,6 @@ class SettingsLayer extends AppLayer {
         
         os.getDataDir()
         .then(result => {
-            console.log(result, typeof result);
             if (typeof result === "string"){
                 text.value += "\nData dir: " + result;
 

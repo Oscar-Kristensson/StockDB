@@ -22,6 +22,11 @@ export class StockStat<T> {
 export class StockStatistics {
     constructor(
         readonly returnOnEquity: StockStat<number | undefined>,
+        readonly pricePerEquity: StockStat<number | undefined>,
+        readonly equityPerShare: StockStat<number | undefined>,
+        readonly earningsPerShare: StockStat<number | undefined>,
+        readonly sharePrice: StockStat<number | undefined>,
+        readonly dividend: StockStat<number | undefined>,
         readonly yearly: boolean = false,
     ) {
 
@@ -31,9 +36,14 @@ export class StockStatistics {
         
 
         const returnOnEquity = calcDataAverages(reports, "return_on_equity", reportType);
+        const pricePerEquity = calcDataAverages(reports, "price_per_equity", reportType);
+        const equityPerShare = calcDataAverages(reports, "equity_per_share", reportType);
+        const earningsPerShare = calcDataAverages(reports, "earnings_per_share", reportType);
+        const sharePrice = calcDataAverages(reports, "share_price", reportType);
+        const dividend = calcDataAverages(reports, "dividend", reportType);
 
 
-        return new StockStatistics(returnOnEquity);
+        return new StockStatistics(returnOnEquity, pricePerEquity, equityPerShare, earningsPerShare, sharePrice, dividend);
 
     }
 }
