@@ -2,7 +2,7 @@ use rusqlite:: {Connection, params};
 
 
 
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 
 #[derive(Debug, Serialize)]
 pub struct QuarterlyRecord {
@@ -19,21 +19,40 @@ pub struct QuarterlyRecord {
     pub created_at: String,
 }
 
+#[derive(Serialize, Deserialize)]
+pub enum ReportType {
+    Yearly,
+    Quarterly,
+    All,
+}
 
 
 pub fn get_quarterly_for_stock(
     conn: &Connection,
     stock_id: i64,
+    report_type: ReportType, 
+    
+    
 ) -> Result<Vec<QuarterlyRecord>, String> {
-    let mut stmt = conn.prepare(
-        "SELECT 
-            id, stock_id, fiscal_year, fiscal_quarter, 
-            returnOnEquity, pricePerEquity, equityPerShare, earningsPerShare,
-            sharePrice, dividend, created_at
-         FROM quarterly
-         WHERE stock_id = ?
-         ORDER BY fiscal_year DESC, fiscal_quarter DESC"
-    ).map_err(|e| e.to_string())?;
+    let filter = match report_type {
+        ReportType::Yearly => "AND fiscal_quarter = 0",
+        ReportType::Quarterly => "AND fiscal_quarter BETWEEN 1 AND 4",
+        ReportType::All => "",
+    };
+
+    let query = format!(
+    "SELECT 
+    id, stock_id, fiscal_year, fiscal_quarter, 
+    returnOnEquity, pricePerEquity, equityPerShare, earningsPerShare,
+    sharePrice, dividend, created_at
+    FROM quarterly
+    WHERE stock_id = ?
+    {}
+    ORDER BY fiscal_year DESC, fiscal_quarter DESC", filter
+    );
+
+
+    let mut stmt = conn.prepare(&query).map_err(|e| e.to_string())?;
 
     let quarterly_iter = stmt.query_map([stock_id], |row| {
         Ok(QuarterlyRecord {
@@ -81,7 +100,7 @@ pub fn add_record (
             equityPerShare,
             earningsPerShare,
             sharePrice,
-            dividend,
+            dividend
         )
         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)
         "#,

@@ -10,6 +10,8 @@ use std::fs;
 use std::path::PathBuf;
 use std::env;
 
+use crate::db::quarterly::ReportType;
+
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -237,12 +239,12 @@ fn assure_folder_structure(data_dir_path: &PathBuf) {
 }
 
 #[tauri::command]
-fn db_get_quarterly_from_stock_id(db: State<db::DbConn>, stock_id: i64) -> Result<Vec<db::quarterly::QuarterlyRecord>, String> {
+fn db_get_quarterly_from_stock_id(db: State<db::DbConn>, stock_id: i64, report_type: ReportType) -> Result<Vec<db::quarterly::QuarterlyRecord>, String> {
     let conn = db.0.lock().unwrap();
 
     println!("Stock ID: {}", stock_id);
 
-    db::quarterly::get_quarterly_for_stock(&conn, stock_id)
+    db::quarterly::get_quarterly_for_stock(&conn, stock_id, report_type)
         .map_err(|e| e.to_string())
 }
 

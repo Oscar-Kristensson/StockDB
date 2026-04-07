@@ -66,15 +66,17 @@ export class QuarterlyReport {
     }
 }
 
+export type ReportType = "Yearly" | "Quarterly" | "All";
+
 /**
  * 
  * @param stockId 
  * @returns 
  */
-export function getQuarterlyFromStockID(stockId: Number) : Promise<Array<QuarterlyReport>> {
+export function getQuarterlyFromStockID(stockId: Number, reportType: ReportType) : Promise<Array<QuarterlyReport>> {
     console.log(stockId);
     return new Promise((resolve, reject) => {
-        invoke("db_get_quarterly_from_stock_id", { stockId: stockId })
+        invoke("db_get_quarterly_from_stock_id", { stockId: stockId, reportType: reportType })
         .then(rv => {
             const array: Array<QuarterlyReport> = [];
             if (!(rv instanceof Array)) {

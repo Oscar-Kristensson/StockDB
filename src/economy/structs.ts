@@ -1,4 +1,4 @@
-import { QuarterlyReport } from "../db";
+import { QuarterlyReport, ReportType } from "../db";
 import { calcDataAverage } from "./statistics"
 import * as utils from "../utils"
 
@@ -27,10 +27,10 @@ export class StockStatistics {
 
     }
 
-    static fromQuarterlyReports(reports: Array<QuarterlyReport>, yearly = true) {
+    static fromQuarterlyReports(reports: Array<QuarterlyReport>, reportType: ReportType = "Yearly") {
         
 
-        const returnOnEquity = calcDataAverages(reports, "return_on_equity", yearly);
+        const returnOnEquity = calcDataAverages(reports, "return_on_equity", reportType);
 
 
         return new StockStatistics(returnOnEquity);
@@ -40,7 +40,7 @@ export class StockStatistics {
 
 
 
-export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: keyof QuarterlyReport, yearly: boolean = true) {
+export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: keyof QuarterlyReport, reportType: ReportType = "Yearly") {
     const now: Date = new Date();
     const year: number = now.getFullYear();
     const quarter = utils.getCurrentQuarter(now);
@@ -58,10 +58,12 @@ export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: 
 
         const dp = new utils.DtPoint<number | null>(record.totalPeriod, value);
 
-        if (yearly && record.fiscal_quarter === 0) {
+        if (reportType === "All") {
+            return [dp];
+        } else if (reportType === "Yearly" && record.fiscal_quarter === 0) {
             return [dp];
 
-        } else if (!yearly && record.fiscal_quarter !== 0) {
+        } else if (reportType === "Quarterly" && record.fiscal_quarter !== 0) {
             return [dp];
         }
 

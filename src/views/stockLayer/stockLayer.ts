@@ -273,10 +273,9 @@ class StockLayer extends AppLayer {
     async updateStockOverviewTable() {
         this.clearStockOverviewTable();
 
-        const stats = await this.stock?.getStatistics()
+        const stats = await this.stock?.getStatistics("Yearly")
         if (stats === undefined) return;
 
-        console.log("Set revenue!");
         this.revenueRow?.data.setDataStockStat(stats.returnOnEquity);
 
         /*const revenue = calcDataAverages(this.quarterlyRecords, "revenue");

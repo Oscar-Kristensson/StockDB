@@ -1,6 +1,8 @@
 import * as db from "../db"
 import * as utils from "../utils"
 import { StockStatistics } from "./structs"
+import { ReportType } from "../db"
+
 
 export class Stock {
     list: db.StockListItem
@@ -45,7 +47,7 @@ export class Stock {
             return;
         }
 
-        return db.getQuarterlyFromStockID(this.list.id)
+        return db.getQuarterlyFromStockID(this.list.id, "Yearly")
         .then(result => {
             this._data = result;
             this.event.post("update.data");
@@ -107,7 +109,7 @@ export class Stock {
     }
 
 
-    getStatistics() : Promise<StockStatistics> {
+    getStatistics(reportType: ReportType) : Promise<StockStatistics> {
         return new Promise(async (resolve) => {
             const data = await this.getData();
             if (!data) {
@@ -115,7 +117,7 @@ export class Stock {
             }
 
 
-            const statistics = StockStatistics.fromQuarterlyReports(data);
+            const statistics = StockStatistics.fromQuarterlyReports(data, reportType);
             resolve(statistics);
 
 
