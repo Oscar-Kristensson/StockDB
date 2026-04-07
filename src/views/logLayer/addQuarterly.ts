@@ -78,11 +78,15 @@ export class AddRecordForm extends CustomFormElement {
     yearInput: CustomInputElement;
     quarterInput: CustomInputElement;
     stockSelector: CustomDropdownElement;
-    revenueInput: CustomInputElement;
-    grossProfitInput: CustomInputElement;
-    operatingIncomeInput: CustomInputElement;
-    netIncomeInput: CustomInputElement;
-    sharesOutstandingInput: CustomInputElement;
+    returnOnEquityInput: CustomInputElement;
+    pricePerEquityInput: CustomInputElement;
+    equityPerShareInput: CustomInputElement;
+    earningsPerShareInput: CustomInputElement;
+    sharePriceInput: CustomInputElement;
+    dividendInput: CustomInputElement;
+
+
+    // OLD
     infoPanel: HTMLDivElement;
     inputError: CustomErrorMessage;
 
@@ -110,25 +114,41 @@ export class AddRecordForm extends CustomFormElement {
 
         
         
-        this.revenueInput = new CustomInputElement(undefined, "Quarter (1-4)", "SEK", "number", false);
-        this.revenueInput.placeholder = "1 000 000";
-        this.addInput(this.revenueInput);
+        this.returnOnEquityInput = new CustomInputElement(undefined, "Return on equity", "SEK", "number", false);
+        this.returnOnEquityInput.placeholder = "1 000 000";
+        this.addInput(this.returnOnEquityInput);
         
-        this.grossProfitInput = new CustomInputElement(undefined, "Gross profit", "SEK", "number", false);
-        this.grossProfitInput.placeholder = "1 000 000";
-        this.addInput(this.grossProfitInput);
         
-        this.operatingIncomeInput = new CustomInputElement(undefined, "Operating income", "SEK", "number", false);
-        this.operatingIncomeInput.placeholder = "1 000 000";
-        this.addInput(this.operatingIncomeInput);
+        this.pricePerEquityInput = new CustomInputElement(undefined, "Price per equity", "SEK", "number", false);
+        this.pricePerEquityInput.placeholder = "1 000 000";
+        this.addInput(this.pricePerEquityInput);
+
         
-        this.netIncomeInput = new CustomInputElement(undefined, "Net income", "SEK", "number", false);
-        this.netIncomeInput.placeholder = "1 000 000";
-        this.addInput(this.netIncomeInput);
         
-        this.sharesOutstandingInput = new CustomInputElement(undefined, "Shares outstanding", "SEK", "number", false);
-        this.sharesOutstandingInput.placeholder = "1 000 000";
-        this.addInput(this.sharesOutstandingInput);
+        
+        
+        this.equityPerShareInput = new CustomInputElement(undefined, "Equity per share", "SEK", "number", false);
+        this.equityPerShareInput.placeholder = "1 000 000";
+        this.addInput(this.equityPerShareInput);
+        
+        
+        this.earningsPerShareInput = new CustomInputElement(undefined, "Earnings per share", "SEK", "number", false);
+        this.earningsPerShareInput.placeholder = "1 000 000";
+        this.addInput(this.earningsPerShareInput);
+        
+        
+        this.sharePriceInput = new CustomInputElement(undefined, "Share price", "SEK", "number", false);
+        this.sharePriceInput.placeholder = "1 000 000";
+        this.addInput(this.sharePriceInput);
+        
+        this.dividendInput = new CustomInputElement(undefined, "Dividend", "%", "number", false);
+        this.dividendInput.placeholder = "1 000 000";
+        this.addInput(this.dividendInput);
+
+        
+
+
+        // OLD
         
 
         this.send = this.send.bind(this);
@@ -194,18 +214,18 @@ export class AddRecordForm extends CustomFormElement {
         db.addQuarterly(
             this.stockSelector.value, 
             Number(this.yearInput.value), 
-            Number(this.quarterInput.value), 
-            Number(this.revenueInput.value), 
-            Number(this.grossProfitInput.value), 
-            Number(this.operatingIncomeInput.value), 
-            Number(this.netIncomeInput.value), 
-            Number(this.sharesOutstandingInput.value), 
-            "SEK"
+            Number(this.quarterInput.value),
+            Number(this.returnOnEquityInput.value),
+            Number(this.pricePerEquityInput.value),
+            Number(this.equityPerShareInput.value),
+            Number(this.earningsPerShareInput.value),
+            Number(this.sharePriceInput.value),
+            Number(this.dividendInput.value),
         );
 
 
 
-        [this.revenueInput, this.grossProfitInput, this.netIncomeInput, this.operatingIncomeInput, this.sharesOutstandingInput].forEach(input => {
+        [this.returnOnEquityInput, this.pricePerEquityInput, this.equityPerShareInput, this.earningsPerShareInput, this.sharePriceInput, this.dividendInput].forEach(input => {
             input.value = "";
         })
 

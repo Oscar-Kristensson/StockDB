@@ -277,7 +277,7 @@ class StockLayer extends AppLayer {
         if (stats === undefined) return;
 
         console.log("Set revenue!");
-        this.revenueRow?.data.setDataStockStat(stats.revenue);
+        this.revenueRow?.data.setDataStockStat(stats.returnOnEquity);
 
         /*const revenue = calcDataAverages(this.quarterlyRecords, "revenue");
         this.revenueRow?.data.setDataS(revenue);

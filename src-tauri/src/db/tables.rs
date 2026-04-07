@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS quarterly (
     stock_id INTEGER NOT NULL,
 
     fiscal_year INTEGER NOT NULL,
-    fiscal_quarter INTEGER NOT NULL CHECK (fiscal_quarter BETWEEN 1 AND 4),
+    fiscal_quarter INTEGER NOT NULL CHECK (fiscal_quarter BETWEEN 0 AND 4), --quarter of 0 represents a yearly report
 
     returnOnEquity DECIMAL(7,6),                         -- total revenue
     pricePerEquity DECIMAL(18,6),
