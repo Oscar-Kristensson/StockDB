@@ -1,4 +1,5 @@
 import { QuarterlyReport } from "../db";
+import { calcDataAverage } from "./statistics"
 import * as utils from "../utils"
 
 
@@ -38,22 +39,7 @@ export class StockStatistics {
 
 
 
-function calcDataAverage(currentYear: number, currentQuarter: number, yearsTime: number, data: Array<utils.DtPoint<number | null>>) {
-    const average = utils.getAverageS(utils.calcTotalPeriod(currentYear - yearsTime, currentQuarter), utils.calcTotalPeriod(currentYear, currentQuarter), data);
-    console.log("AVG", average, yearsTime);
-    if (average === undefined)
-        return undefined; 
-
-    if (average.count !== yearsTime * 4) {
-        console.log("Test!");
-        return undefined;
-    }
-
-    return average.average;
-
-}
-
-function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: keyof QuarterlyReport) {
+export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: keyof QuarterlyReport) {
     const now: Date = new Date();
     const year: number = now.getFullYear();
     const quarter = utils.getCurrentQuarter(now);
