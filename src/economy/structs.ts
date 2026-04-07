@@ -22,14 +22,15 @@ export class StockStat<T> {
 export class StockStatistics {
     constructor(
         readonly returnOnEquity: StockStat<number | undefined>,
+        readonly yearly: boolean = false,
     ) {
 
     }
 
-    static fromQuarterlyReports(reports: Array<QuarterlyReport>) {
+    static fromQuarterlyReports(reports: Array<QuarterlyReport>, yearly = true) {
+        
 
-        const returnOnEquity = calcDataAverages(reports, "return_on_equity");
-        console.log("Revenue", returnOnEquity);
+        const returnOnEquity = calcDataAverages(reports, "return_on_equity", yearly);
 
 
         return new StockStatistics(returnOnEquity);
@@ -39,7 +40,7 @@ export class StockStatistics {
 
 
 
-export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: keyof QuarterlyReport) {
+export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: keyof QuarterlyReport, yearly: boolean = true) {
     const now: Date = new Date();
     const year: number = now.getFullYear();
     const quarter = utils.getCurrentQuarter(now);
@@ -48,14 +49,24 @@ export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: 
     quarterlyRecords.forEach(r => {
         str += "\n" + r.getCSVRow();
     })
-    console.log(str);
 
-    const revenueData: Array<utils.DtPoint<number | null>> = quarterlyRecords.map(record => {
+    const revenueData: Array<utils.DtPoint<number | null>> = quarterlyRecords.flatMap(record => {  // .map(record => {
         let value = null;
         if (typeof record[key] === "number") {
             value = record[key];
         }
-        return new utils.DtPoint<number | null>(record.totalPeriod, value)
+
+        const dp = new utils.DtPoint<number | null>(record.totalPeriod, value);
+
+        if (yearly && record.fiscal_quarter === 0) {
+            return [dp];
+
+        } else if (!yearly && record.fiscal_quarter !== 0) {
+            return [dp];
+        }
+
+        return [];
+
     } );
     
 

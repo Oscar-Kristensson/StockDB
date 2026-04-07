@@ -58,10 +58,10 @@ function validateQuarter(quarterString: string) {
         )
     }
 
-    if (quarter > 4 || quarter < 1) {
+    if (quarter > 4 || quarter < 0) {
         return new InputValidationError(
             InputValidationStates.error,
-            "Quarter must between 1 and 4"
+            "Quarter must between 0 and 4 (Q0 for yearly)"
         )
     }
 
@@ -256,8 +256,6 @@ export class AddRecordForm extends CustomFormElement {
 
     validate(throwError: boolean = false): boolean {
         throwError;
-
-        console.log(this.stockSelector.value);
 
         if (this.stockSelector.value === undefined) {
             if (throwError)
