@@ -1,5 +1,4 @@
 import { QuarterlyReport, ReportType } from "../db";
-import { calcDataAverage } from "./statistics"
 import * as utils from "../utils"
 
 

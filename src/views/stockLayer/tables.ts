@@ -19,11 +19,14 @@ export class TableRowStruct<valueT> {
         this.value = value;
 
         if (value === undefined) {
-            this.element.update("");
+            this.element.update("-");
             this.element.setloaded(false);
         } else {
             this.element.setloaded(true);
-            this.element.update(String(value));
+            let str: string = String(value);
+            if (typeof value === "number")
+                str = value.toFixed(2);
+            this.element.update(str);
         }
 
     }
