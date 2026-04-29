@@ -17,6 +17,7 @@ class StockLayer extends AppLayer {
     informationContainer: CustomContainer | undefined;
     stockInfo: CustomStockInfo | undefined;
     overviewTable: CustomTable | undefined;
+    infoTable: CustomTable | undefined;
 
     stock: economy.Stock | undefined;
     app: StockDB | undefined;
@@ -88,10 +89,12 @@ class StockLayer extends AppLayer {
 
 
 
-        this.overviewTable = new CustomTable(this.overviewContainer, "informationTable", 6);
-
+        this.overviewTable = new CustomTable(this.overviewContainer, "overviewTable", 6);
         this.generateStockOverViewTable();
-
+        
+        this.infoTable = new CustomTable(this.informationContainer, "infoTable", 6);
+        this.generateInfoTable();
+        
         if (this.app) {
             this.app.events.listen("stockListUpdate", this.onStockListChange);
         }
@@ -363,6 +366,39 @@ class StockLayer extends AppLayer {
 
 
 
+    }
+
+
+    generateInfoTable() {
+        if (!(this.infoTable instanceof CustomTable)) {
+            console.error("The overview table is not correctly initalized!");
+            return;
+        }
+
+        this.infoTable.addRow_L([
+            new CustomLabelElement(undefined, ""),
+            new CustomLabelElement(undefined, "Latest"),
+            new CustomLabelElement(undefined, "1 year"),
+            new CustomLabelElement(undefined, "5 years"),
+            new CustomLabelElement(undefined, "10 years"),
+            new CustomLabelElement(undefined, "All"),
+        ], true); 
+        this.infoTable.addRow_L([
+            new CustomLabelElement(undefined, ""),
+            new CustomLabelElement(undefined, "Latest"),
+            new CustomLabelElement(undefined, "1 year"),
+            new CustomLabelElement(undefined, "5 years"),
+            new CustomLabelElement(undefined, "10 years"),
+            new CustomLabelElement(undefined, "All"),
+        ], false); 
+        
+
+
+
+
+
+        
+        
     }
 
 }
