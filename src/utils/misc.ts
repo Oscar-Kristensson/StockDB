@@ -81,7 +81,8 @@ export function average(numbers: Array<number>) {
 }
 
 export function calcTotalPeriod(year: number, quarter: number) {
-    return year * 4 + quarter;
+    // NOTE: This changed recently from 4 -> 5 to accommodate the yearly reports
+    return year * 5 + quarter;
 }
 
 /**

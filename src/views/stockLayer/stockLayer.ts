@@ -265,6 +265,8 @@ class StockLayer extends AppLayer {
     async updateStockOverviewTable() {
         this.clearStockOverviewTable();
 
+        
+        // NOTE: This should be updated to be able to handle quarterly updates
         const stats = await this.stock?.getStatistics("Yearly")
         if (stats === undefined) return;
 

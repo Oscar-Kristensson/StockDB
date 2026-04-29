@@ -53,7 +53,7 @@ export class StockStatistics {
 export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: keyof QuarterlyReport, reportType: ReportType = "Yearly") {
     const now: Date = new Date();
     const year: number = now.getFullYear();
-    const quarter = utils.getCurrentQuarter(now);
+    const currentQuarter = utils.getCurrentQuarter(now);
 
     let str = QuarterlyReport.getCSVHeaderRow();
     quarterlyRecords.forEach(r => {
@@ -80,15 +80,37 @@ export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: 
         return [];
 
     } );
+
+    console.log(revenueData);
+
+    let calcFromQuarter = 0;
+
+    if (reportType === "Quarterly"){ 
+        calcFromQuarter = currentQuarter;
+    }
     
 
     const yearAllAvgRevenue = utils.getAverageS(undefined, undefined, revenueData)?.average;
+    const year1AvgRevenue = utils.getAverageS(utils.calcTotalPeriod(year - 1, calcFromQuarter), utils.calcTotalPeriod(year, calcFromQuarter), revenueData)?.average;
+    const year10AvgRevenue = utils.getAverageS(utils.calcTotalPeriod(year - 10, calcFromQuarter), utils.calcTotalPeriod(year, calcFromQuarter), revenueData)?.average;
+    const year5AvgRevenue = utils.getAverageS(utils.calcTotalPeriod(year - 5, calcFromQuarter), utils.calcTotalPeriod(year, calcFromQuarter), revenueData)?.average;
 
 
-    const year10AvgRevenue = calcDataAverage(year, quarter, 10, revenueData); // utils.getAverageS(utils.calcTotalPeriod(year - 10, quarter), utils.calcTotalPeriod(year, quarter), revenueData);
-    const year5AvgRevenue = calcDataAverage(year, quarter, 5, revenueData); // utils.getAverageS(utils.calcTotalPeriod(year - 5, quarter), utils.calcTotalPeriod(year, quarter), revenueData);
-    const year1AvgRevenue = calcDataAverage(year, quarter, 1, revenueData); // utils.getAverageS(utils.calcTotalPeriod(year - 1, quarter), utils.calcTotalPeriod(year, quarter), revenueData);
+    let latestValue: number = 0;
+    revenueData.forEach(dp => {
+        if (dp.data !== null && dp.data > latestValue) {
+            latestValue = dp.data;
+        }
+    })
 
-    return new StockStat<number | undefined>(key, yearAllAvgRevenue, year10AvgRevenue, year5AvgRevenue, year1AvgRevenue, 0);
+    
+
+
+    //const year10AvgRevenue = calcDataAverage(year, currentQuarter, 10, revenueData); // utils.getAverageS(utils.calcTotalPeriod(year - 10, quarter), utils.calcTotalPeriod(year, quarter), revenueData);
+    //const year5AvgRevenue = calcDataAverage(year, currentQuarter, 5, revenueData); // utils.getAverageS(utils.calcTotalPeriod(year - 5, quarter), utils.calcTotalPeriod(year, quarter), revenueData);
+    //const year1AvgRevenue = calcDataAverage(year, quarter, 1, revenueData); // utils.getAverageS(utils.calcTotalPeriod(year - 1, quarter), utils.calcTotalPeriod(year, quarter), revenueData);
+    console.log(year1AvgRevenue);
+
+    return new StockStat<number | undefined>(key, yearAllAvgRevenue, year10AvgRevenue, year5AvgRevenue, year1AvgRevenue, latestValue);
     
 }
