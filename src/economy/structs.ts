@@ -88,27 +88,27 @@ export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: 
     if (reportType === "Quarterly"){ 
         calcFromQuarter = currentQuarter;
     }
-    
 
+
+    // Note: This method of calculating is inefficient, consider improving
     const yearAllAvgRevenue = utils.getAverageS(undefined, undefined, revenueData)?.average;
     const year1AvgRevenue = utils.getAverageS(utils.calcTotalPeriod(year - 1, calcFromQuarter), utils.calcTotalPeriod(year, calcFromQuarter), revenueData)?.average;
     const year10AvgRevenue = utils.getAverageS(utils.calcTotalPeriod(year - 10, calcFromQuarter), utils.calcTotalPeriod(year, calcFromQuarter), revenueData)?.average;
     const year5AvgRevenue = utils.getAverageS(utils.calcTotalPeriod(year - 5, calcFromQuarter), utils.calcTotalPeriod(year, calcFromQuarter), revenueData)?.average;
 
 
+    // Finds the latset
     let latestValue: number = 0;
+    let latestTime: number = 0;
     revenueData.forEach(dp => {
-        if (dp.data !== null && dp.data > latestValue) {
+        if (dp.data !== null && dp.time > latestTime) {
             latestValue = dp.data;
+            latestTime = dp.time;
         }
     })
+  
 
-    
 
-
-    //const year10AvgRevenue = calcDataAverage(year, currentQuarter, 10, revenueData); // utils.getAverageS(utils.calcTotalPeriod(year - 10, quarter), utils.calcTotalPeriod(year, quarter), revenueData);
-    //const year5AvgRevenue = calcDataAverage(year, currentQuarter, 5, revenueData); // utils.getAverageS(utils.calcTotalPeriod(year - 5, quarter), utils.calcTotalPeriod(year, quarter), revenueData);
-    //const year1AvgRevenue = calcDataAverage(year, quarter, 1, revenueData); // utils.getAverageS(utils.calcTotalPeriod(year - 1, quarter), utils.calcTotalPeriod(year, quarter), revenueData);
     console.log(year1AvgRevenue);
 
     return new StockStat<number | undefined>(key, yearAllAvgRevenue, year10AvgRevenue, year5AvgRevenue, year1AvgRevenue, latestValue);
