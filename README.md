@@ -18,6 +18,10 @@ To run the program in the development environment with npm use the following com
 npm run tauri dev
 ```
 
+More documentation can be found in the docs folder. 
+
++ **[Architecture](docs/architecture.md):** Information about how the app is structured and its key components.
+
 
 ## License
-See the LICENSE file
+See the [LICENSE](LICENSE) file

@@ -8,7 +8,7 @@ export class QuarterlyReport {
         public readonly id: number,
         public readonly stock_id: number,
         public fiscal_year: number,
-        public fiscal_quarter: number,
+        public fiscal_quarter: number,      // The quarter 0 represents a whole year report
 
         public return_on_equity: number | null,
         public price_per_equity: number | null,
