@@ -9,7 +9,6 @@ Store your own local long-term market data.
 - [Data Flow](#data-flow)
 - [Key Components](#key-components)
 - [Data Model](#data-model)
-- [External Dependencies](#external-dependencies)
 - [Known Limitations](#known-limitations)
 
 ---
@@ -96,7 +95,7 @@ The economy module purpose is to manage the data for stocks and is based on the 
 <!-- Repeat for each meaningful component, module, or service. -->
 
 ## Data Model
-
+TBD
 <!-- Describe your main data structures, database schema, or key types.
      Can be prose, a table, or a code block. Example:
 
