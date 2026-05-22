@@ -1,6 +1,6 @@
 # Roadmap
 
-> Last updated: 2026-05-D21
+> Last updated: 2026-05-21
 
 This roadmap reflects current priorities and rough intentions - not hard commitments.
 
@@ -9,22 +9,16 @@ This roadmap reflects current priorities and rough intentions - not hard commitm
 
 - [ ] Improving and adding documentation
 
----
-
 ## Next — Up Soon
 
 - [ ] An overview page for all stocks
 - [ ] Support for editing the database
-
----
 
 ## Later — Backlog
 
 - [ ] Adding a graph for various data
 - [ ] Adding support for other operating systems as well as proving binaries
 - [ ] Better export options
-
----
 
 <!--
 ## Done ✓
