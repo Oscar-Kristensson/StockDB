@@ -6,22 +6,14 @@ StockDB is a local database for tracking key statistics about stocks. Note that 
 Download the msi installer (TBD) and run it 
 
 
-## Development Setup
-Tauri requires specific system dependencies depending on your OS. Please follow [the official Tauri guide](https://v2.tauri.app/start/prerequisites/) for your platform. Then simply clone the repository:
+## Development Setup and Building
+Information about related to development can be found in the docs folder. 
 
-``` bash
-git clone https://github.com/Oscar-Kristensson/StockDB.git
-```
 
-To run the program in the development environment with npm use the following command:
-``` bash
-npm run tauri dev
-```
-
-More documentation can be found in the docs folder. 
 
 + **[Architecture](docs/architecture.md):** Information about how the app is structured and its key components.
 
++ **[Building](docs/building):** The build instructions and related info.
 
 ## License
 See the [LICENSE](LICENSE) file
