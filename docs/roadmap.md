@@ -14,11 +14,13 @@ This roadmap reflects current priorities and rough intentions - not hard commitm
 ## Next — Up Soon
 
 - [ ] An overview page for all stocks
+- [ ] Support for editing the database
 
 ---
 
 ## Later — Backlog
 
+- [ ] Adding a graph for various data
 - [ ] Adding support for other operating systems as well as proving binaries
 - [ ] Better export options
 

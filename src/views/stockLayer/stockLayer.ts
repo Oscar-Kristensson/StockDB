@@ -92,7 +92,7 @@ class StockLayer extends AppLayer {
         this.overviewTable = new CustomTable(this.overviewContainer, "overviewTable", 6);
         this.generateStockOverViewTable();
         
-        this.infoTable = new CustomTable(this.informationContainer, "infoTable", 6);
+        this.infoTable = new CustomTable(this.informationContainer, "infoTable", QuarterlyReport.keys.length + 1);
         this.generateInfoTable();
         
         if (this.app) {
@@ -212,6 +212,8 @@ class StockLayer extends AppLayer {
         
 
         this.updateStockOverviewTable();
+        this.updateInformationOverviewTable();
+
 
         /*
 
@@ -263,6 +265,59 @@ class StockLayer extends AppLayer {
         this.updateStockOverviewTable();
 
 
+    }
+
+    async updateInformationOverviewTable() {
+        if (!this.app) {
+            console.log("Test");
+            return;
+        }
+
+        if (!this.app.stock) {
+            console.log("Test");
+            return;
+        }
+
+        const stock = this.app.stock;
+
+        const quarterlyReports = (await stock.getData())?.filter(r => r.fiscal_quarter === 0).sort((a, b) => 
+            utils.calcTotalPeriod(b.fiscal_year, b.fiscal_quarter) - utils.calcTotalPeriod(a.fiscal_year, a.fiscal_quarter));
+
+        if (!quarterlyReports){
+            return;
+        }
+
+        if (!this.infoTable){
+            return;
+        }
+
+
+        
+        
+        
+        quarterlyReports.forEach(report => {
+            const row: Array<CustomLabelElement> = [
+                new CustomLabelElement(undefined, report.getReportTimeStringA())
+            ];
+            report.forEach((key) => {
+                row.push(new CustomLabelElement(undefined, String(report[key])))
+            })
+
+            this.infoTable?.addRow_L(row);
+            /*this.infoTable?.addRow_L([
+                new CustomLabelElement(undefined, report.getReportTimeStringA()),
+                new CustomLabelElement(undefined, String(report.return_on_equity)),
+                new CustomLabelElement(undefined, String(report.price_per_equity)),
+                new CustomLabelElement(undefined, String(report.equity_per_share)),
+                new CustomLabelElement(undefined, String(report.earnings_per_share)),
+                new CustomLabelElement(undefined, String(report.share_price)),
+            ], false); */
+
+
+        });
+
+
+        console.log(quarterlyReports)
     }
 
     async updateStockOverviewTable() {
@@ -375,29 +430,19 @@ class StockLayer extends AppLayer {
             return;
         }
 
-        this.infoTable.addRow_L([
-            new CustomLabelElement(undefined, ""),
-            new CustomLabelElement(undefined, "Latest"),
-            new CustomLabelElement(undefined, "1 year"),
-            new CustomLabelElement(undefined, "5 years"),
-            new CustomLabelElement(undefined, "10 years"),
-            new CustomLabelElement(undefined, "All"),
-        ], true); 
-        this.infoTable.addRow_L([
-            new CustomLabelElement(undefined, ""),
-            new CustomLabelElement(undefined, "Latest"),
-            new CustomLabelElement(undefined, "1 year"),
-            new CustomLabelElement(undefined, "5 years"),
-            new CustomLabelElement(undefined, "10 years"),
-            new CustomLabelElement(undefined, "All"),
-        ], false); 
-        
+
+        const row: Array<CustomLabelElement> = [
+            new CustomLabelElement(undefined, "Period")
+        ];
+        QuarterlyReport.keys.forEach(value => {
+            row.push(
+                new CustomLabelElement(undefined, String(value[1]))
+            );
+        });
 
 
-
-
-
-        
+        this.infoTable.addRow_L(row, true);
+   
         
     }
 

@@ -114,7 +114,7 @@ Post
 
 
 ## Known Limitations
-+ The DB currently only works with Quarly reports
++ The DB currently only works with quarterly reports
 + The data in the DB can not currently be modifyed
 + The data is not stored in the standardized format
 <!-- Honest notes about shortcuts taken, things that don't scale, or areas to improve.

@@ -4,6 +4,14 @@ import * as utils from "../utils";
 
 
 export class QuarterlyReport {
+    static keys: Array<[keyof QuarterlyReport, string]> = [
+        ["return_on_equity", "Return on equity"],
+        ["price_per_equity", "Price per equity"],
+        ["equity_per_share", "Equity per share"],
+        ["earnings_per_share", "Earnings per share"],
+        ["share_price", "Share price"],
+        ["dividend", "Dividend"],
+    ]
     constructor(
         public readonly id: number,
         public readonly stock_id: number,
@@ -62,6 +70,31 @@ export class QuarterlyReport {
     getCSVRow() : string {
 
         return `(THIS IS WRONG) ${this.id}, ${this.stock_id}, ${this.fiscal_year}, ${this.fiscal_quarter}, ${this.return_on_equity}, ${this.price_per_equity}, ${this.equity_per_share}, ${this.id}`
+
+    }
+
+    forEach(fn: (key: keyof QuarterlyReport, name: string, index: number) => any){
+        let stop: boolean = false;
+        for (let i = 0; i < QuarterlyReport.keys.length; i++){
+            const keyInfo = QuarterlyReport.keys[i];
+
+            stop = fn(keyInfo[0], keyInfo[1], i);
+            if (stop) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * 
+     * @returns - A date presentable to the user
+     */
+    getReportTimeStringA() : string {
+        let str = `${this.fiscal_year}`;
+        if (this.fiscal_quarter !== 0){
+            str += ` Q${this.fiscal_quarter}`
+        }
+        return str;
 
     }
 }
