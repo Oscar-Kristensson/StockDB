@@ -45,7 +45,8 @@ export class CustomTable implements CustomElementInterface {
     }
 
     /**
-     * Legacy function
+     * Legacy function (Why? Explain this futher) and some of the methods 
+     * do not work. Use addRow instead.
      * @param row 
      * @param header 
      * @returns 
@@ -81,6 +82,15 @@ export class CustomTable implements CustomElementInterface {
 
     appendChild(node: CustomElementInterface | HTMLElement): void {
         console.error("Table element can not append a child", node.toString());        
+    }
+
+    clearRows() {
+        this.rows.forEach(row => {
+            row.deleted();
+        });
+
+        
+
     }
 
 }

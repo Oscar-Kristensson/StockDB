@@ -8,6 +8,10 @@ export class CustomTableRow {
     }
 
     get rows() : number | undefined {
-        return undefined;
+        return this.container.childNodes.length;
+    }
+
+    deleted() {
+        this.container.remove();
     }
 }

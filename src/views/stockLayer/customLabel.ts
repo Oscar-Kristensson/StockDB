@@ -1,4 +1,5 @@
 import { CustomElementInterface } from "../../components/base.ts";
+import { CustomTableRow } from "../../components/row.ts";
 
 
 export class CustomLabelElement implements CustomElementInterface {
@@ -36,4 +37,35 @@ export class CustomLabelElement implements CustomElementInterface {
     getTopMostHTMLContainer(): HTMLElement {
         return this.content;
     }
+}
+
+
+
+
+
+
+
+
+
+
+export class InfoTableRow extends CustomTableRow {
+    elements: Array<CustomLabelElement>
+    constructor(elements: Array<CustomLabelElement>) {
+        super();
+
+        this.elements = elements;
+
+        this.addElementsToContainer();
+
+        
+    }
+
+    addElementsToContainer() {
+        this.elements.forEach(element => {
+            const td = document.createElement("td");
+            td.appendChild(element.getTopMostHTMLContainer());
+            this.container.appendChild(td);
+        });
+    }
+
 }

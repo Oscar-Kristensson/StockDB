@@ -3,7 +3,7 @@ import { CustomContainer } from "../../components/container.ts";
 import { CustomTable } from "../../components/table.ts";
 import { CustomStockInfo } from "../../components/stockInfo.ts";
 import { StockDB } from "../../app.ts";
-import { CustomLabelElement } from "./customLabel.ts";
+import { CustomLabelElement, InfoTableRow } from "./customLabel.ts";
 import * as utils from "../../utils"
 import { QuarterlyReport } from "../../db/quarterly.ts";
 import { OverviewTableRow, TableRowStruct } from "./tables.ts";
@@ -211,6 +211,7 @@ class StockLayer extends AppLayer {
         })
         
 
+
         this.updateStockOverviewTable();
         this.updateInformationOverviewTable();
 
@@ -293,7 +294,8 @@ class StockLayer extends AppLayer {
 
 
         
-        
+        this.infoTable.clearRows();
+
         
         quarterlyReports.forEach(report => {
             const row: Array<CustomLabelElement> = [
@@ -303,7 +305,10 @@ class StockLayer extends AppLayer {
                 row.push(new CustomLabelElement(undefined, String(report[key])))
             })
 
-            this.infoTable?.addRow_L(row);
+            const tableRow = new InfoTableRow(row);
+
+
+            this.infoTable?.addRow(tableRow);
             /*this.infoTable?.addRow_L([
                 new CustomLabelElement(undefined, report.getReportTimeStringA()),
                 new CustomLabelElement(undefined, String(report.return_on_equity)),
