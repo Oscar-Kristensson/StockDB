@@ -16,12 +16,25 @@ git clone https://github.com/Oscar-Kristensson/StockDB.git
 cd StockDB
 ```
 
+
 **Run in development mode**
 ```bash
 npm run tauri dev
 ```
 This starts the frontend dev server and the Tauri window with hot reload.
 
+If you get the following error when running the command, you most likely do not have tauri installed.
+
+```
+'tauri' is not recognized as an internal or external command,
+operable program or batch file.
+```
+
+Install by running the command bellow, if it does not work, make sure you followed the instructions provided in the link above.
+
+```
+npm install -D @tauri-apps/cli@latest
+```
 
 <!-- When test are added (if ever)
 ## Running Tests

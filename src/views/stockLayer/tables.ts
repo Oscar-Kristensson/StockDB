@@ -1,7 +1,6 @@
 import { CustomTableRow } from "../../components/row";
 import { CustomLabelElement } from "./customLabel";
 import * as utils from "../../utils";
-import { QuarterlyReport } from "../../db";
 import * as economy from "../../economy"
 
 export class TableRowStruct<valueT> {
@@ -121,7 +120,7 @@ export class OverviewTableRow extends CustomTableRow {
     }
 }
 
-
+/* This is unused code and should likely be removed
 export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: keyof QuarterlyReport) {
     const now: Date = new Date();
     const year: number = now.getFullYear();
@@ -141,4 +140,4 @@ export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: 
         lastAll: yearAllAvgRevenue,
     }
     
-}
+}*/
