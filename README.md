@@ -13,7 +13,7 @@ Information about related to development can be found in the docs folder.
 
 + **[Architecture](docs/architecture.md):** Information about how the app is structured and its key components.
 
-+ **[Building](docs/building):** The build instructions and related info.
++ **[Building](docs/building.md):** The build instructions and related info.
 
 ## License
 See the [LICENSE](LICENSE) file
