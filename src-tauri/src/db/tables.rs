@@ -49,15 +49,17 @@ CREATE TABLE IF NOT EXISTS quarterly (
     stock_id INTEGER NOT NULL,
 
     fiscal_year INTEGER NOT NULL,
-    fiscal_quarter INTEGER NOT NULL CHECK (fiscal_quarter BETWEEN 0 AND 4), --quarter of 0 represents a yearly report
+    fiscal_quarter INTEGER NOT NULL CHECK (fiscal_quarter BETWEEN 0 AND 4), --qu<arter of 0 represents a yearly report
 
-    returnOnEquity DECIMAL(7,6),                         -- total revenue
-    pricePerEquity DECIMAL(18,6),
-    equityPerShare DECIMAL(18,6),
-    earningsPerShare DECIMAL(18,6),
-    sharePrice DECIMAL(10,4),
-
-    dividend DECIMAL(5,4), -- percentage as decimal
+    revenue DECIMAL(7,6),                         -- total revenue
+    gross_profit DECIMAL(18,6),
+    operating_income DECIMAL(18,6),
+    net_income DECIMAL(18,6),
+    shares_outstanding DECIMAL(10,4),
+    total_shareholders_equity DECIMAL(10,4),
+    share_price DECIMAL(10,4),
+    dividend DECIMAL(5,4),                       -- percentage as decimal
+    
 
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
 

@@ -75,15 +75,17 @@ function validateQuarter(quarterString: string) {
 
 
 export class AddRecordForm extends CustomFormElement {
-    yearInput: CustomInputElement;
-    quarterInput: CustomInputElement;
-    stockSelector: CustomDropdownElement;
-    returnOnEquityInput: CustomInputElement;
-    pricePerEquityInput: CustomInputElement;
-    equityPerShareInput: CustomInputElement;
-    earningsPerShareInput: CustomInputElement;
-    sharePriceInput: CustomInputElement;
-    dividendInput: CustomInputElement;
+    year_input: CustomInputElement;
+    quarter_input: CustomInputElement;
+    stock_selector: CustomDropdownElement;
+    revenue_input: CustomInputElement;
+    gross_profit_input: CustomInputElement;
+    operating_income_input: CustomInputElement;
+    net_income_input: CustomInputElement;
+    shares_outstanding_input: CustomInputElement;
+    total_shareholders_equity_input: CustomInputElement;
+    share_price_input: CustomInputElement;
+    dividend_input: CustomInputElement;
 
 
     // OLD
@@ -99,51 +101,59 @@ export class AddRecordForm extends CustomFormElement {
         this.onInput = this.onInput.bind(this);
 
 
-        this.yearInput = new CustomInputElement(undefined, "Year", undefined, "number", false, validateYear);
-        this.yearInput.value = String(new Date().getFullYear());
-        this.addInput(this.yearInput);
+        this.year_input = new CustomInputElement(undefined, "Year", undefined, "number", false, validateYear);
+        this.year_input.value = String(new Date().getFullYear());
+        this.addInput(this.year_input);
         
-        this.quarterInput = new CustomInputElement(undefined, "Quarter (1-4)", undefined, "number", false, validateQuarter);
-        this.quarterInput.placeholder = "1";
-        this.addInput(this.quarterInput);
+        this.quarter_input = new CustomInputElement(undefined, "Quarter (1-4)", undefined, "number", false, validateQuarter);
+        this.quarter_input.placeholder = "1";
+        this.addInput(this.quarter_input);
         
-        this.stockSelector = new CustomDropdownElement(undefined, "Stock", [], true);
-        this.addInput(this.stockSelector);
-        this.stockSelector.events?.listen("close", this.onInput);
+        this.stock_selector = new CustomDropdownElement(undefined, "Stock", [], true);
+        this.addInput(this.stock_selector);
+        this.stock_selector.events?.listen("close", this.onInput);
         
 
         
         
-        this.returnOnEquityInput = new CustomInputElement(undefined, "Return on equity", "SEK", "number", false);
-        this.returnOnEquityInput.placeholder = "1 000 000";
-        this.addInput(this.returnOnEquityInput);
+        this.revenue_input = new CustomInputElement(undefined, "Return on equity", "SEK", "number", false);
+        this.revenue_input.placeholder = "1 000 000";
+        this.addInput(this.revenue_input);
         
         
-        this.pricePerEquityInput = new CustomInputElement(undefined, "Price per equity", "SEK", "number", false);
-        this.pricePerEquityInput.placeholder = "1 000 000";
-        this.addInput(this.pricePerEquityInput);
+        this.gross_profit_input = new CustomInputElement(undefined, "Price per equity", "SEK", "number", false);
+        this.gross_profit_input.placeholder = "1 000 000";
+        this.addInput(this.gross_profit_input);
 
         
         
         
         
-        this.equityPerShareInput = new CustomInputElement(undefined, "Equity per share", "SEK", "number", false);
-        this.equityPerShareInput.placeholder = "1 000 000";
-        this.addInput(this.equityPerShareInput);
+        this.operating_income_input = new CustomInputElement(undefined, "Equity per share", "SEK", "number", false);
+        this.operating_income_input.placeholder = "1 000 000";
+        this.addInput(this.operating_income_input);
         
         
-        this.earningsPerShareInput = new CustomInputElement(undefined, "Earnings per share", "SEK", "number", false);
-        this.earningsPerShareInput.placeholder = "1 000 000";
-        this.addInput(this.earningsPerShareInput);
+        this.net_income_input = new CustomInputElement(undefined, "Earnings per share", "SEK", "number", false);
+        this.net_income_input.placeholder = "1 000 000";
+        this.addInput(this.net_income_input);
         
         
-        this.sharePriceInput = new CustomInputElement(undefined, "Share price", "SEK", "number", false);
-        this.sharePriceInput.placeholder = "1 000 000";
-        this.addInput(this.sharePriceInput);
+        this.shares_outstanding_input = new CustomInputElement(undefined, "Share price", "SEK", "number", false);
+        this.shares_outstanding_input.placeholder = "1 000 000";
+        this.addInput(this.shares_outstanding_input);
         
-        this.dividendInput = new CustomInputElement(undefined, "Dividend", "%", "number", false);
-        this.dividendInput.placeholder = "1 000 000";
-        this.addInput(this.dividendInput);
+        this.total_shareholders_equity_input = new CustomInputElement(undefined, "Dividend", "%", "number", false);
+        this.total_shareholders_equity_input.placeholder = "1 000 000";
+        this.addInput(this.total_shareholders_equity_input);
+        
+        this.share_price_input = new CustomInputElement(undefined, "Dividend", "%", "number", false);
+        this.share_price_input.placeholder = "1 000 000";
+        this.addInput(this.share_price_input);
+        
+        this.dividend_input = new CustomInputElement(undefined, "Dividend", "%", "number", false);
+        this.dividend_input.placeholder = "1 000 000";
+        this.addInput(this.dividend_input);
 
         
 
@@ -165,7 +175,7 @@ export class AddRecordForm extends CustomFormElement {
 
             stockListItems.forEach((item) => {
                 // Should the dropdown item instead recieve the id instead of ticker
-                this.stockSelector.addItem(new DropDownItem(item.name, item.id))
+                this.stock_selector.addItem(new DropDownItem(item.name, item.id))
             })
         })
         
@@ -203,29 +213,57 @@ export class AddRecordForm extends CustomFormElement {
             this.inputError.hide();
         }
 
-        if (!(typeof this.stockSelector.value === "number")) {
+        if (!(typeof this.stock_selector.value === "number")) {
             return;
 
         }
 
+console.log([
+            this.stock_selector.value,
+            Number(this.year_input.value),
+            Number(this.quarter_input.value),
+            Number(this.revenue_input.value),
+            Number(this.gross_profit_input.value),
+            Number(this.operating_income_input.value),
+            Number(this.net_income_input.value),
+            Number(this.shares_outstanding_input.value),
+            Number(this.total_shareholders_equity_input.value),
+            Number(this.share_price_input.value),
+            Number(this.dividend_input.value),
 
+]);
 
 
         db.addQuarterly(
-            this.stockSelector.value, 
-            Number(this.yearInput.value), 
-            Number(this.quarterInput.value),
-            Number(this.returnOnEquityInput.value),
-            Number(this.pricePerEquityInput.value),
-            Number(this.equityPerShareInput.value),
-            Number(this.earningsPerShareInput.value),
-            Number(this.sharePriceInput.value),
-            Number(this.dividendInput.value),
+            this.stock_selector.value,
+            Number(this.year_input.value),
+            Number(this.quarter_input.value),
+            Number(this.revenue_input.value),
+            Number(this.gross_profit_input.value),
+            Number(this.operating_income_input.value),
+            Number(this.net_income_input.value),
+            Number(this.shares_outstanding_input.value),
+            Number(this.total_shareholders_equity_input.value),
+            Number(this.share_price_input.value),
+            Number(this.dividend_input.value),
         );
 
 
 
-        [this.returnOnEquityInput, this.pricePerEquityInput, this.equityPerShareInput, this.earningsPerShareInput, this.sharePriceInput, this.dividendInput].forEach(input => {
+        [
+            this.year_input,
+            this.quarter_input,
+            this.stock_selector,
+            this.revenue_input,
+            this.gross_profit_input,
+            this.operating_income_input,
+            this.net_income_input,
+            this.shares_outstanding_input,
+            this.total_shareholders_equity_input,
+            this.share_price_input,
+            this.dividend_input,
+        ]
+        .forEach(input => {
             input.value = "";
         })
 
@@ -257,21 +295,21 @@ export class AddRecordForm extends CustomFormElement {
     validate(throwError: boolean = false): boolean {
         throwError;
 
-        if (this.stockSelector.value === undefined) {
+        if (this.stock_selector.value === undefined) {
             if (throwError)
                 this.inputError.throw("Invalid stock", "A stock must be selected");
             return false;
         }
 
-        if (this.yearInput.value === undefined || validateYear(this.yearInput.value) !== InputValidationStates.ok) {
+        if (this.year_input.value === undefined || validateYear(this.year_input.value) !== InputValidationStates.ok) {
             if (throwError)
                 this.inputError.throw("Invalid year", "A valid year must be inputted");
             return false;
         }
 
-        if (this.quarterInput.value === undefined || validateQuarter(this.quarterInput.value) !== InputValidationStates.ok) {
+        if (this.quarter_input.value === undefined || validateQuarter(this.quarter_input.value) !== InputValidationStates.ok) {
             if (throwError)
-                this.inputError.throw("Invalid quarterInput", "A quarter must be inputted");
+                this.inputError.throw("Invalid quarter_input", "A quarter must be inputted");
             return false;
         }
 
