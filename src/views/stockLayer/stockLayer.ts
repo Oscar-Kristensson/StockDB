@@ -6,8 +6,10 @@ import { StockDB } from "../../app.ts";
 import { CustomLabelElement, InfoTableRow } from "./customLabel.ts";
 import * as utils from "../../utils"
 import { QuarterlyReport } from "../../db/quarterly.ts";
-import { OverviewTableRow, TableRowStruct } from "./tables.ts";
+import { OverviewTableRow, TableRowStruct, buildOverviewTable } from "./tables.ts";
 import { CustomDropdownElement, DropDownItem } from "../../components/dropdown.ts";
+import { renderOverviewTable, CustomTableData } from "../../components/new_table.ts";
+
 import * as economy from "../../economy"
 
 class StockLayer extends AppLayer {
@@ -16,8 +18,11 @@ class StockLayer extends AppLayer {
     overviewContainer: CustomContainer | undefined;
     informationContainer: CustomContainer | undefined;
     stockInfo: CustomStockInfo | undefined;
-    overviewTable: CustomTable | undefined;
-    infoTable: CustomTable | undefined;
+    old_overviewTable: CustomTable | undefined;
+    old_infoTable: CustomTable | undefined;
+    
+
+    overviewTable: CustomTableData | undefined;
 
     stock: economy.Stock | undefined;
     app: StockDB | undefined;
@@ -89,10 +94,38 @@ class StockLayer extends AppLayer {
 
 
 
-        this.overviewTable = new CustomTable(this.overviewContainer, "overviewTable", 6);
+        this.old_overviewTable = new CustomTable(this.overviewContainer, "overviewTable", 5);
         this.generateStockOverViewTable();
+
+
+        this.overviewTable = {
+            columns: [
+                { key: "latest", label: "Latest" },
+                { key: "5y", label: "5 years" },
+                { key: "10y", label: "10 years" },
+                { key: "all", label: "All" },
+            ],
+            rows: [
+                "Return on equity",
+                "Price per equity",
+                "Equity per share",
+                "Earnings per share",
+                "Shares price",
+                "Dividend",
+            ].map((label) => ({
+                label,
+                values: {
+                latest: { value: null, loaded: false },
+                "5y": { value: null, loaded: false },
+                "10y": { value: null, loaded: false },
+                all: { value: null, loaded: false },
+            },
+            })),
+        };
         
-        this.infoTable = new CustomTable(this.informationContainer, "infoTable", QuarterlyReport.keys.length + 1);
+
+
+        this.old_infoTable = new CustomTable(this.informationContainer, "infoTable", QuarterlyReport.keys.length + 1);
         this.generateInfoTable();
         
         if (this.app) {
@@ -288,13 +321,13 @@ class StockLayer extends AppLayer {
             return;
         }
 
-        if (!this.infoTable){
+        if (!this.old_infoTable){
             return;
         }
 
 
         
-        this.infoTable.clearRows();
+        this.old_infoTable.clearRows();
 
         
         quarterlyReports.forEach(report => {
@@ -308,7 +341,7 @@ class StockLayer extends AppLayer {
             const tableRow = new InfoTableRow(row);
 
 
-            this.infoTable?.addRow(tableRow);
+            this.old_infoTable?.addRow(tableRow);
             /*this.infoTable?.addRow_L([
                 new CustomLabelElement(undefined, report.getReportTimeStringA()),
                 new CustomLabelElement(undefined, String(report.return_on_equity)),
@@ -328,41 +361,33 @@ class StockLayer extends AppLayer {
     async updateStockOverviewTable() {
         this.clearStockOverviewTable();
 
-        
-        // NOTE: This should be updated to be able to handle quarterly updates
-        const stats = await this.stock?.getStatistics("Yearly")
-        if (stats === undefined) return;
+        if (!this.stock) {
+            console.error("Could not update the StockOverviewTable since the stock was not loaded in");
+            return;
+        }
 
-        this.returnOnEquity?.data.setDataStockStat(stats.returnOnEquity);
-        this.pricePerEquity?.data.setDataStockStat(stats.pricePerEquity);
-        this.equityPerShare?.data.setDataStockStat(stats.equityPerShare);
-        this.earningsPerShare?.data.setDataStockStat(stats.earningsPerShare);
-        this.sharePrice?.data.setDataStockStat(stats.sharePrice);
-        this.dividend?.data.setDataStockStat(stats.dividend);
+        if (!this.overviewContainer) {
+            console.error("Could not update the StockOverviewTable since the overviewContainer was not loaded in");
+            return;
+        }
 
-        /*const revenue = calcDataAverages(this.quarterlyRecords, "revenue");
-        this.revenueRow?.data.setDataS(revenue);
 
-        const gross_profit = calcDataAverages(this.quarterlyRecords, "gross_profit");
-        this.grossProfitRow?.data.setDataS(gross_profit);
 
-        const operating_income = calcDataAverages(this.quarterlyRecords, "operating_income");
-        this.operatingIncomeRow?.data.setDataS(operating_income);
 
-        const net_income = calcDataAverages(this.quarterlyRecords, "net_income");
-        this.netIncomeRow?.data.setDataS(net_income);
+        const summary: economy.StockMetricsSummary = await this.stock.getStatistics("Yearly");
+        const tableData = buildOverviewTable(summary);
+        const html = renderOverviewTable(tableData);
 
-        const shares_outstanding = calcDataAverages(this.quarterlyRecords, "shares_outstanding");
-        this.sharesOutstandingRow?.data.setDataS(shares_outstanding);*/
+        this.overviewContainer.contentContainer.innerHTML = html;
     }
 
     clearStockOverviewTable() {
-        this.returnOnEquity?.data.setData(undefined, undefined, undefined, undefined, undefined);
-        this.pricePerEquity?.data.setData(undefined, undefined, undefined, undefined, undefined);
-        this.equityPerShare?.data.setData(undefined, undefined, undefined, undefined, undefined);
-        this.earningsPerShare?.data.setData(undefined, undefined, undefined, undefined, undefined);
-        this.sharePrice?.data.setData(undefined, undefined, undefined, undefined, undefined);
-        this.dividend?.data.setData(undefined, undefined, undefined, undefined, undefined);
+        this.returnOnEquity?.data.setData(undefined, undefined, undefined, undefined);
+        this.pricePerEquity?.data.setData(undefined, undefined, undefined, undefined);
+        this.equityPerShare?.data.setData(undefined, undefined, undefined, undefined);
+        this.earningsPerShare?.data.setData(undefined, undefined, undefined, undefined);
+        this.sharePrice?.data.setData(undefined, undefined, undefined, undefined);
+        this.dividend?.data.setData(undefined, undefined, undefined, undefined);
     }
 
 
@@ -370,15 +395,14 @@ class StockLayer extends AppLayer {
 
 
     generateStockOverViewTable() {
-        if (!(this.overviewTable instanceof CustomTable)) {
+        if (!(this.old_overviewTable instanceof CustomTable)) {
             console.error("The overview table is not correctly initalized!");
             return;
         }
 
-        this.overviewTable.addRow_L([
+        this.old_overviewTable.addRow_L([
             new CustomLabelElement(undefined, ""),
             new CustomLabelElement(undefined, "Latest"),
-            new CustomLabelElement(undefined, "1 year"),
             new CustomLabelElement(undefined, "5 years"),
             new CustomLabelElement(undefined, "10 years"),
             new CustomLabelElement(undefined, "All"),
@@ -414,12 +438,12 @@ class StockLayer extends AppLayer {
 
 
 
-        this.overviewTable.addRow(this.returnOnEquity);
-        this.overviewTable.addRow(this.pricePerEquity);
-        this.overviewTable.addRow(this.equityPerShare);
-        this.overviewTable.addRow(this.earningsPerShare);
-        this.overviewTable.addRow(this.sharePrice);
-        this.overviewTable.addRow(this.dividend);
+        this.old_overviewTable.addRow(this.returnOnEquity);
+        this.old_overviewTable.addRow(this.pricePerEquity);
+        this.old_overviewTable.addRow(this.equityPerShare);
+        this.old_overviewTable.addRow(this.earningsPerShare);
+        this.old_overviewTable.addRow(this.sharePrice);
+        this.old_overviewTable.addRow(this.dividend);
 
         
 
@@ -430,7 +454,7 @@ class StockLayer extends AppLayer {
 
 
     generateInfoTable() {
-        if (!(this.infoTable instanceof CustomTable)) {
+        if (!(this.old_infoTable instanceof CustomTable)) {
             console.error("The overview table is not correctly initalized!");
             return;
         }
@@ -446,7 +470,7 @@ class StockLayer extends AppLayer {
         });
 
 
-        this.infoTable.addRow_L(row, true);
+        this.old_infoTable.addRow_L(row, true);
    
         
     }

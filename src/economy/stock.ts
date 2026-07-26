@@ -1,6 +1,7 @@
 import * as db from "../db"
 import * as utils from "../utils"
 import { StockStatistics } from "./structs"
+import { computeStockMetricsSummary, StockMetricsSummary, PeriodType } from "./calculations"
 import { ReportType } from "../db"
 
 
@@ -107,8 +108,27 @@ export class Stock {
 
     }
 
+    getStatistics(reportType: PeriodType) : Promise<StockMetricsSummary> {
+        return new Promise(async (resolve) => {
+            const data = await this.getData();
+            if (!data) {
+                throw new Error("Statistics could not be loaded");
+            }
 
-    getStatistics(reportType: ReportType) : Promise<StockStatistics> {
+            const data_summary = computeStockMetricsSummary(data, reportType)
+
+            resolve(data_summary);
+
+
+            
+        })
+    
+
+    }
+    
+
+
+    getStatistics_old(reportType: ReportType) : Promise<StockStatistics> {
         return new Promise(async (resolve) => {
             const data = await this.getData();
             if (!data) {
@@ -122,6 +142,18 @@ export class Stock {
 
             
         })
+    }
+
+
+    async getLatestQuarterlyReport(): Promise<db.QuarterlyReport | undefined> {
+        const data = await this.getData();
+
+        if (!data) {
+            return undefined;
+        }
+        return data
+            .filter(report => report.fiscal_quarter == 0)
+            .sort((a, b) => b.totalPeriod - a.totalPeriod)[0];
     }
 
 

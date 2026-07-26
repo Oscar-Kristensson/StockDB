@@ -1,9 +1,9 @@
 import { QuarterlyReport } from "../db";
 
 
-type PeriodType = "yearly" | "quarterly";
+export type PeriodType = "Yearly" | "Quarterly";
 
-interface MetricAverages {
+export interface MetricAverages {
   returnOnEquity: number | null;
   pricePerEquity: number | null;
   equityPerShare: number | null;
@@ -13,10 +13,11 @@ interface MetricAverages {
   sampleSize: number; // number of reports actually included
 }
 
-interface StockMetricsSummary {
-  last5Years: MetricAverages;
-  last10Years: MetricAverages;
-  allTime: MetricAverages;
+export interface StockMetricsSummary {
+    latest: MetricAverages;
+    last5Years: MetricAverages;
+    last10Years: MetricAverages;
+    allTime: MetricAverages;
 }
 
 /** Per-report derived metrics. Any input of null/0-denominator yields null for that field. */
@@ -57,6 +58,20 @@ function average(values: Array<number | null>): number | null {
   return valid.reduce((sum, v) => sum + v, 0) / valid.length;
 }
 
+function getLatestQuarterlyReport(reports: Array<QuarterlyReport>, period: PeriodType) {
+    return reports
+        .filter(report => {
+            switch(period) {
+                case "Yearly":
+                    return report.fiscal_quarter == 0;
+                case "Quarterly":
+                    return report.fiscal_quarter != 0;
+            }
+        })
+        .sort((a, b) => b.totalPeriod - a.totalPeriod)[0];
+
+}
+
 function averageMetrics(reports: QuarterlyReport[]): MetricAverages {
   const metrics = reports.map(computeDerivedMetrics);
 
@@ -82,7 +97,7 @@ export function computeStockMetricsSummary(
   periodType: PeriodType
 ): StockMetricsSummary {
   const filtered = allReports.filter((r) =>
-    periodType === "yearly" ? r.fiscal_quarter === 0 : r.fiscal_quarter !== 0
+    periodType === "Yearly" ? r.fiscal_quarter === 0 : r.fiscal_quarter !== 0
   );
 
   // Distinct fiscal years present, descending (most recent first).
@@ -96,7 +111,11 @@ export function computeStockMetricsSummary(
   const last5Reports = filtered.filter((r) => last5YearSet.has(r.fiscal_year));
   const last10Reports = filtered.filter((r) => last10YearSet.has(r.fiscal_year));
 
+  const latestReport = getLatestQuarterlyReport(allReports, periodType);
+
+
   return {
+    latest: averageMetrics([latestReport]),
     last5Years: averageMetrics(last5Reports),
     last10Years: averageMetrics(last10Reports),
     allTime: averageMetrics(filtered),

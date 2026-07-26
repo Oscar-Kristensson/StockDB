@@ -1,7 +1,10 @@
 import { CustomTableRow } from "../../components/row";
 import { CustomLabelElement } from "./customLabel";
+import { TableColumn, TableCell, TableRow } from "../../components/new_table";
 import * as utils from "../../utils";
 import * as economy from "../../economy"
+
+import { CustomTableData } from "../../components/new_table";
 
 export class TableRowStruct<valueT> {
     element: CustomLabelElement;
@@ -37,7 +40,6 @@ export class TableRowStruct<valueT> {
 
 export class TableRowData {
     latest: TableRowStruct<number | undefined>;
-    lastYear: TableRowStruct<number | undefined>;
     last5Years: TableRowStruct<number | undefined>;
     last10Years: TableRowStruct<number | undefined>;
     lastAll: TableRowStruct<number | undefined>;
@@ -45,7 +47,6 @@ export class TableRowData {
     constructor(
     ) {
         this.latest = new TableRowStruct(undefined);
-        this.lastYear = new TableRowStruct(undefined);
         this.last5Years = new TableRowStruct(undefined);
         this.last10Years = new TableRowStruct(undefined);
         this.lastAll = new TableRowStruct(undefined);
@@ -53,7 +54,6 @@ export class TableRowData {
 
     addTo(container: HTMLDivElement) {
         container.appendChild(this.latest.tableElement);
-        container.appendChild(this.lastYear.tableElement);
         container.appendChild(this.last5Years.tableElement);
         container.appendChild(this.last10Years.tableElement);
         container.appendChild(this.lastAll.tableElement);
@@ -61,14 +61,12 @@ export class TableRowData {
 
     setData(
         latest: number | undefined,    
-        lastYear: number | undefined,
         last5Years: number | undefined,
         last10Years: number | undefined,
         lastAll: number | undefined,
 
     ) {
         this.latest.update(latest);
-        this.lastYear.update(lastYear);
         this.last5Years.update(last5Years);
         this.last10Years.update(last10Years);
         this.lastAll.update(lastAll);
@@ -83,7 +81,6 @@ export class TableRowData {
     }) {
         this.setData(
             data.latest,
-            data.lastYear,
             data.last5Years,
             data.last10Years,
             data.lastAll
@@ -93,7 +90,6 @@ export class TableRowData {
     setDataStockStat(stat: economy.StockStat<number | undefined>){
         this.setData(
             stat.previous,
-            stat.oneYear,
             stat.fiveYear,
             stat.tenYear,
             stat.allYears,
@@ -104,6 +100,57 @@ export class TableRowData {
     
 
 }
+
+
+type MetricKey = keyof Omit<economy.MetricAverages, "sampleSize">;
+
+const METRIC_ROWS: { key: MetricKey; label: string }[] = [
+  { key: "returnOnEquity", label: "Return on equity" },
+  { key: "pricePerEquity", label: "Price per equity" },
+  { key: "equityPerShare", label: "Equity per share" },
+  { key: "earningsPerShare", label: "Earnings per share" },
+  { key: "sharePrice", label: "Shares price" },
+  { key: "dividend", label: "Dividend" },
+];
+
+const COLUMNS: TableColumn[] = [
+  { key: "latest", label: "Latest" },
+  { key: "5y", label: "5 years" },
+  { key: "10y", label: "10 years" },
+  { key: "all", label: "All" },
+];
+
+export function buildOverviewTable(summary: economy.StockMetricsSummary): CustomTableData {
+  const periodByColumnKey: Record<string, economy.MetricAverages | null> = {
+    latest: summary.latest,
+    "5y": summary.last5Years,
+    "10y": summary.last10Years,
+    all: summary.allTime,
+  };
+
+  const rows: TableRow[] = METRIC_ROWS.map(({ key, label }) => {
+    const values: Record<string, TableCell> = {};
+
+    for (const col of COLUMNS) {
+      const period = periodByColumnKey[col.key];
+      const raw = period ? period[key] : null;
+
+      values[col.key] = {
+        value: raw,
+        loaded: raw != null, // null -> stays "unloaded", matches your placeholder rows
+      };
+    }
+
+    return { label, values };
+  });
+
+  return { columns: COLUMNS, rows };
+}
+
+
+
+
+
 
 
 export class OverviewTableRow extends CustomTableRow {
@@ -119,25 +166,3 @@ export class OverviewTableRow extends CustomTableRow {
         data.addTo(this.container);
     }
 }
-
-/* This is unused code and should likely be removed
-export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: keyof QuarterlyReport) {
-    const now: Date = new Date();
-    const year: number = now.getFullYear();
-
-    const revenueData = quarterlyRecords.map(record => new utils.DtPoint(record.totalPeriod, record[key]));
-
-    const yearAllAvgRevenue = utils.getAverageS(undefined, undefined, revenueData);
-    const year10AvgRevenue = utils.getAverageS(utils.calcTotalPeriod(year - 10, 1), utils.calcTotalPeriod(year, 1), revenueData);
-    const year5AvgRevenue = utils.getAverageS(utils.calcTotalPeriod(year - 10, 1), utils.calcTotalPeriod(year, 1), revenueData);
-    const year1AvgRevenue = utils.getAverageS(utils.calcTotalPeriod(year - 10, 1), utils.calcTotalPeriod(year, 1), revenueData);
-
-    return {
-        latest: 0,
-        lastYear: year1AvgRevenue,
-        last5Years: year5AvgRevenue,
-        last10Years: year10AvgRevenue,
-        lastAll: yearAllAvgRevenue,
-    }
-    
-}*/

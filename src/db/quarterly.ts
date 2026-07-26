@@ -5,12 +5,12 @@ import * as utils from "../utils";
 
 export class QuarterlyReport {
     static keys: Array<[keyof QuarterlyReport, string]> = [
-        ["revenue",                     "revenue"],
-        ["gross_profit",                "gross_profit"],
-        ["operating_income",            "operating_income"],
-        ["net_income",                  "net_income"],
-        ["shares_outstanding",          "shares_outstanding"],
-        ["total_shareholders_equity",   "total_shareholders_equity"],
+        ["revenue",                     "Revenue"],
+        ["gross_profit",                "Gross profit"],
+        ["operating_income",            "Operating income"],
+        ["net_income",                  "Net income"],
+        ["shares_outstanding",          "Shares outstanding"],
+        ["total_shareholders_equity",   "Total Shareholders Equity"],
         ["dividend", "Dividend"],
     ]
     constructor(
