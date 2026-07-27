@@ -483,3 +483,44 @@ h2 {
     display: flex;
     column-gap: 16px;
 }
+
+
+.customCheckboxElement {
+    display: flex;
+    align-items: center;
+    
+}
+
+.customFormElement .customCheckboxElement {
+    height: 61px;
+}
+
+.customCheckboxElement .checkboxBox {
+    --size: 24px;
+    height: var(--size);
+    width: var(--size);
+    border-radius: 4px;
+    border: solid 2px #333333;
+    background-color: rgba(0, 128, 0, 0);
+    transition: all 250ms ease-in-out;
+    margin-right: 8px;
+    display: flex;
+}
+
+.customCheckboxElement.checked .checkboxBox {
+    background-color: green;
+    border-color: #134b13;
+    align-items: center;
+    justify-content: center;
+}
+.customCheckboxElement.checked .checkboxBox .checkMark {
+    display: inherit;
+}
+.customCheckboxElement .checkboxBox .checkMark {
+    display: none;
+}
+.customCheckboxElement .checkMark {
+    --checkSize: calc(var(--size) - 2px);
+    width: var(--checkSize);
+    height: var(--checkSize);
+}

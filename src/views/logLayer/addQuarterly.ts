@@ -5,7 +5,7 @@ import { CustomButtonElement } from "../../components/button.ts";
 import { CustomErrorMessage } from "../../components/errorMsg.ts";
 import * as db from "../../db"
 import { CustomInputElement, InputValidationError, InputValidationStates } from "../../components/input.ts";
-
+import { CustomCheckboxElement } from "../../components/checkbox.ts";
 
 function validateYear(yearString: string) {
     if (yearString === "") {
@@ -85,6 +85,7 @@ export class AddRecordForm extends CustomFormElement {
     total_shareholders_equity_input: CustomInputElement;
     share_price_input: CustomInputElement;
     dividend_input: CustomInputElement;
+    allowUpdateCheckbox: CustomCheckboxElement;
 
 
     // OLD
@@ -154,6 +155,9 @@ export class AddRecordForm extends CustomFormElement {
         this.dividend_input.placeholder = "1 000 000";
         this.addInput(this.dividend_input);
 
+
+        this.allowUpdateCheckbox = new CustomCheckboxElement(undefined, "Update report", false, false);
+        this.addInput(this.allowUpdateCheckbox);
         
 
 
@@ -278,6 +282,8 @@ export class AddRecordForm extends CustomFormElement {
         this.total_shareholders_equity_input.value = String(report.total_shareholders_equity);
         this.share_price_input.value = String(report.share_price);
         this.dividend_input.value = String(report.dividend);
+
+        this.allowUpdateCheckbox.setChecked(true);
 
     }
     

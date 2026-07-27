@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="16"
+   height="16"
+   viewBox="0 0 16 16"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="check.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#00a703"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:zoom="37.15625"
+     inkscape:cx="1.5475189"
+     inkscape:cy="7.333894"
+     inkscape:window-width="2560"
+     inkscape:window-height="1369"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g3" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g3"
+       transform="translate(2.1888848,0.51135424)"
+       style="stroke-width:0;stroke-dasharray:none">
+      <path
+         id="rect2"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+         d="M 7.1899838 9.9305381 C 7.0215233 9.7620775 6.7893807 9.6584677 6.5312144 9.6584677 L -5.6000863 9.6584677 L -5.5987053 5.8453391 C -5.5987053 5.3290064 -6.0145934 4.9131183 -6.5309261 4.9131183 C -7.0472588 4.9131183 -7.463147 5.3290064 -7.463147 5.8453391 L -7.463147 10.590689 C -7.463147 10.881126 -7.3317636 11.139551 -7.1247853 11.310225 C -6.9638023 11.442971 -6.7568217 11.522909 -6.5309261 11.522909 L 6.5312144 11.522909 C 7.0475471 11.522909 7.4634352 11.107021 7.4634352 10.590689 C 7.4634352 10.332522 7.3584443 10.098999 7.1899838 9.9305381 z "
+         transform="rotate(-45)" />
+    </g>
+  </g>
+</svg>
