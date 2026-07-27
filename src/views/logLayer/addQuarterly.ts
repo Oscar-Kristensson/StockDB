@@ -218,22 +218,6 @@ export class AddRecordForm extends CustomFormElement {
 
         }
 
-console.log([
-            this.stock_selector.value,
-            Number(this.year_input.value),
-            Number(this.quarter_input.value),
-            Number(this.revenue_input.value),
-            Number(this.gross_profit_input.value),
-            Number(this.operating_income_input.value),
-            Number(this.net_income_input.value),
-            Number(this.shares_outstanding_input.value),
-            Number(this.total_shareholders_equity_input.value),
-            Number(this.share_price_input.value),
-            Number(this.dividend_input.value),
-
-]);
-
-
         db.addQuarterly(
             this.stock_selector.value,
             Number(this.year_input.value),
@@ -246,6 +230,7 @@ console.log([
             Number(this.total_shareholders_equity_input.value),
             Number(this.share_price_input.value),
             Number(this.dividend_input.value),
+            false
         );
 
 

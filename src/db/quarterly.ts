@@ -178,3 +178,19 @@ export function addQuarterly(
 }
 
 
+export function deleteQuarterly(id: number): Promise<number> {
+    return new Promise((resolve, reject) => {
+        invoke("db_delete_quarterly", {
+            id: id,
+        })
+        .then((rv) => {
+            resolve(rv as number);
+        })
+        .catch((error) => {
+            printError(error, deleteQuarterly);
+            reject(error);
+        });
+    });
+}
+
+

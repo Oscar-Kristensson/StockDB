@@ -8,8 +8,10 @@ export class CustomButtonElement implements CustomElementInterface {
     icon: HTMLImageElement | undefined;
     label: HTMLDivElement | undefined;
     callback: (() => any) | undefined;
-    constructor(parent: HTMLElement, name: string | undefined = undefined, icon: string | undefined = undefined, classNames: Array<string> = [], callback: (() => any) | undefined = undefined) {
-        this.container = utils.createElement("button", parent, ["customButtonElement", ... classNames] );
+    constructor(parent: HTMLElement, name: string | undefined = undefined, icon: string | undefined = undefined, classNames: Array<string> = [], callback: (() => any) | undefined = undefined, removeDefaultClass:boolean = false) {
+        const classes = [... classNames]
+        if (!removeDefaultClass) classes.push("customButtonElement");
+        this.container = utils.createElement("button", parent, classes);
         if  (icon) {
             this.icon = utils.createElement("img", this.container, ["icon"]);
             this.icon.src = icon;

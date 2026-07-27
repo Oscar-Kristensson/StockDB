@@ -227,6 +227,17 @@ fn db_add_quarterly(
 }
 
 
+#[tauri::command]
+fn db_delete_quarterly(
+    db: State<db::DbConn>,
+    id: i64,
+) -> Result<usize, String> {
+    let conn = db.0.lock().unwrap();
+
+    db::quarterly::delete_quarterly_record(&conn, id)
+}
+
+
 
 fn assure_folder_structure(data_dir_path: &PathBuf) {
     println!("Data dir: {}", data_dir_path.display());
@@ -327,6 +338,7 @@ pub fn run() {
             db_get_table_names,
             db_add_stock,
             db_add_quarterly,
+            db_delete_quarterly,
             db_get_quarterly_from_stock_id,
             db_get_all_stocks,
             os_get_data_dir,

@@ -22,7 +22,7 @@ export interface CustomTableData {
   rows: TableRow[];
 }
 
-export function renderOverviewTable(data: CustomTableData): string {
+export function renderOverviewTable(data: CustomTableData, classNames: string = ""): string {
   const headerCells = [
     `<th><div class="labelElement"></div></th>`,
     ...data.columns.map(
@@ -44,7 +44,7 @@ export function renderOverviewTable(data: CustomTableData): string {
     })
     .join("");
 
-  return `<div class="customTable overviewTable"><table><thead><tr class="header">${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table></div>`;
+  return `<div class="customTable ${classNames}"><table><thead><tr class="header">${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table></div>`;
 }
 
 function formatValue(value: string | number | null): string {

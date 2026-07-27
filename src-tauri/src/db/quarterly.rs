@@ -84,6 +84,22 @@ let filter = match report_type {
     Ok(records)}
 
 
+    
+pub fn delete_quarterly_record(conn: &Connection, id: i64) -> Result<usize, String> {
+    let query = "DELETE FROM quarterly WHERE id = ?";
+
+    let rows_affected = conn
+        .execute(query, [id])
+        .map_err(|e| e.to_string())?;
+
+    if rows_affected == 0 {
+        return Err(format!("No record found with id {}", id));
+    }
+
+    Ok(rows_affected)
+}
+
+
 // NOTE: Update to use the quarterly struct
 pub fn add_record(
     conn: &Connection,
