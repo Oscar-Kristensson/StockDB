@@ -86,6 +86,7 @@ export class AddRecordForm extends CustomFormElement {
     share_price_input: CustomInputElement;
     dividend_input: CustomInputElement;
     allowUpdateCheckbox: CustomCheckboxElement;
+    prefixSelector: CustomDropdownElement;
 
 
     // OLD
@@ -155,6 +156,15 @@ export class AddRecordForm extends CustomFormElement {
         this.dividend_input.placeholder = "1 000 000";
         this.addInput(this.dividend_input);
 
+        this.prefixSelector = new CustomDropdownElement(undefined, "Prefix", [
+            new DropDownItem("No unit", 1),
+            new DropDownItem("K, Thousand, e6", 1e6),
+            new DropDownItem("M, Million, e6", 1e6),
+            new DropDownItem("B, Billion, e9", 1e9),
+
+        ], true);
+        this.addInput(this.prefixSelector);
+
 
         this.allowUpdateCheckbox = new CustomCheckboxElement(undefined, "Update report", false, false);
         this.addInput(this.allowUpdateCheckbox);
@@ -221,19 +231,21 @@ export class AddRecordForm extends CustomFormElement {
 
         }
 
+        const unitPrefix = Number(this.prefixSelector.value);
+
         db.addQuarterly(
             this.stock_selector.value,
             Number(this.year_input.value),
             Number(this.quarter_input.value),
-            Number(this.revenue_input.value),
-            Number(this.gross_profit_input.value),
-            Number(this.operating_income_input.value),
-            Number(this.net_income_input.value),
-            Number(this.shares_outstanding_input.value),
-            Number(this.total_shareholders_equity_input.value),
+            Number(this.revenue_input.value)                   * unitPrefix               ,
+            Number(this.gross_profit_input.value)              * unitPrefix               ,
+            Number(this.operating_income_input.value)          * unitPrefix               ,
+            Number(this.net_income_input.value)                * unitPrefix               ,
+            Number(this.shares_outstanding_input.value)        * unitPrefix               ,
+            Number(this.total_shareholders_equity_input.value) * unitPrefix               ,
             Number(this.share_price_input.value),
             Number(this.dividend_input.value),
-            false
+            this.allowUpdateCheckbox.value
         );
 
 
