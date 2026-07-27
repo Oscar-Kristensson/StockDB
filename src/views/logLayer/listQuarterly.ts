@@ -6,6 +6,8 @@ import { Stock } from "../../economy/stock.ts";
 import { CustomButtonElement } from "../../components/button.ts";
 import { CustomConfirmDialog } from "../../components/confirm.ts";
 import { renderOverviewTable, CustomTableData, TableColumn, TableRow, TableCell } from "../../components/new_table.ts";
+import { CustomTabs, CustomTab } from "../../components/tabs.ts";
+import { AddRecordForm } from "./addQuarterly.ts";
 
 export class QuarterlyReportList {
     container: HTMLElement;
@@ -13,6 +15,9 @@ export class QuarterlyReportList {
 
     stock: Stock | null = null;
     reports: QuarterlyReport[] = [];
+    tabsSystem: CustomTabs | undefined;
+    editQRTab: CustomTab | undefined;
+    editQRForm: AddRecordForm | undefined;
 
     constructor(parent: HTMLElement) {
         this.container = utils.createElement("div", parent, ["quarterlyReportList"]);
@@ -92,6 +97,7 @@ export class QuarterlyReportList {
 
             const reportId = Number(col.key);
             new CustomButtonElement(labelEl, "", "icons/deleteIcon.svg", ["deleteReportBtn"], () => this.onDelete(reportId), true);
+            new CustomButtonElement(labelEl, "", "icons/deleteIcon.svg", [], () => this.onEdit(reportId), true);
         });
     }
 
@@ -115,5 +121,33 @@ export class QuarterlyReportList {
                     .catch(err => console.error("Failed to delete quarterly report", err));
             }
         );
+    }
+
+
+    private onEdit(reportId: number) {
+        const report = this.reports.find(r => r.id === reportId);
+        if (!report) return;
+
+        // Connect this to the addQuarterly tab
+
+        if (!this.tabsSystem) {
+            console.error("Could not edit since the tabsSystem was not linked");
+            return;
+        }
+        if (!this.editQRTab) {
+            console.error("Could not edit since the editQRTab was not linked");
+            return;
+        }
+
+        if (!this.editQRForm) {
+            console.error("Could not edit since the editQRForm was not linked");
+            return;
+        }     
+        
+        
+        this.tabsSystem.switchTab(this.editQRTab);
+        this.editQRForm.openReport(report);
+
+        
     }
 }

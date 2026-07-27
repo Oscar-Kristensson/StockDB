@@ -73,7 +73,6 @@ function validateQuarter(quarterString: string) {
 
 
 
-
 export class AddRecordForm extends CustomFormElement {
     year_input: CustomInputElement;
     quarter_input: CustomInputElement;
@@ -265,6 +264,23 @@ export class AddRecordForm extends CustomFormElement {
         
 
     }
+
+
+    openReport(report: db.QuarterlyReport) {
+        this.year_input.value = String(report.fiscal_year);
+        this.quarter_input.value = String(report.fiscal_quarter);
+        this.stock_selector.value = String(report.stock_id);
+        this.revenue_input.value = String(report.revenue);
+        this.gross_profit_input.value = String(report.gross_profit);
+        this.operating_income_input.value = String(report.operating_income);
+        this.net_income_input.value = String(report.net_income);
+        this.shares_outstanding_input.value = String(report.shares_outstanding);
+        this.total_shareholders_equity_input.value = String(report.total_shareholders_equity);
+        this.share_price_input.value = String(report.share_price);
+        this.dividend_input.value = String(report.dividend);
+
+    }
+    
 
     onInput() {
         const valid = this.validate();

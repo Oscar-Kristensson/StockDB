@@ -1,7 +1,6 @@
 import { AppLayer } from "../../appLayer.ts";
 import { StockDB } from "../../app.ts";
 import { CustomTabs, CustomTab } from "../../components/tabs.ts";
-
 import { CustomHeading } from "../../components/heading.ts";
 
 
@@ -89,9 +88,14 @@ class LogLayer extends AppLayer {
 
 
         this.tabs = new CustomTabs(this.container);
+        const addRecordTab: CustomTab = new CustomTab("Add record", this.addRecordContainer, "icons/recordIcon.svg");
         this.tabs.addTab(new CustomTab("Add stock", this.addStockContainer, "icons/addStockIcon.svg"));
-        this.tabs.addTab(new CustomTab("Add record", this.addRecordContainer, "icons/recordIcon.svg"));
+        this.tabs.addTab(addRecordTab);
         this.tabs.addTab(new CustomTab("Edit records", this.editRecordsContainer, "icons/recordIcon.svg"));
+
+        this.editRecords.editQRForm = this.recordForm;
+        this.editRecords.editQRTab = addRecordTab;
+        this.editRecords.tabsSystem = this.tabs;
 
         this.container.appendChild(this.addStockContainer)
         this.container.appendChild(this.addRecordContainer);
