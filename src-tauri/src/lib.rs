@@ -204,6 +204,7 @@ fn db_add_quarterly(
     total_shareholders_equity: Option<f64>,
     share_price: Option<f64>,
     dividend: Option<f64>,
+    update: bool,
 ) -> Result<(), String> {
     let conn = db.0.lock().unwrap();
     println!("In add record! shares_outstanding {:?}", shares_outstanding);
@@ -220,7 +221,8 @@ fn db_add_quarterly(
         shares_outstanding,
         total_shareholders_equity,
         share_price,
-        dividend
+        dividend,
+        update,
     )
 }
 

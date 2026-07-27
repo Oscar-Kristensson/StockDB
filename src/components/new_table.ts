@@ -48,7 +48,10 @@ export function renderOverviewTable(data: CustomTableData): string {
 }
 
 function formatValue(value: string | number | null): string {
-  return value == null ? "-" : String(value);
+    if (typeof value === "number") {
+        value = value.toFixed(2);
+    }
+    return value == null ? "-" : String(value);
 }
 
 function escapeHtml(s: string): string {

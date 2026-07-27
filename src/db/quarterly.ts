@@ -148,6 +148,7 @@ export function addQuarterly(
     total_shareholders_equity: number,
     share_price: number,
     dividend: number,
+    update: boolean,
 ) {
     return new Promise((resolve, reject) => {
         invoke("db_add_quarterly", {
@@ -162,6 +163,7 @@ export function addQuarterly(
             totalShareholdersEquity: total_shareholders_equity,
             sharePrice: share_price,
             dividend: dividend,
+            update: update,
         })
         .then(rv => {
             resolve(rv);

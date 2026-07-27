@@ -105,7 +105,7 @@ export class AddRecordForm extends CustomFormElement {
         this.year_input.value = String(new Date().getFullYear());
         this.addInput(this.year_input);
         
-        this.quarter_input = new CustomInputElement(undefined, "Quarter (1-4)", undefined, "number", false, validateQuarter);
+        this.quarter_input = new CustomInputElement(undefined, "Quarter (1-4, 0 yearly)", undefined, "number", false, validateQuarter);
         this.quarter_input.placeholder = "1";
         this.addInput(this.quarter_input);
         
@@ -116,12 +116,12 @@ export class AddRecordForm extends CustomFormElement {
 
         
         
-        this.revenue_input = new CustomInputElement(undefined, "Return on equity", "SEK", "number", false);
+        this.revenue_input = new CustomInputElement(undefined, "Revenue (Omsättning)", "SEK", "number", false);
         this.revenue_input.placeholder = "1 000 000";
         this.addInput(this.revenue_input);
         
         
-        this.gross_profit_input = new CustomInputElement(undefined, "Price per equity", "SEK", "number", false);
+        this.gross_profit_input = new CustomInputElement(undefined, "Gross profit (Bruttoresultat)", "SEK", "number", false);
         this.gross_profit_input.placeholder = "1 000 000";
         this.addInput(this.gross_profit_input);
 
@@ -129,29 +129,29 @@ export class AddRecordForm extends CustomFormElement {
         
         
         
-        this.operating_income_input = new CustomInputElement(undefined, "Equity per share", "SEK", "number", false);
+        this.operating_income_input = new CustomInputElement(undefined, "Operating income (Rörelseresultat)", "SEK", "number", false);
         this.operating_income_input.placeholder = "1 000 000";
         this.addInput(this.operating_income_input);
         
         
-        this.net_income_input = new CustomInputElement(undefined, "Earnings per share", "SEK", "number", false);
+        this.net_income_input = new CustomInputElement(undefined, "Net income (Nettoresultat)", "SEK", "number", false);
         this.net_income_input.placeholder = "1 000 000";
         this.addInput(this.net_income_input);
         
         
-        this.shares_outstanding_input = new CustomInputElement(undefined, "Share price", "SEK", "number", false);
+        this.shares_outstanding_input = new CustomInputElement(undefined, "Shares outstanding (Antal aktier)", "SEK", "number", false);
         this.shares_outstanding_input.placeholder = "1 000 000";
         this.addInput(this.shares_outstanding_input);
         
-        this.total_shareholders_equity_input = new CustomInputElement(undefined, "Dividend", "%", "number", false);
+        this.total_shareholders_equity_input = new CustomInputElement(undefined, "Total equity (Eget kapital)", "%", "number", false);
         this.total_shareholders_equity_input.placeholder = "1 000 000";
         this.addInput(this.total_shareholders_equity_input);
         
-        this.share_price_input = new CustomInputElement(undefined, "Dividend", "%", "number", false);
+        this.share_price_input = new CustomInputElement(undefined, "Share price (Aktiekurs)", "%", "number", false);
         this.share_price_input.placeholder = "1 000 000";
         this.addInput(this.share_price_input);
         
-        this.dividend_input = new CustomInputElement(undefined, "Dividend", "%", "number", false);
+        this.dividend_input = new CustomInputElement(undefined, "Dividend (Utdelning)", "%", "number", false);
         this.dividend_input.placeholder = "1 000 000";
         this.addInput(this.dividend_input);
 

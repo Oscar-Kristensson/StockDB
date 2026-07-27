@@ -85,10 +85,10 @@ let filter = match report_type {
 
 
 // NOTE: Update to use the quarterly struct
-pub fn add_record (
-    conn: &Connection, 
-    stock_id: i64, 
-    fiscal_year: i64, 
+pub fn add_record(
+    conn: &Connection,
+    stock_id: i64,
+    fiscal_year: i64,
     fiscal_quarter: i64,
     revenue: Option<f64>,
     gross_profit: Option<f64>,
@@ -98,11 +98,40 @@ pub fn add_record (
     total_shareholders_equity: Option<f64>,
     share_price: Option<f64>,
     dividend: Option<f64>,
-
+    update: bool,
 ) -> Result<(), String> {
-    conn.execute(
+    let sql = if update {
         r#"
         INSERT INTO quarterly (
+            stock_id, fiscal_year, fiscal_quarter, revenue, gross_profit,
+            operating_income, net_income, shares_outstanding,
+            total_shareholders_equity, share_price, dividend
+        )
+        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)
+        ON CONFLICT(stock_id, fiscal_year, fiscal_quarter) DO UPDATE SET
+            revenue = excluded.revenue,
+            gross_profit = excluded.gross_profit,
+            operating_income = excluded.operating_income,
+            net_income = excluded.net_income,
+            shares_outstanding = excluded.shares_outstanding,
+            total_shareholders_equity = excluded.total_shareholders_equity,
+            share_price = excluded.share_price,
+            dividend = excluded.dividend
+        "#
+    } else {
+        r#"
+        INSERT INTO quarterly (
+            stock_id, fiscal_year, fiscal_quarter, revenue, gross_profit,
+            operating_income, net_income, shares_outstanding,
+            total_shareholders_equity, share_price, dividend
+        )
+        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)
+        "#
+    };
+
+    conn.execute(
+        sql,
+        params![
             stock_id,
             fiscal_year,
             fiscal_quarter,
@@ -113,26 +142,10 @@ pub fn add_record (
             shares_outstanding,
             total_shareholders_equity,
             share_price,
-            dividend
-        )
-        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)
-        "#,
-        params![
-            stock_id,               // stock_id
-            fiscal_year,            // fiscal_year
-            fiscal_quarter,         // fiscal_quarter
-            revenue,
-            gross_profit,
-            operating_income,
-            net_income,
-            shares_outstanding,
-            total_shareholders_equity,
-            share_price,
-            dividend,    
+            dividend,
         ],
     )
-    .map_err(|e| e.to_string())?; // convert rusqlite::Error -> String 
+    .map_err(|e| e.to_string())?;
 
     Ok(())
-
 }
