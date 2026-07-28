@@ -1,6 +1,5 @@
 import * as db from "../db"
 import * as utils from "../utils"
-import { StockStatistics } from "./structs"
 import { computeStockMetricsSummary, StockMetricsSummary, PeriodType } from "./calculations"
 import { ReportType } from "../db"
 
@@ -124,24 +123,6 @@ export class Stock {
         })
     
 
-    }
-    
-
-
-    getStatistics_old(reportType: ReportType) : Promise<StockStatistics> {
-        return new Promise(async (resolve) => {
-            const data = await this.getData();
-            if (!data) {
-                throw new Error("Statistics could not be loaded");
-            }
-
-
-            const statistics = StockStatistics.fromQuarterlyReports(data, reportType);
-            resolve(statistics);
-
-
-            
-        })
     }
 
 
