@@ -1,4 +1,4 @@
-import { formatNumberBody, formatWithPrefix } from "../utils";
+import { formatWithPrefix } from "../utils";
 
 // One column definition (the header row)
 export interface TableColumn {

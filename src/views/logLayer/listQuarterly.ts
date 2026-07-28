@@ -97,7 +97,7 @@ export class QuarterlyReportList {
 
             const reportId = Number(col.key);
             new CustomButtonElement(labelEl, "", "icons/deleteIcon.svg", ["deleteReportBtn"], () => this.onDelete(reportId), true);
-            new CustomButtonElement(labelEl, "", "icons/deleteIcon.svg", [], () => this.onEdit(reportId), true);
+            new CustomButtonElement(labelEl, "", "icons/edit.svg", [], () => this.onEdit(reportId), true);
         });
     }
 

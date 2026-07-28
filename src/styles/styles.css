@@ -512,6 +512,7 @@ h2 {
     border-color: #134b13;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 .customCheckboxElement.checked .checkboxBox .checkMark {
     display: inherit;

@@ -40,6 +40,21 @@
     justify-content: center;
 } 
 
+.customTable.databaseData th .labelElement .icon {
+    --size: 24px;
+    width: var(--size);
+    height: var(--size);
+    transform: none;
+    transition: all 100ms ease-in-out;
+    cursor: pointer;
+}
+
+.customTable.databaseData th .labelElement .icon:hover  {
+    transform: translateY(4px);
+    
+}
+
+
 .customTable.databaseData th .labelElement button {
     margin-left: 8px;
     background: none;
