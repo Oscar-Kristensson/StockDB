@@ -1,7 +1,6 @@
 import * as db from "../db"
 import * as utils from "../utils"
 import { computeStockMetricsSummary, StockMetricsSummary, PeriodType } from "./calculations"
-import { ReportType } from "../db"
 
 
 export class Stock {
