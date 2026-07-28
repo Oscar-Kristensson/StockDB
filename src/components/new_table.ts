@@ -1,3 +1,5 @@
+import { formatNumberBody, formatWithPrefix } from "../utils";
+
 // One column definition (the header row)
 export interface TableColumn {
   key: string;      // e.g. "latest", "5y", "10y", "all"
@@ -49,7 +51,7 @@ export function renderOverviewTable(data: CustomTableData, classNames: string = 
 
 function formatValue(value: string | number | null): string {
     if (typeof value === "number") {
-        value = value.toFixed(2);
+        value = formatWithPrefix(value);
     }
     return value == null ? "-" : String(value);
 }

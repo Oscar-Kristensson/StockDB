@@ -172,3 +172,47 @@ export function saveFile(data: string, fileName = "test.csv"){
 
 
 }
+
+
+
+
+export function formatWithPrefix(num: number): string {
+  if (num === 0) return "0";
+
+  const prefixes = [
+    { value: 1e12, symbol: "T" },
+    { value: 1e9,  symbol: "B" }, // Use "B" or "b" based on your preference
+    { value: 1e6,  symbol: "M" },
+    { value: 1e3,  symbol: "k" },
+  ];
+
+  const absNum = Math.abs(num);
+  const sign = num < 0 ? "-" : "";
+
+  for (const { value, symbol } of prefixes) {
+    if (absNum >= value) {
+      const scaled = num / value;
+      // Convert to 4 significant digits
+      const formatted = Number(scaled.toPrecision(4)).toString();
+      
+      // Replace decimal point with space if it's a whole number, 
+      // or format appropriately
+      return `${sign}${formatNumberBody(formatted)} ${symbol}`;
+    }
+  }
+
+  // Fallback for numbers smaller than 1000
+  return `${sign}${formatNumberBody(Number(num.toPrecision(4)).toString())}`;
+}
+
+/**
+ * Helper to match your exact spacing style (e.g., "1 300" instead of "1300")
+ */
+export function formatNumberBody(numStr: string): string {
+  const [integerPart, decimalPart] = numStr.split(".");
+  
+  // Add spaces as thousand separators for the integer portion
+  const spacedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  
+  return decimalPart ? `${spacedInteger}.${decimalPart}` : spacedInteger;
+}

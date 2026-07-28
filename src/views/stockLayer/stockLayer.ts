@@ -335,7 +335,12 @@ class StockLayer extends AppLayer {
                 new CustomLabelElement(undefined, report.getReportTimeStringA())
             ];
             report.forEach((key) => {
-                row.push(new CustomLabelElement(undefined, String(report[key])))
+                let number = report[key];
+                let number_str: string;
+                if (typeof number === "number") number_str = utils.formatWithPrefix(number);
+                else number_str = String(number);
+
+                row.push(new CustomLabelElement(undefined, number_str));
             })
 
             const tableRow = new InfoTableRow(row);
