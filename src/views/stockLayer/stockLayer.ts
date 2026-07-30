@@ -353,7 +353,7 @@ class StockLayer extends AppLayer {
             return;
         }
 
-        if (!this.infoTable && !this.derivedInfoTable){
+        if (!this.infoTable || !this.derivedInfoTable){
             return;
         }
 
@@ -532,13 +532,14 @@ class StockLayer extends AppLayer {
         }
 
 
+
         const row: Array<CustomLabelElement> = [
             new CustomLabelElement(undefined, "Period")
         ];
 
         METRIC_ROWS.map(({ label }) => {
             row.push(
-                new CustomLabelElement(undefined, label.replace("{currency}", "???"))
+                new CustomLabelElement(undefined, label.replace("{currency}", ""))
             )
         })
 
