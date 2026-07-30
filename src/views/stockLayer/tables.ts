@@ -104,7 +104,7 @@ export class TableRowData {
 
 type MetricKey = keyof Omit<economy.MetricAverages, "sampleSize">;
 
-const METRIC_ROWS: { key: MetricKey; label: string }[] = [
+export const METRIC_ROWS: { key: MetricKey; label: string }[] = [
   { key: "returnOnEquity", label: "Return on equity" },
   { key: "pricePerEquity", label: "Price per equity" },
   { key: "equityPerShare", label: "Equity per share {currency}" },

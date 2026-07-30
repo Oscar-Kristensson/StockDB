@@ -88,9 +88,11 @@ export class CustomTable implements CustomElementInterface {
         this.rows.forEach(row => {
             row.deleted();
         });
+    }
 
-        
-
+    clearTable_L() {
+        while (this.tableHead.children.length > 0) this.tableHead.removeChild(this.tableHead.children[0]);
+        while (this.tableBody.children.length > 0) this.tableBody.removeChild(this.tableBody.children[0]);
     }
 
 }

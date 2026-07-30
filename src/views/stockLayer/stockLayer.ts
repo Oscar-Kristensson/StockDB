@@ -6,7 +6,7 @@ import { StockDB } from "../../app.ts";
 import { CustomLabelElement, InfoTableRow } from "./customLabel.ts";
 import * as utils from "../../utils"
 import { QuarterlyReport } from "../../db/quarterly.ts";
-import { OverviewTableRow, TableRowStruct, buildOverviewTable } from "./tables.ts";
+import { OverviewTableRow, TableRowStruct, buildOverviewTable, METRIC_ROWS } from "./tables.ts";
 import { CustomDropdownElement, DropDownItem } from "../../components/dropdown.ts";
 import { renderOverviewTable, CustomTableData } from "../../components/new_table.ts";
 
@@ -17,9 +17,11 @@ class StockLayer extends AppLayer {
     graphContainer: CustomContainer | undefined;
     overviewContainer: CustomContainer | undefined;
     informationContainer: CustomContainer | undefined;
+    derivedInformationContainer: CustomContainer | undefined;
     stockInfo: CustomStockInfo | undefined;
     old_overviewTable: CustomTable | undefined;
-    old_infoTable: CustomTable | undefined;
+    infoTable: CustomTable | undefined;
+    derivedInfoTable: CustomTable | undefined;
     
 
     overviewTable: CustomTableData | undefined;
@@ -58,6 +60,7 @@ class StockLayer extends AppLayer {
 
 
         this.onStockListChange = this.onStockListChange.bind(this);
+        this.onStockChange = this.onStockChange.bind(this);
 
 
 
@@ -76,6 +79,7 @@ class StockLayer extends AppLayer {
 
         this.stockDropDown = new CustomDropdownElement(this.container, "Current stock", [], true);
         this.stockDropDown.events?.listen("change", () => {
+            console.log("Stock dropdown change!");
             if (!this.stockDropDown?.value) {
                 return;                
             }
@@ -91,6 +95,7 @@ class StockLayer extends AppLayer {
         this.graphContainer = new CustomContainer(this.container, "Graph", "graphContainer")
         this.overviewContainer = new CustomContainer(this.container, "Overview", "overviewContainer");
         this.informationContainer = new CustomContainer(this.container, "Info", "informationContainer");
+        this.derivedInformationContainer = new CustomContainer(this.container, "Key values", "derivedInformationContainer");
 
 
 
@@ -126,17 +131,43 @@ class StockLayer extends AppLayer {
         
 
 
-        this.old_infoTable = new CustomTable(this.informationContainer, "infoTable", QuarterlyReport.keys.length + 1);
+        this.infoTable = new CustomTable(this.informationContainer, "infoTable", QuarterlyReport.keys.length + 1);
         this.generateInfoTable();
+        
+        
+        this.derivedInfoTable = new CustomTable(this.derivedInformationContainer, "derivedInfoTable", economy.derivedMetricKeys.length + 1);
+        this.generateDerivedInfoTable();
+
         
         if (this.app) {
             this.app.events.listen("stockListUpdate", this.onStockListChange);
+            this.app.events.listen("stockChange", this.onStockChange);
         }
 
         this.onStockListChange();
         
 
         
+
+    }
+
+    onStockChange() {
+        if (!this.app) {
+            console.error("App must be registered"); 
+            return;
+        }
+
+
+
+
+
+        this.clearStockOverviewTable();
+        this.generateStockOverViewTable();
+
+
+
+
+
 
     }
 
@@ -148,6 +179,7 @@ class StockLayer extends AppLayer {
      * @returns 
      */
     onStockListChange() {
+        console.log("Stock change!");
 
         if (!this.app) {
             console.warn("This layer is not bound to a layer");
@@ -175,8 +207,7 @@ class StockLayer extends AppLayer {
                     this.stockDropDown.value = values[0];
             }
             
-        }
-
+        }        
         
     }
 
@@ -322,41 +353,55 @@ class StockLayer extends AppLayer {
             return;
         }
 
-        if (!this.old_infoTable){
+        if (!this.infoTable && !this.derivedInfoTable){
             return;
         }
 
 
         
-        this.old_infoTable.clearRows();
+        this.infoTable.clearRows();
+        this.derivedInfoTable.clearRows();
 
         
         quarterlyReports.forEach(report => {
-            const row: Array<CustomLabelElement> = [
+            // Info table
+            const it_row: Array<CustomLabelElement> = [
                 new CustomLabelElement(undefined, report.getReportTimeStringA())
             ];
+
+            const dit_row: Array<CustomLabelElement> = [
+                new CustomLabelElement(undefined, report.getReportTimeStringA())
+            ];
+            
             report.forEach((key) => {
                 let number = report[key];
                 let number_str: string;
                 if (typeof number === "number") number_str = utils.formatWithPrefix(number);
                 else number_str = String(number);
 
-                row.push(new CustomLabelElement(undefined, number_str));
+                it_row.push(new CustomLabelElement(undefined, number_str));
             })
 
-            const tableRow = new InfoTableRow(row);
+            const it_tableRow = new InfoTableRow(it_row);
+            this.infoTable?.addRow(it_tableRow);
 
 
-            this.old_infoTable?.addRow(tableRow);
-            /*this.infoTable?.addRow_L([
-                new CustomLabelElement(undefined, report.getReportTimeStringA()),
-                new CustomLabelElement(undefined, String(report.return_on_equity)),
-                new CustomLabelElement(undefined, String(report.price_per_equity)),
-                new CustomLabelElement(undefined, String(report.equity_per_share)),
-                new CustomLabelElement(undefined, String(report.earnings_per_share)),
-                new CustomLabelElement(undefined, String(report.share_price)),
-            ], false); */
 
+            // Derived table
+            const derived_metrics = economy.computeDerivedMetrics(report);
+
+            METRIC_ROWS.map(({ key }) => {
+                let number = derived_metrics[key];
+                let number_str: string;
+                if (typeof number === "number") number_str = utils.formatWithPrefix(number);
+                else number_str = String(number);
+
+                dit_row.push(new CustomLabelElement(undefined, number_str));
+
+            });
+
+            const dit_tableRow = new InfoTableRow(dit_row);
+            this.derivedInfoTable?.addRow(dit_tableRow);
 
         });
 
@@ -461,7 +506,7 @@ class StockLayer extends AppLayer {
 
 
     generateInfoTable() {
-        if (!(this.old_infoTable instanceof CustomTable)) {
+        if (!(this.infoTable instanceof CustomTable)) {
             console.error("The overview table is not correctly initalized!");
             return;
         }
@@ -477,9 +522,28 @@ class StockLayer extends AppLayer {
         });
 
 
-        this.old_infoTable.addRow_L(row, true);
-   
-        
+        this.infoTable.addRow_L(row, true);
+    }
+
+    generateDerivedInfoTable() {
+        if (!(this.derivedInfoTable instanceof CustomTable)) {
+            console.error("The derived info table is not correctly initalized!");
+            return;
+        }
+
+
+        const row: Array<CustomLabelElement> = [
+            new CustomLabelElement(undefined, "Period")
+        ];
+
+        METRIC_ROWS.map(({ label }) => {
+            row.push(
+                new CustomLabelElement(undefined, label.replace("{currency}", "???"))
+            )
+        })
+
+
+        this.derivedInfoTable.addRow_L(row, true);
     }
 
 }

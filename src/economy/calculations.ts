@@ -21,8 +21,18 @@ export interface StockMetricsSummary {
     allTime: MetricAverages;
 }
 
+export const derivedMetricKeys: (keyof DerivedMetrics)[] = [
+  'returnOnEquity',
+  'equityPerShare',
+  'pricePerEquity',
+  'earningsPerShare',
+  'pricePerEarnings',
+  'sharePrice',
+  'dividend',
+];
+
 /** Per-report derived metrics. Any input of null/0-denominator yields null for that field. */
-interface DerivedMetrics {
+export interface DerivedMetrics {
   returnOnEquity: number | null;
   equityPerShare: number | null;
   pricePerEquity: number | null;
@@ -37,7 +47,7 @@ function safeDiv(a: number | null, b: number | null): number | null {
   return a / b;
 }
 
-function computeDerivedMetrics(r: QuarterlyReport): DerivedMetrics {
+export function computeDerivedMetrics(r: QuarterlyReport): DerivedMetrics {
   const equityPerShare = safeDiv(r.total_shareholders_equity, r.shares_outstanding);
   const earningsPerShare = safeDiv(r.net_income, r.shares_outstanding);
   const returnOnEquity = safeDiv(r.net_income, r.total_shareholders_equity);
