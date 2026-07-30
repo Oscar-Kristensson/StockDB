@@ -107,9 +107,10 @@ type MetricKey = keyof Omit<economy.MetricAverages, "sampleSize">;
 const METRIC_ROWS: { key: MetricKey; label: string }[] = [
   { key: "returnOnEquity", label: "Return on equity" },
   { key: "pricePerEquity", label: "Price per equity" },
-  { key: "equityPerShare", label: "Equity per share" },
-  { key: "earningsPerShare", label: "Earnings per share" },
-  { key: "sharePrice", label: "Shares price" },
+  { key: "equityPerShare", label: "Equity per share {currency}" },
+  { key: "earningsPerShare", label: "Earnings per share {currency}" },
+  { key: "pricePerEarnings", label: "P/e ratio" },
+  { key: "sharePrice", label: "Shares price {currency}" },
   { key: "dividend", label: "Dividend" },
 ];
 

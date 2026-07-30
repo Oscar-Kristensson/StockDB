@@ -8,6 +8,7 @@ export interface MetricAverages {
   pricePerEquity: number | null;
   equityPerShare: number | null;
   earningsPerShare: number | null;
+  pricePerEarnings: number | null;
   sharePrice: number | null;
   dividend: number | null;
   sampleSize: number; // number of reports actually included
@@ -26,6 +27,7 @@ interface DerivedMetrics {
   equityPerShare: number | null;
   pricePerEquity: number | null;
   earningsPerShare: number | null;
+  pricePerEarnings: number | null;
   sharePrice: number | null;
   dividend: number | null;
 }
@@ -40,12 +42,14 @@ function computeDerivedMetrics(r: QuarterlyReport): DerivedMetrics {
   const earningsPerShare = safeDiv(r.net_income, r.shares_outstanding);
   const returnOnEquity = safeDiv(r.net_income, r.total_shareholders_equity);
   const pricePerEquity = safeDiv(r.share_price, equityPerShare);
+  const pricePerEarnings = safeDiv(r.share_price, earningsPerShare);
 
   return {
     returnOnEquity,
     equityPerShare,
     pricePerEquity,
     earningsPerShare,
+    pricePerEarnings,
     sharePrice: r.share_price,
     dividend: r.dividend,
   };
@@ -80,6 +84,7 @@ function averageMetrics(reports: QuarterlyReport[]): MetricAverages {
     pricePerEquity: average(metrics.map((m) => m.pricePerEquity)),
     equityPerShare: average(metrics.map((m) => m.equityPerShare)),
     earningsPerShare: average(metrics.map((m) => m.earningsPerShare)),
+    pricePerEarnings: average(metrics.map((m) => m.pricePerEarnings)),
     sharePrice: average(metrics.map((m) => m.sharePrice)),
     dividend: average(metrics.map((m) => m.dividend)),
     sampleSize: reports.length,

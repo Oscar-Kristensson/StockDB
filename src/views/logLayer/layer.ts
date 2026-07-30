@@ -79,7 +79,6 @@ class LogLayer extends AppLayer {
         }
 
         this.app.events.listen("stockChange", () => { if (this.app && this.app.stock) this.editRecords?.setStock(this.app.stock) });
-        console.log(this.editRecordsContainer);
 
 
         

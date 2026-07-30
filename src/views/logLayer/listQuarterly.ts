@@ -28,12 +28,10 @@ export class QuarterlyReportList {
 
     setStock(stock: Stock) {
         this.stock = stock;
-        console.log("Set stock!");
         this.refresh();
     }
 
     refresh() {
-        console.log("refresh!");
         if (!this.stock) return;
 
         this.stock.getData()
@@ -75,7 +73,6 @@ export class QuarterlyReportList {
     }
 
     private render() {
-        console.log("RENDER!");
         if (this.reports.length === 0) {
             this.tableContainer.innerHTML = "";
             const emptyEl = utils.createElement("p", this.tableContainer, ["emptyState"]);

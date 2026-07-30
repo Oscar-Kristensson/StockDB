@@ -24,7 +24,7 @@ export interface CustomTableData {
   rows: TableRow[];
 }
 
-export function renderOverviewTable(data: CustomTableData, classNames: string = ""): string {
+export function renderOverviewTable(data: CustomTableData, classNames: string = "", currency: string = ""): string {
   const headerCells = [
     `<th><div class="labelElement"></div></th>`,
     ...data.columns.map(
@@ -42,7 +42,7 @@ export function renderOverviewTable(data: CustomTableData, classNames: string = 
           return `<td><div class="${cls}">${text}</div></td>`;
         })
         .join("");
-      return `<tr><td><div class="labelElement">${escapeHtml(row.label)}</div></td>${cells}</tr>`;
+      return `<tr><td><div class="labelElement">${escapeHtml(row.label).replace("{currency}", `[${currency}]`)}</div></td>${cells}</tr>`;
     })
     .join("");
 

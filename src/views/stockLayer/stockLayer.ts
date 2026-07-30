@@ -95,7 +95,7 @@ class StockLayer extends AppLayer {
 
 
         this.old_overviewTable = new CustomTable(this.overviewContainer, "overviewTable", 5);
-        this.generateStockOverViewTable();
+        //this.generateStockOverViewTable();
 
 
         this.overviewTable = {
@@ -110,6 +110,7 @@ class StockLayer extends AppLayer {
                 "Price per equity",
                 "Equity per share",
                 "Earnings per share",
+                "P/e ratio",
                 "Shares price",
                 "Dividend",
             ].map((label) => ({
@@ -381,7 +382,8 @@ class StockLayer extends AppLayer {
 
         const summary: economy.StockMetricsSummary = await this.stock.getStatistics("Yearly");
         const tableData = buildOverviewTable(summary);
-        const html = renderOverviewTable(tableData);
+        const currency = this.stock.info?.currency;
+        const html = renderOverviewTable(tableData, "", currency);
 
         this.overviewContainer.contentContainer.innerHTML = html;
     }
