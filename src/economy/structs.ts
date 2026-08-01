@@ -52,7 +52,6 @@ export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: 
 
     } );
 
-    console.log(revenueData);
 
     let calcFromQuarter = 0;
 
@@ -80,7 +79,6 @@ export function calcDataAverages(quarterlyRecords: Array<QuarterlyReport>, key: 
   
 
 
-    console.log(year1AvgRevenue);
 
     return new StockStat<number | undefined>(key, yearAllAvgRevenue, year10AvgRevenue, year5AvgRevenue, year1AvgRevenue, latestValue);
     

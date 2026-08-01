@@ -87,7 +87,6 @@ class StockLayer extends AppLayer {
 
         this.stockDropDown = new CustomDropdownElement(this.container, "Current stock", [], true);
         this.stockDropDown.events?.listen("change", () => {
-            console.log("Stock dropdown change!");
             if (!this.stockDropDown?.value) {
                 return;                
             }
@@ -193,7 +192,6 @@ class StockLayer extends AppLayer {
      * @returns 
      */
     onStockListChange() {
-        console.log("Stock change!");
 
         if (!this.app) {
             console.warn("This layer is not bound to a layer");
@@ -341,7 +339,6 @@ class StockLayer extends AppLayer {
 
 
     onQuarterlyRecieved() {
-        console.log("Recieved quarterly for", this.app?.stock?.info?.ticker);
         this.updateStockOverviewTable();
 
 
@@ -544,7 +541,6 @@ class StockLayer extends AppLayer {
         }
 
 
-        console.log(temp_data, labels);
 
 
         this.graph.dataLabels = labels;
@@ -561,7 +557,6 @@ class StockLayer extends AppLayer {
 
 
             if (data) {
-                console.log(data);
                 this.graph?.addSeries(label, "line", data.reverse());
             }
         });

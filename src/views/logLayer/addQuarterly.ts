@@ -219,7 +219,6 @@ export class AddRecordForm extends CustomFormElement {
     }
 
     override send() {
-        console.log("Send add record!");
         const isValid = this.validate(true);
 
         if (isValid) {

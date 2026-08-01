@@ -32,7 +32,6 @@ export class StockDB extends LayerSwitcher {
     public set stock(stock: economy.Stock | undefined){
         this.currentStock.value = stock;
         this.events.post("stockChange");
-        console.log("stockChange!!!");
     }
 
     public get stock() {

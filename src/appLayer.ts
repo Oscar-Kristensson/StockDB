@@ -122,7 +122,6 @@ export class AppLayer {
      * This function should be overriden
      */
     onLoad(): HTMLElement | undefined {
-        console.log("Loaded layer", this.name)
         if (this.layerContainer)
             this.layerContainer.innerText = this.name;
 

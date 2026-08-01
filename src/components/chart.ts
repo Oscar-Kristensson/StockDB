@@ -122,6 +122,10 @@ class CustomChartCheckbox {
 
 
     }
+
+    delete() {
+        this.container.remove();
+    }
 }
 
 interface ChartEntry {
@@ -236,16 +240,18 @@ export class CustomChart {
         this.series.set(name, { series, checkbox });
     }
 
-    removeSeries(name: "string") {
+    removeSeries(name: string) {
+        let entry = this.series.get(name);
+        if (entry) entry.checkbox.delete();
+
         this.series.delete(name);
     }
     removeAllSeries() {
-        this.series.forEach(( _value, key) => this.series.delete(key));
+        this.series.forEach(( _value, key) => { this.removeSeries(key); });
     }
 
 
     renderChart() {
-        console.log("RENDERING CHART");
         this.chart.setOption(
             this.createOption(),
             true

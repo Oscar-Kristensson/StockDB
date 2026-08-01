@@ -127,7 +127,6 @@ export class AddStockForm extends CustomFormElement {
     }
 
     override send() {
-        console.log("Send add stock!");
 
         if (!this.validate()) {
             return;

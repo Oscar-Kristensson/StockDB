@@ -81,8 +81,6 @@ export function addStock(stock: StockInfo) {
             stock: stock,
         })
         .then(rv => {
-            console.log("Got rv");
-            console.log(rv);
             resolve(rv);
             //resolve(rv);
         }) 

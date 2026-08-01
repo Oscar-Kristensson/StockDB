@@ -115,7 +115,6 @@ window.addEventListener("DOMContentLoaded", () => {
     
 
     addUserButton?.addEventListener("click", () => {
-        console.log("On Event!");
         let userName: string | null;
 
         if (addUserInput instanceof HTMLInputElement) {
