@@ -145,15 +145,14 @@ class StockLayer extends AppLayer {
         this.derivedInfoTable = new CustomTable(this.derivedInformationContainer, "derivedInfoTable", economy.derivedMetricKeys.length + 1);
         this.generateDerivedInfoTable();
 
-
-        this.graph = new CustomChart(this.graphContainer.contentContainer, "");
+        this.graph = new CustomChart(this.graphContainer.contentContainer, `Table`);
 
 
 
         
         if (this.app) {
             this.app.events.listen("stockListUpdate", this.onStockListChange);
-            this.app.events.listen("stockChange", this.onStockChange);
+            //this.app.events.listen("stockChange", this.onStockChange);
         }
 
         this.onStockListChange();
@@ -291,6 +290,7 @@ class StockLayer extends AppLayer {
 
         this.updateStockOverviewTable();
         this.updateInformationOverviewTable();
+        this.onStockChange();
 
 
         /*
@@ -450,7 +450,12 @@ class StockLayer extends AppLayer {
             return;
         }
 
-        this.graph?.removeAllSeries();
+        if (!this.graph) {
+            console.warn("Could not update page data since the graph was undefined");
+            return;
+        }
+
+        this.graph.removeAllSeries();
 
         /** Only yearly QR reports sorted from newest to oldest */
         const quarterlyReports = (await this.stock.getData())?.filter(r => r.fiscal_quarter === 0).sort((a, b) => 
@@ -583,7 +588,7 @@ class StockLayer extends AppLayer {
         });
 
 
-        // this.graph.addSeries("Share price", "line", temp_data);
+
         this.graph.renderChart();
 
 
@@ -662,6 +667,13 @@ class StockLayer extends AppLayer {
 
 
 
+    }
+
+    unload(): void {
+        if (this.graph) {
+            this.graph.delete();
+        };
+        this.graph = undefined;
     }
 
 

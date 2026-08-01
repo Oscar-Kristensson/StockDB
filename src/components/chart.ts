@@ -213,6 +213,9 @@ export class CustomChart {
     }
 
     private initChart(): void {
+        echarts.dispose(this.contentContainer);
+
+
         // Make sure we don't re-initialize if the container isn't ready
         if (!this.contentContainer.clientWidth) return;
 
@@ -243,6 +246,7 @@ export class CustomChart {
     removeSeries(name: string) {
         let entry = this.series.get(name);
         if (entry) entry.checkbox.delete();
+        else console.warn("Could not remove HTML element!");
 
         this.series.delete(name);
     }
@@ -252,6 +256,14 @@ export class CustomChart {
 
 
     renderChart() {
+        // Attempt initialization if it hasn't happened yet
+        if (!this.chart) {
+            this.initChart();
+        }
+        
+        // Safety guard
+        if (!this.chart) return;
+        console.warn("Rendering chart! With", this.series.size, this.chart);
         this.chart.setOption(
             this.createOption(),
             true
@@ -260,5 +272,11 @@ export class CustomChart {
 
     getTopMostHTMLContainer(): HTMLElement {
         return this.mainContainer;
+    }
+    
+    delete() {
+        if (this.contentContainer) {
+            echarts.dispose(this.contentContainer);
+        }
     }
 }
