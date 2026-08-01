@@ -24,7 +24,6 @@ class CustomChartSeries {
     constructor(
         private data: Array<number | null>,
         private type: "line" | "bar",
-        public visible: boolean,
 
     ) {}
 
@@ -73,12 +72,69 @@ class CustomChartSeries {
 
 
 
+class CustomChartCheckbox {
+    container: HTMLDivElement;
+    colorDot: HTMLDivElement;
+    labelContainer: HTMLDivElement;
+    constructor(
+        private readonly chart: CustomChart,
+        public visible: boolean,
+        public color: string | undefined,
+        parent: HTMLDivElement,
+        label: string,
+    ) {
+        this.container = utils.createElement("div", parent, ["visiblitySelectorContainer"]);
+        this.colorDot = utils.createElement("div", this.container, ["dot"]);
+        this.labelContainer = utils.createElement("div", this.container, ["label"]);
+        this.labelContainer.innerText = label;
+        this.setVisibility(visible);
+
+        this.container.addEventListener("click", () => { this.toggleVisiblity(); this.chart.renderChart() });
+    }
+
+    setVisibility(isVisible: boolean) {
+        this.visible = isVisible;
+        
+        if (this.visible) {
+            this.container.classList.add("visible");
+        } else {
+            this.container.classList.remove("visible"); 
+        }
+
+        this.updateColor();
+    }
+
+    toggleVisiblity() {
+        this.setVisibility(!this.visible);
+    }
+
+    updateColor() {
+        if (!this.color) return;
+        this.colorDot.style.backgroundColor = this.color;
+    }
+
+
+    setColor(color: string | undefined) {
+        this.color = color;
+
+        this.updateColor();
+
+
+
+    }
+}
+
+interface ChartEntry {
+  series: CustomChartSeries;
+  checkbox: CustomChartCheckbox;
+}
 
 export class CustomChart {
     mainContainer: HTMLDivElement;
     contentContainer: HTMLDivElement;
+    checkboxesContainer: HTMLDivElement;
     chart!: echarts.ECharts;
-    series: Map<string, CustomChartSeries>;
+    series: Map<string, ChartEntry>;
     title: string; 
     public dataLabels: Array<string>;
 
@@ -98,6 +154,8 @@ export class CustomChart {
         this.mainContainer.appendChild(this.contentContainer);
         parent?.appendChild(this.mainContainer);
 
+        this.checkboxesContainer = utils.createElement("div", this.mainContainer, ["checkboxesContainer"]);
+
         // Defer initialization until the DOM has calculated layout dimensions
         requestAnimationFrame(() => {
             this.initChart();
@@ -108,7 +166,7 @@ export class CustomChart {
         this.chart?.resize();
         });
 
-        this.series = new Map<string, CustomChartSeries>();
+        this.series = new Map<string, ChartEntry>();
         this.title = title;
         this.dataLabels = ["Mon", "Tue"];
     }
@@ -116,10 +174,12 @@ export class CustomChart {
     private createOption() {
         const seriesData: ChartSeriesOption[] = [];
         let i = 0;
-        this.series.forEach(( value, key ) => {
+        this.series.forEach(( s, key ) => {
+            const color_index = i;
             i++;
-            if (!value.visible) return;
-            seriesData.push(value.getChartData(key, i - 1));
+            if (!s.checkbox.visible) return;
+            seriesData.push(s.series.getChartData(key, color_index));
+            s.checkbox.setColor(`hsl(${COLOR_HUES[color_index]}, 100%, 65%)`)
         })
 
 
@@ -163,10 +223,17 @@ export class CustomChart {
         const series = new CustomChartSeries(
             data, 
             type,
-            true    // Visible by default
         );
 
-        this.series.set(name, series);
+        const checkbox = new CustomChartCheckbox(
+            this,
+            true,    // Visible by default
+            undefined,
+            this.checkboxesContainer,
+            name
+        )
+
+        this.series.set(name, { series, checkbox });
     }
 
     removeSeries(name: "string") {
@@ -178,8 +245,10 @@ export class CustomChart {
 
 
     renderChart() {
+        console.log("RENDERING CHART");
         this.chart.setOption(
-            this.createOption()
+            this.createOption(),
+            true
         )
     }
 
