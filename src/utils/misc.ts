@@ -216,3 +216,9 @@ export function formatNumberBody(numStr: string): string {
   
   return decimalPart ? `${spacedInteger}.${decimalPart}` : spacedInteger;
 }
+
+
+
+export function isInRange(value: number, min: number, max: number) {
+    return min <= value && value <= max;
+}

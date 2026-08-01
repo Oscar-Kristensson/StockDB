@@ -31,6 +31,17 @@ export const derivedMetricKeys: (keyof DerivedMetrics)[] = [
   'dividend',
 ];
 
+
+export const derivedMetricLabels: Array<string> = [
+  'Return on equity',
+  'Equity per share',
+  'Price per equity',
+  'Earnings per share',
+  'Price per earnings',
+  'Share price',
+  'Dividend',
+]
+
 /** Per-report derived metrics. Any input of null/0-denominator yields null for that field. */
 export interface DerivedMetrics {
   returnOnEquity: number | null;

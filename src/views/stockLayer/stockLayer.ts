@@ -10,7 +10,13 @@ import { OverviewTableRow, TableRowStruct, buildOverviewTable, METRIC_ROWS } fro
 import { CustomDropdownElement, DropDownItem } from "../../components/dropdown.ts";
 import { renderOverviewTable, CustomTableData } from "../../components/new_table.ts";
 
+import * as db from "../../db"
 import * as economy from "../../economy"
+import { CustomChart } from "../../components/chart.ts";
+
+const GRAPHED_RAW_METRICS: (keyof db.QuarterlyReport)[] = ["share_price", "dividend"] as const;
+const GRAPHED_DERIVED_METRICS: (keyof economy.DerivedMetrics)[] = ["equityPerShare", "earningsPerShare", "pricePerEarnings"] as const;
+
 
 class StockLayer extends AppLayer {
     container: HTMLElement | undefined;
@@ -22,6 +28,8 @@ class StockLayer extends AppLayer {
     old_overviewTable: CustomTable | undefined;
     infoTable: CustomTable | undefined;
     derivedInfoTable: CustomTable | undefined;
+
+    graph: CustomChart | undefined;
     
 
     overviewTable: CustomTableData | undefined;
@@ -138,6 +146,11 @@ class StockLayer extends AppLayer {
         this.derivedInfoTable = new CustomTable(this.derivedInformationContainer, "derivedInfoTable", economy.derivedMetricKeys.length + 1);
         this.generateDerivedInfoTable();
 
+
+        this.graph = new CustomChart(this.graphContainer.contentContainer, "");
+
+
+
         
         if (this.app) {
             this.app.events.listen("stockListUpdate", this.onStockListChange);
@@ -163,6 +176,7 @@ class StockLayer extends AppLayer {
 
         this.clearStockOverviewTable();
         this.generateStockOverViewTable();
+        this.updatePageToNewData();
 
 
 
@@ -406,7 +420,6 @@ class StockLayer extends AppLayer {
         });
 
 
-        console.log(quarterlyReports)
     }
 
     async updateStockOverviewTable() {
@@ -432,6 +445,152 @@ class StockLayer extends AppLayer {
 
         this.overviewContainer.contentContainer.innerHTML = html;
     }
+
+
+    async updatePageToNewData() {
+        if (!this.stock) {
+            console.warn("Could not update page data since the stock was undefined");
+            return;
+        }
+
+        this.graph?.removeAllSeries();
+
+        /** Only yearly QR reports sorted from newest to oldest */
+        const quarterlyReports = (await this.stock.getData())?.filter(r => r.fiscal_quarter === 0).sort((a, b) => 
+            utils.calcTotalPeriod(b.fiscal_year, b.fiscal_quarter) - utils.calcTotalPeriod(a.fiscal_year, a.fiscal_quarter)); 
+        
+        if (!quarterlyReports) {
+            console.warn("Quarterly reports was undefined");
+            return;
+        }
+        
+        this.collectDataAndDrawChart(quarterlyReports);
+    
+    }
+
+    collectDataAndDrawChart(quarterlyReports: Array<QuarterlyReport>) {
+        if (quarterlyReports.length < 1) {
+            return;
+        }
+
+        if (!this.graph) {
+            console.warn("Graph not defined");
+            return;
+        }
+        
+        const lastYear = quarterlyReports[0].fiscal_year;
+        const firstYear = quarterlyReports[quarterlyReports.length - 1].fiscal_year;
+
+
+        // Output arrays ordered chronologically: index 0 = firstYear, index period_length - 1 = lastYear
+        const period_length = lastYear - firstYear + 1;
+        const temp_data: Array<number | null> = Array(period_length);
+        const labels: Array<string> = Array(period_length);
+
+
+        const rawMetricSeries: Partial<Record<keyof QuarterlyReport, Array<number | null>>> = {
+            share_price: [],
+            dividend: [],
+        };
+
+        const derivedMetricSeries: Partial<Record<keyof economy.DerivedMetrics, Array<number | null>>> = {
+            equityPerShare: [],
+            earningsPerShare: [],
+        };
+
+        let report_index = 0;
+
+        // Loop downwards from lastYear to firstYear
+        for (let year = lastYear; year >= firstYear; year--) {
+            // Determine target index in labels/data (chronological: firstYear = 0)
+            const array_idx = year - firstYear;
+            labels[array_idx] = String(year);
+
+            // Skip any reports that are *newer* than the current target year
+            while (
+                report_index < quarterlyReports.length && 
+                quarterlyReports[report_index].fiscal_year > year
+            ) {
+                report_index++;
+            }
+
+            // Check if the current report matches the year we're looking for
+            if (
+                report_index < quarterlyReports.length && 
+                quarterlyReports[report_index].fiscal_year === year
+            ) {
+                const qr = quarterlyReports[report_index];
+                const dqr = economy.computeDerivedMetrics(qr);
+
+
+                GRAPHED_RAW_METRICS.forEach(key => {
+                    const data_entry = qr[key];
+                    if (typeof data_entry !== "number") rawMetricSeries[key]?.push(null);
+                    else rawMetricSeries[key]?.push(data_entry);
+                })
+                GRAPHED_DERIVED_METRICS.forEach(key => {
+                    const data_entry = dqr[key];
+                    if (typeof data_entry !== "number") derivedMetricSeries[key]?.push(null);
+                    else derivedMetricSeries[key]?.push(data_entry);
+                })
+
+                
+                temp_data[array_idx] = qr.share_price;
+                report_index++; // Advance to the next report for the next iteration
+            } else {
+                // Missing report for this year
+                temp_data[array_idx] = null;
+            }
+        }
+
+
+        console.log(temp_data, labels);
+
+
+        this.graph.dataLabels = labels;
+
+        // Loop directly over the keys present in rawMetricSeries
+        (Object.keys(rawMetricSeries) as Array<keyof typeof rawMetricSeries>).forEach((key) => {
+            const data = rawMetricSeries[key];
+            
+            // Check that data exists before adding it
+            let key_info = QuarterlyReport.keys.find((r) => r[0] === key)
+            let label: string;
+            if (!key_info) label = "unkown";
+            else label = key_info[1]
+
+
+            if (data) {
+                console.log(data);
+                this.graph?.addSeries(label, "line", data.reverse());
+            }
+        });
+
+        (Object.keys(derivedMetricSeries) as Array<keyof typeof derivedMetricSeries>).forEach((key) => {
+            const data = derivedMetricSeries[key];
+
+            const key_index = economy.derivedMetricKeys.indexOf(key);
+            let label: string;
+            if (key_index === -1) label = "@" + key;
+            else label = economy.derivedMetricLabels[key_index];
+
+            
+            // Check that data exists before adding it
+            if (data) {
+                this.graph?.addSeries(label, "line", data.reverse());
+            }
+        });
+
+
+        // this.graph.addSeries("Share price", "line", temp_data);
+        this.graph.renderChart();
+
+
+
+        
+    }
+
+
 
     clearStockOverviewTable() {
         this.returnOnEquity?.data.setData(undefined, undefined, undefined, undefined);

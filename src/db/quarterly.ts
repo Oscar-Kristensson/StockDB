@@ -11,7 +11,8 @@ export class QuarterlyReport {
         ["net_income",                  "Net income"],
         ["shares_outstanding",          "Shares outstanding"],
         ["total_shareholders_equity",   "Total Shareholders Equity"],
-        ["dividend", "Dividend"],
+        ["share_price",                 "Share price"],
+        ["dividend",                    "Dividend"],
     ]
     constructor(
         public readonly id: number,
