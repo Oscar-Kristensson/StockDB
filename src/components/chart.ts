@@ -17,7 +17,7 @@ echarts.use([
   CanvasRenderer,
 ]);
 
-const COLOR_HUES: Array<number> = [120, 0, 55, 225];
+const COLOR_HUES: Array<number> = [120, 0, 55, 225, 180, 280, 305];
 
 
 class CustomChartSeries {
@@ -48,7 +48,7 @@ class CustomChartSeries {
                 color: new graphic.LinearGradient(0, 0, 0, 1, [
                     { offset: 0, color: `hsl(${hue}, 90%, 65%)` }, // Top color
                     { offset: 1, color: `hsl(${hue}, 90%, 35%)` }  // Bottom color
-                ])
+                ]),
             },
             areaStyle: {
                 color: new graphic.LinearGradient(

@@ -105,13 +105,13 @@ export class TableRowData {
 type MetricKey = keyof Omit<economy.MetricAverages, "sampleSize">;
 
 export const METRIC_ROWS: { key: MetricKey; label: string }[] = [
-  { key: "returnOnEquity", label: "Return on equity" },
-  { key: "pricePerEquity", label: "Price per equity" },
+  { key: "returnOnEquity", label: "Return on equity [%]" },
+  { key: "pricePerEquity", label: "Price per equity [%]" },
   { key: "equityPerShare", label: "Equity per share {currency}" },
   { key: "earningsPerShare", label: "Earnings per share {currency}" },
   { key: "pricePerEarnings", label: "P/e ratio" },
   { key: "sharePrice", label: "Shares price {currency}" },
-  { key: "dividend", label: "Dividend" },
+  { key: "dividend", label: "Dividend {currency}" },
 ];
 
 const COLUMNS: TableColumn[] = [

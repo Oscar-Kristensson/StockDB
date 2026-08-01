@@ -538,10 +538,21 @@ h2 {
     filter: brightness(0.5);
 }
 
-.checkboxesContainer {
+.customChart {
     display: flex;
+    flex-direction: column;
+
+}
+
+.checkboxesContainer {
+    display: grid;
+    flex-direction: column;
     justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    flex-wrap: wrap;
     gap: 16px;
+    width: 70%;
+    align-self: center;
 }
 
 .checkboxesContainer .visiblitySelectorContainer {

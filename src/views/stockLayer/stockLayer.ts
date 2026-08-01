@@ -15,7 +15,7 @@ import * as economy from "../../economy"
 import { CustomChart } from "../../components/chart.ts";
 
 const GRAPHED_RAW_METRICS: (keyof db.QuarterlyReport)[] = ["share_price", "dividend"] as const;
-const GRAPHED_DERIVED_METRICS: (keyof economy.DerivedMetrics)[] = ["equityPerShare", "earningsPerShare", "pricePerEarnings"] as const;
+const GRAPHED_DERIVED_METRICS: (keyof economy.DerivedMetrics)[] = ["equityPerShare", "earningsPerShare", "pricePerEarnings", "returnOnEquity", "pricePerEquity"] as const;
 
 
 class StockLayer extends AppLayer {
@@ -492,11 +492,16 @@ class StockLayer extends AppLayer {
 
         const derivedMetricSeries: Partial<Record<keyof economy.DerivedMetrics, Array<number | null>>> = {
             equityPerShare: [],
+            returnOnEquity: [],
             earningsPerShare: [],
+            pricePerEarnings: [],
+            pricePerEquity: [],
+
         };
 
+        
         let report_index = 0;
-
+        
         // Loop downwards from lastYear to firstYear
         for (let year = lastYear; year >= firstYear; year--) {
             // Determine target index in labels/data (chronological: firstYear = 0)
@@ -518,8 +523,7 @@ class StockLayer extends AppLayer {
             ) {
                 const qr = quarterlyReports[report_index];
                 const dqr = economy.computeDerivedMetrics(qr);
-
-
+                
                 GRAPHED_RAW_METRICS.forEach(key => {
                     const data_entry = qr[key];
                     if (typeof data_entry !== "number") rawMetricSeries[key]?.push(null);
@@ -528,7 +532,8 @@ class StockLayer extends AppLayer {
                 GRAPHED_DERIVED_METRICS.forEach(key => {
                     const data_entry = dqr[key];
                     if (typeof data_entry !== "number") derivedMetricSeries[key]?.push(null);
-                    else derivedMetricSeries[key]?.push(data_entry);
+                    else if(derivedMetricSeries[key]) derivedMetricSeries[key].push(data_entry);
+                    else console.log("KEY does not exist");
                 })
 
                 
@@ -560,6 +565,7 @@ class StockLayer extends AppLayer {
                 this.graph?.addSeries(label, "line", data.reverse());
             }
         });
+
 
         (Object.keys(derivedMetricSeries) as Array<keyof typeof derivedMetricSeries>).forEach((key) => {
             const data = derivedMetricSeries[key];

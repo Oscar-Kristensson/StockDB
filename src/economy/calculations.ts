@@ -33,9 +33,9 @@ export const derivedMetricKeys: (keyof DerivedMetrics)[] = [
 
 
 export const derivedMetricLabels: Array<string> = [
-  'Return on equity',
+  'Return on equity [%]',
   'Equity per share',
-  'Price per equity',
+  'Price per equity [%]',
   'Earnings per share',
   'Price per earnings',
   'Share price',
@@ -53,16 +53,16 @@ export interface DerivedMetrics {
   dividend: number | null;
 }
 
-function safeDiv(a: number | null, b: number | null): number | null {
+function safeDiv(a: number | null, b: number | null, asPercentage: boolean = false): number | null {
   if (a === null || b === null || b === 0) return null;
-  return a / b;
+  return asPercentage ? a / b * 100 : a / b;
 }
 
 export function computeDerivedMetrics(r: QuarterlyReport): DerivedMetrics {
   const equityPerShare = safeDiv(r.total_shareholders_equity, r.shares_outstanding);
   const earningsPerShare = safeDiv(r.net_income, r.shares_outstanding);
-  const returnOnEquity = safeDiv(r.net_income, r.total_shareholders_equity);
-  const pricePerEquity = safeDiv(r.share_price, equityPerShare);
+  const returnOnEquity = safeDiv(r.net_income, r.total_shareholders_equity, true);
+  const pricePerEquity = safeDiv(r.share_price, equityPerShare, true);
   const pricePerEarnings = safeDiv(r.share_price, earningsPerShare);
 
   return {
