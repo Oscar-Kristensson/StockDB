@@ -290,43 +290,7 @@ class StockLayer extends AppLayer {
 
         this.updateStockOverviewTable();
         this.updateInformationOverviewTable();
-        this.onStockChange();
-
-
-        /*
-
-        db.getQuarterlyFromStockID(this.stock.info.id)
-            .then(result => {
-                if (result instanceof Array) {
-                    console.log("Sorting", result);
-                    this.quarterlyRecords = result.sort((a, b) => b.totalPeriod - a.totalPeriod);
-
-
-
-                    this.averageRevenue.value = String(utils.averageO(this.quarterlyRecords, (record: QuarterlyReport) => {
-                        if (record.revenue === null) {
-                            return 0;
-                        }
-                            
-                        return record.revenue;
-                    }))
-
-                    this.onQuarterlyRecieved();
-
-
-
-                    
-                } else {
-                    console.warn("Not an array", result);
-                }
-            })
-            .catch(error => {
-                console.error("An error occured whilst reading quarterly records", error);
-            })*/
-
-        
-
-
+        this.onStockChange();      
 
     }
 
@@ -357,8 +321,8 @@ class StockLayer extends AppLayer {
 
         const stock = this.app.stock;
 
-        const quarterlyReports = (await stock.getData())?.filter(r => r.fiscal_quarter === 0).sort((a, b) => 
-            utils.calcTotalPeriod(b.fiscal_year, b.fiscal_quarter) - utils.calcTotalPeriod(a.fiscal_year, a.fiscal_quarter));
+        const quarterlyReports = (await stock.getData())?.filter(r => r.report.fiscal_quarter === 0).sort((a, b) => 
+            utils.calcTotalPeriod(b.report.fiscal_year, b.report.fiscal_quarter) - utils.calcTotalPeriod(a.report.fiscal_year, a.report.fiscal_quarter));
 
         if (!quarterlyReports){
             return;
@@ -374,18 +338,18 @@ class StockLayer extends AppLayer {
         this.derivedInfoTable.clearRows();
 
         
-        quarterlyReports.forEach(report => {
+        quarterlyReports.forEach(data => {
             // Info table
             const it_row: Array<CustomLabelElement> = [
-                new CustomLabelElement(undefined, report.getReportTimeStringA())
+                new CustomLabelElement(undefined, data.report.getReportTimeStringA())
             ];
 
             const dit_row: Array<CustomLabelElement> = [
-                new CustomLabelElement(undefined, report.getReportTimeStringA())
+                new CustomLabelElement(undefined, data.report.getReportTimeStringA())
             ];
             
-            report.forEach((key) => {
-                let number = report[key];
+            data.report.forEach((key) => {
+                let number = data.report[key];
                 let number_str: string;
                 if (typeof number === "number") number_str = utils.formatWithPrefix(number);
                 else number_str = String(number);
@@ -399,10 +363,9 @@ class StockLayer extends AppLayer {
 
 
             // Derived table
-            const derived_metrics = economy.computeDerivedMetrics(report);
 
             METRIC_ROWS.map(({ key }) => {
-                let number = derived_metrics[key];
+                let number = data.derived[key];
                 let number_str: string;
                 if (typeof number === "number") number_str = utils.formatWithPrefix(number);
                 else number_str = String(number);
@@ -435,7 +398,7 @@ class StockLayer extends AppLayer {
 
 
 
-        const summary: economy.StockMetricsSummary = await this.stock.getStatistics("Yearly");
+        const summary: economy.StockMetricsSummary = await this.stock.getStatistics();
         const tableData = buildOverviewTable(summary);
         const currency = this.stock.info?.currency;
         const html = renderOverviewTable(tableData, "", currency);
@@ -458,8 +421,8 @@ class StockLayer extends AppLayer {
         this.graph.removeAllSeries();
 
         /** Only yearly QR reports sorted from newest to oldest */
-        const quarterlyReports = (await this.stock.getData())?.filter(r => r.fiscal_quarter === 0).sort((a, b) => 
-            utils.calcTotalPeriod(b.fiscal_year, b.fiscal_quarter) - utils.calcTotalPeriod(a.fiscal_year, a.fiscal_quarter)); 
+        const quarterlyReports = (await this.stock.getData())?.filter(r => r.report.fiscal_quarter === 0).sort((a, b) => 
+            utils.calcTotalPeriod(b.report.fiscal_year, b.report.fiscal_quarter) - utils.calcTotalPeriod(a.report.fiscal_year, a.report.fiscal_quarter)); 
         
         if (!quarterlyReports) {
             console.warn("Quarterly reports was undefined");
@@ -470,7 +433,7 @@ class StockLayer extends AppLayer {
     
     }
 
-    collectDataAndDrawChart(quarterlyReports: Array<QuarterlyReport>) {
+    collectDataAndDrawChart(quarterlyReports: Array<economy.CompleteQuarterlyData>) {
         if (quarterlyReports.length < 1) {
             return;
         }
@@ -480,8 +443,8 @@ class StockLayer extends AppLayer {
             return;
         }
         
-        const lastYear = quarterlyReports[0].fiscal_year;
-        const firstYear = quarterlyReports[quarterlyReports.length - 1].fiscal_year;
+        const lastYear = quarterlyReports[0].report.fiscal_year;
+        const firstYear = quarterlyReports[quarterlyReports.length - 1].report.fiscal_year;
 
 
         // Output arrays ordered chronologically: index 0 = firstYear, index period_length - 1 = lastYear
@@ -516,7 +479,7 @@ class StockLayer extends AppLayer {
             // Skip any reports that are *newer* than the current target year
             while (
                 report_index < quarterlyReports.length && 
-                quarterlyReports[report_index].fiscal_year > year
+                quarterlyReports[report_index].report.fiscal_year > year
             ) {
                 report_index++;
             }
@@ -524,10 +487,10 @@ class StockLayer extends AppLayer {
             // Check if the current report matches the year we're looking for
             if (
                 report_index < quarterlyReports.length && 
-                quarterlyReports[report_index].fiscal_year === year
+                quarterlyReports[report_index].report.fiscal_year === year
             ) {
-                const qr = quarterlyReports[report_index];
-                const dqr = economy.computeDerivedMetrics(qr);
+                const qr = quarterlyReports[report_index].report;
+                const dqr = quarterlyReports[report_index].derived;
                 
                 GRAPHED_RAW_METRICS.forEach(key => {
                     const data_entry = qr[key];

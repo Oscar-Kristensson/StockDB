@@ -1,5 +1,13 @@
 import { QuarterlyReport, ReportType } from "../db";
 import * as utils from "../utils"
+import { DerivedMetrics } from "./calculations";
+
+
+
+export interface CompleteQuarterlyData {
+    report: QuarterlyReport,
+    derived: DerivedMetrics,
+}
 
 
 

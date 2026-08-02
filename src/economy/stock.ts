@@ -1,15 +1,22 @@
 import * as db from "../db"
 import * as utils from "../utils"
-import { computeStockMetricsSummary, StockMetricsSummary, PeriodType } from "./calculations"
+import { computeStockMetricsSummary, StockMetricsSummary, PeriodType, computeDerivedMetrics } from "./calculations"
+import { CompleteQuarterlyData } from "./structs";
 
 
 export class Stock {
-    list: db.StockListItem
-    _info: db.StockInfo | undefined
-    _data: Array<db.QuarterlyReport> | undefined
+    list: db.StockListItem;
+    _info: db.StockInfo | undefined;
+    private _data: Array<CompleteQuarterlyData> | undefined;
+    _averages: StockMetricsSummary | undefined;
+    
     event: utils.EventSystem;
 
-    constructor(list: db.StockListItem, info: db.StockInfo | undefined = undefined, data: Array<db.QuarterlyReport> | undefined = undefined) {
+    constructor(
+        list: db.StockListItem, 
+        info: db.StockInfo | undefined = undefined, 
+        data: Array<CompleteQuarterlyData> | undefined = undefined,
+    ) {
         this.list = list;
         this._info = info;
         this._data = data;
@@ -47,7 +54,8 @@ export class Stock {
 
         return db.getQuarterlyFromStockID(this.list.id, "Yearly")
         .then(result => {
-            this._data = result;
+
+            this.processQuarterlyData(result);
             this.event.post("update.data");
         })
     }
@@ -61,10 +69,10 @@ export class Stock {
 
 
     public get data() : Array<db.QuarterlyReport> | undefined {
-        return this._data;
+        return this._data?.map((d) => d.report);
     }
 
-    getData() : Promise<Array<db.QuarterlyReport> | undefined> {
+    getData() : Promise<Array<CompleteQuarterlyData> | undefined> {
         return new Promise((resolve, reject) => {
             if (this._data)
                 resolve(this._data);
@@ -106,16 +114,20 @@ export class Stock {
 
     }
 
-    getStatistics(reportType: PeriodType) : Promise<StockMetricsSummary> {
+    getStatistics() : Promise<StockMetricsSummary> {
         return new Promise(async (resolve) => {
-            const data = await this.getData();
-            if (!data) {
+            await this.getData();
+            if (!this._data) {
                 throw new Error("Statistics could not be loaded");
             }
+            
+            if (!this._averages) {
+                throw new Error("Averages could not be calculated");
 
-            const data_summary = computeStockMetricsSummary(data, reportType)
+            }
 
-            resolve(data_summary);
+
+            resolve(this._averages);
 
 
             
@@ -124,16 +136,28 @@ export class Stock {
 
     }
 
+    processQuarterlyData(reports: db.QuarterlyReport[]) {
+        reports = reports.sort((a, b) => b.totalPeriod - a.totalPeriod);
+        const data: CompleteQuarterlyData[] = reports.map((r) => {
+            return {report: r, derived: computeDerivedMetrics(r)};
+        });
 
-    async getLatestQuarterlyReport(): Promise<db.QuarterlyReport | undefined> {
+        this._data = data;
+
+        this._averages = computeStockMetricsSummary(data, "Yearly");
+
+    }
+
+
+    async getLatestQuarterlyReport(): Promise<CompleteQuarterlyData | undefined> {
         const data = await this.getData();
 
         if (!data) {
             return undefined;
         }
         return data
-            .filter(report => report.fiscal_quarter == 0)
-            .sort((a, b) => b.totalPeriod - a.totalPeriod)[0];
+            .filter(d => d.report.fiscal_quarter == 0)
+            .sort((a, b) => b.report.totalPeriod - a.report.totalPeriod)[0];
     }
 
 
