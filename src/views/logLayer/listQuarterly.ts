@@ -36,7 +36,7 @@ export class QuarterlyReportList {
 
         this.stock.getData()
             .then(reports => {
-                this.reports = reports ?? [];
+                this.reports = reports?.map((d) => d.report) ?? [];
                 this.render();
             })
             .catch(err => {

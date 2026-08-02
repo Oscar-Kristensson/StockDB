@@ -680,7 +680,7 @@ class StockLayer extends AppLayer {
 
 
         this.derivedInfoTable.addRow_L(row, true);
-    }
+        }
 
 }
 

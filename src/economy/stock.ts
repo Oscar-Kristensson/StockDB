@@ -1,6 +1,6 @@
 import * as db from "../db"
 import * as utils from "../utils"
-import { computeStockMetricsSummary, StockMetricsSummary, PeriodType, computeDerivedMetrics } from "./calculations"
+import { computeStockMetricsSummary, StockMetricsSummary, computeDerivedMetrics } from "./calculations"
 import { CompleteQuarterlyData } from "./structs";
 
 
